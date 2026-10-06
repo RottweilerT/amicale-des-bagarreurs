@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#C22F2B">
+<title>Amicale Des Bagarreurs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: poster-style header with the ring's red and blue corners, then one working panel per tab (members, fights, calendar, rules). */
+:root{
+  --bg:#ECEEF1; --surface:#FFFFFF; --sunk:#E2E5EA; --line:#CDD2DA; --ink:#15181E; --muted:#5B6270;
+  --red:#C22F2B; --red-soft:#F7DEDC; --blue:#1E4BB0; --blue-soft:#DCE4F7;
+  --gold:#A87412; --gold-soft:#F3E6C8; --ok:#1F7A4A; --ok-soft:#D8F0E2;
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-data:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101318; --surface:#191D24; --sunk:#232833; --line:#2F3643; --ink:#ECEFF4; --muted:#9AA3B2;
+  --red:#F0605A; --red-soft:#3A1C1C; --blue:#6E97F2; --blue-soft:#1B2640;
+  --gold:#E0B454; --gold-soft:#3A2F17; --ok:#5CCB8E; --ok-soft:#17322A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101318; --surface:#191D24; --sunk:#232833; --line:#2F3643; --ink:#ECEFF4; --muted:#9AA3B2;
+  --red:#F0605A; --red-soft:#3A1C1C; --blue:#6E97F2; --blue-soft:#1B2640;
+  --gold:#E0B454; --gold-soft:#3A2F17; --ok:#5CCB8E; --ok-soft:#17322A; color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 var(--f-body)}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+h1,h2,h3{font-family:var(--f-display);text-transform:uppercase;letter-spacing:.01em;margin:0;text-wrap:balance;line-height:1}
+h2{font-size:1.9rem}
+h3{font-size:1.25rem}
+.eyebrow{font:600 .75rem var(--f-data);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.num{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+
+/* Header */
+.hero{position:relative;padding-block:22px 14px;display:grid;gap:10px}
+.ropes{height:10px;display:grid;gap:3px}
+.ropes i{display:block;height:2px;background:var(--line)}
+.ropes i:nth-child(1){background:var(--red)} .ropes i:nth-child(3){background:var(--blue)}
+.brand{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand h1{font-size:clamp(2.3rem,8vw,3.8rem);font-weight:900}
+.brand h1 span{color:var(--red)}
+.who{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.who select{max-width:190px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--ink);margin-bottom:18px;scrollbar-width:none}
+nav.tabs button{flex:0 0 auto;border:0;background:none;color:var(--muted);font:700 1.05rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px 10px;cursor:pointer;border-bottom:4px solid transparent;margin-bottom:-2px}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
+nav.tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+
+.banner{border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:.92rem;background:var(--gold-soft);color:var(--ink);border:1px solid var(--gold)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;font-size:.92rem;z-index:20;max-width:calc(100% - 32px);text-align:center}
+
+/* Common controls */
+.grid2{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:760px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0}
+form.panel{gap:10px}
+label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
+input,select{font:inherit;font-size:1rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%;min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 120px;min-width:0}
+.btn{font:700 .95rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:8px;padding:10px 14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.small{padding:6px 10px;font-size:.82rem}
+.btn.danger{background:transparent;color:var(--red);border-color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.hint{font-size:.85rem;color:var(--muted)}
+.empty{border:2px dashed var(--line);border-radius:var(--r);padding:22px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-family:var(--f-display);text-transform:uppercase;font-size:1.3rem;margin-bottom:4px}
+.pill{display:inline-block;font:700 .72rem var(--f-data);letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+.pill.live{background:var(--red-soft);color:var(--red)}
+.pill.done{background:var(--ok-soft);color:var(--ok)}
+.pill.bf{background:var(--gold-soft);color:var(--gold)}
+
+/* Members */
+.members{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.member{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:6px;min-width:0}
+.member .name{font-weight:700;font-size:1.05rem;overflow-wrap:anywhere}
+.member .stats{display:flex;gap:14px;font-family:var(--f-data);font-size:1rem}
+.member .stats b{font-size:1.35rem;font-weight:700;margin-right:3px}
+.member .acts{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Fights */
+.fights{display:grid;gap:10px}
+.fcard{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.fcard:hover{border-color:var(--ink)}
+.fcard .side{min-width:0;font-weight:700;overflow-wrap:anywhere}
+.fcard .side.r{color:var(--red)} .fcard .side.b{color:var(--blue);text-align:right}
+.fcard .mid{text-align:center;display:grid;gap:3px;justify-items:center}
+.fcard .score{font:700 1.6rem var(--f-data);font-variant-numeric:tabular-nums}
+.fcard .meta{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:.82rem;color:var(--muted)}
+.diff{font-size:.85rem;padding:8px 10px;border-radius:8px;background:var(--sunk)}
+.diff.warn{background:var(--gold-soft)}
+
+.bout{display:grid;gap:14px}
+.bout-head{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:stretch}
+.corner{border-radius:var(--r);padding:12px;color:#fff;display:grid;gap:2px;min-width:0}
+.corner.r{background:var(--red)} .corner.b{background:var(--blue);text-align:right}
+.corner .nm{font:900 1.5rem/1 var(--f-display);text-transform:uppercase;overflow-wrap:anywhere}
+.corner .sub{font-size:.8rem;opacity:.85}
+.tot{display:grid;align-content:center;justify-items:center;padding-inline:4px}
+.tot .num{font-size:2.4rem;font-weight:700;line-height:1}
+.rounds{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.rounds button{flex:0 0 auto;min-width:54px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:600 .95rem var(--f-data);display:grid;justify-items:center}
+.rounds button small{font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.rounds button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rounds button[aria-pressed="true"] small{color:var(--bg);opacity:.75}
+.chrono{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--sunk);border-radius:var(--r);padding:10px 14px}
+.chrono .clock{font:700 2.2rem var(--f-data);font-variant-numeric:tabular-nums;min-width:5ch}
+.chrono .clock.over{color:var(--red)}
+.judge{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.jcol{border:2px solid var(--line);border-radius:var(--r);padding:10px;display:grid;gap:8px;min-width:0;background:var(--surface)}
+.jcol.r{border-color:var(--red)} .jcol.b{border-color:var(--blue)}
+.ctr{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:6px}
+.ctr span:first-child{font-size:.85rem;font-weight:600;min-width:0}
+.ctr .v{font:700 1.3rem var(--f-data);min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+.ctr button{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:700 1.2rem var(--f-data);cursor:pointer}
+.jcol.r .ctr button.plus{background:var(--red);border-color:var(--red);color:#fff}
+.jcol.b .ctr button.plus{background:var(--blue);border-color:var(--blue);color:#fff}
+.win{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.win button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:10px 6px;font:700 .9rem var(--f-data);text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+.win button.r[aria-pressed="true"]{background:var(--red);color:#fff;border-color:var(--red)}
+.win button.b[aria-pressed="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.win button.e[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.card-tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-family:var(--f-data);font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+th{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.r{color:var(--red);font-weight:700} td.b{color:var(--blue);font-weight:700}
+.log{display:grid;gap:4px;max-height:220px;overflow:auto;font-size:.88rem}
+.log div{display:flex;gap:8px;align-items:baseline}
+.log .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;transform:translateY(-1px)}
+.log .dot.r{background:var(--red)} .log .dot.b{background:var(--blue)}
+.result{font-size:1.05rem;font-weight:700}
+@media (max-width:520px){
+  .bout-head{grid-template-columns:1fr 1fr}
+  .bout-head .tot{grid-column:1/-1;grid-row:2;flex-direction:row}
+  .judge{grid-template-columns:1fr}
+  .corner .nm{font-size:1.2rem}
+}
+
+/* Calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cal-head h3{font-size:1.5rem}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.cal .dow{font:600 .72rem var(--f-data);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding-bottom:4px}
+.cal button{aspect-ratio:1/1;max-width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:4px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:2px;font:600 .9rem var(--f-data);min-width:0;overflow:hidden}
+.cal button.out{opacity:.35}
+.cal button.today{border-color:var(--ink);border-width:2px}
+.cal button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.cal .dots{display:flex;gap:2px;flex-wrap:wrap}
+.cal .dots i{width:7px;height:7px;border-radius:50%;background:var(--red)}
+.cal .dots i.bf{background:var(--gold)} .cal .dots i.o{background:var(--blue)}
+.courses{display:grid;gap:10px}
+.course{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--red);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;min-width:0}
+.course.bf{border-left-color:var(--gold)} .course.o{border-left-color:var(--blue)}
+.course .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.course .when{font:700 1.1rem var(--f-data)}
+.course .title{font-weight:700}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:.8rem;padding:4px 9px;border-radius:999px;background:var(--sunk);border:1px solid transparent;color:var(--ink);font-family:var(--f-body);cursor:default}
+.chip.p{background:var(--ok-soft);color:var(--ok)}
+.chip.a{background:var(--red-soft);color:var(--red);text-decoration:line-through}
+button.chip{cursor:pointer;border-color:var(--line)}
+.pres{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pres .btn[aria-pressed="true"].yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.pres .btn[aria-pressed="true"].no{background:var(--red);border-color:var(--red);color:#fff}
+
+/* Rules */
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.rules{grid-template-columns:1fr}}
+.rules .panel{border-top:6px solid var(--red)}
+.rules .panel.bf{border-top-color:var(--gold)}
+.rules h4{font:700 .8rem var(--f-data);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:6px 0 0}
+.rules ul{margin:0;padding-left:18px;display:grid;gap:4px;max-width:65ch}
+.rules p{margin:0;max-width:65ch}
+.scale{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.92rem}
+.scale b{font-family:var(--f-data);font-size:1.05rem}
+@media (prefers-reduced-motion:no-preference){.fcard,.btn,.cal button{transition:border-color .15s,background-color .15s}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="ropes" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="brand">
+      <div>
+        <div class="eyebrow">Boxe anglaise · Boxe française</div>
+        <h1>Amicale des <span>Bagarreurs</span></h1>
+      </div>
+      <label class="who" for="me">Tu es
+        <select id="me"><option value="">Choisis ton nom</option></select>
+      </label>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="membres" aria-selected="true">Membres</button>
+    <button role="tab" data-tab="combats" aria-selected="false">Combats</button>
+    <button role="tab" data-tab="calendrier" aria-selected="false">Calendrier</button>
+    <button role="tab" data-tab="regles" aria-selected="false">Règles</button>
+  </nav>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <!-- MEMBRES -->
+  <section id="tab-membres" class="grid2">
+    <form id="fMember" class="panel" autocomplete="off">
+      <h3 id="fMemberTitle">Inscription</h3>
+      <input type="hidden" id="mId">
+      <div class="row">
+        <label for="mFirst">Prénom<input id="mFirst" required maxlength="40"></label>
+        <label for="mLast">Nom<input id="mLast" required maxlength="40"></label>
+      </div>
+      <div class="row">
+        <label for="mWeight">Poids (kg)<input id="mWeight" type="number" inputmode="decimal" min="30" max="200" step="0.1" required></label>
+        <label for="mHeight">Taille (cm)<input id="mHeight" type="number" inputmode="numeric" min="120" max="230" step="1" required></label>
+      </div>
+      <div class="row">
+        <button class="btn" data-w type="submit" id="mSubmit">Je m'inscris</button>
+        <button class="btn ghost" type="button" id="mCancel" hidden>Annuler</button>
+      </div>
+      <p class="hint">Chacun s'inscrit une fois. Ensuite, choisis ton nom en haut pour indiquer tes présences aux cours.</p>
+    </form>
+    <div style="display:grid;gap:12px;min-width:0">
+      <div class="cal-head"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
+      <div id="membersList"></div>
+    </div>
+  </section>
+
+  <!-- COMBATS -->
+  <section id="tab-combats" hidden>
+    <div id="fightList" class="grid2">
+      <form id="fFight" class="panel" autocomplete="off">
+        <h3>Nouveau combat</h3>
+        <label for="fDisc">Discipline
+          <select id="fDisc">
+            <option value="BA">Boxe anglaise</option>
+            <option value="BF">Boxe française (savate)</option>
+          </select>
+        </label>
+        <label for="fRed">Coin rouge<select id="fRed" required></select></label>
+        <label for="fBlue">Coin bleu<select id="fBlue" required></select></label>
+        <div id="fDiff" class="diff" hidden></div>
+        <div class="row">
+          <label for="fRounds">Reprises<select id="fRounds">
+            <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>8</option><option>10</option><option>12</option>
+          </select></label>
+          <label for="fDur">Durée<select id="fDur">
+            <option value="60">1 min</option><option value="90">1 min 30</option><option value="120" selected>2 min</option><option value="180">3 min</option>
+          </select></label>
+        </div>
+        <div class="row">
+          <label for="fRef">Arbitre<input id="fRef" maxlength="60" placeholder="Nom de l'arbitre"></label>
+          <label for="fDate">Date<input id="fDate" type="date"></label>
+        </div>
+        <button class="btn" data-w type="submit">Créer le combat</button>
+        <p class="hint">Il faut au moins deux membres inscrits pour créer un combat.</p>
+      </form>
+      <div style="display:grid;gap:12px;min-width:0">
+        <div class="cal-head"><h2>Les combats</h2><span class="eyebrow" id="fCount"></span></div>
+        <div id="fightsList" class="fights"></div>
+      </div>
+    </div>
+    <div id="bout" class="bout" hidden></div>
+  </section>
+
+  <!-- CALENDRIER -->
+  <section id="tab-calendrier" class="grid2" hidden>
+    <div style="display:grid;gap:14px;min-width:0">
+      <div class="panel">
+        <div class="cal-head">
+          <button class="btn ghost small" id="calPrev" aria-label="Mois précédent">‹</button>
+          <h3 id="calTitle"></h3>
+          <button class="btn ghost small" id="calNext" aria-label="Mois suivant">›</button>
+        </div>
+        <div class="cal" id="cal"></div>
+        <div class="chips hint"><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red)"></i> Anglaise</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold)"></i> Française</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--blue)"></i> Autre</span></div>
+      </div>
+      <form id="fCourse" class="panel" autocomplete="off">
+        <h3>Ajouter un cours</h3>
+        <label for="cType">Cours<select id="cType">
+          <option value="BA">Boxe anglaise</option>
+          <option value="BF">Boxe française</option>
+          <option value="SP">Sparring</option>
+          <option value="PP">Préparation physique</option>
+          <option value="MX">Cours mixte</option>
+        </select></label>
+        <div class="row">
+          <label for="cDate">Date<input id="cDate" type="date" required></label>
+          <label for="cTime">Heure<input id="cTime" type="time" value="19:00" required></label>
+        </div>
+        <div class="row">
+          <label for="cDurMin">Durée<select id="cDurMin"><option value="60">1 h</option><option value="90" selected>1 h 30</option><option value="120">2 h</option></select></label>
+          <label for="cCoach">Coach<input id="cCoach" maxlength="50"></label>
+        </div>
+        <label for="cPlace">Lieu<input id="cPlace" maxlength="80" placeholder="Salle, gymnase, parc…"></label>
+        <label for="cUntil">Répéter chaque semaine jusqu'au (facultatif)<input id="cUntil" type="date"></label>
+        <button class="btn" data-w type="submit" id="cSubmit">Ajouter au calendrier</button>
+      </form>
+    </div>
+    <div style="display:grid;gap:12px;min-width:0">
+      <div class="cal-head"><h2 id="dayTitle">Cours</h2></div>
+      <div id="dayList" class="courses"></div>
+      <div class="cal-head" style="margin-top:8px"><h3>Prochains cours</h3></div>
+      <div id="nextList" class="courses"></div>
+    </div>
+  </section>
+
+  <!-- REGLES -->
+  <section id="tab-regles" hidden>
+    <div class="rules">
+      <div class="panel">
+        <div><div class="eyebrow">Anglaise</div><h2>Juger un combat de boxe anglaise</h2></div>
+        <p>Chaque reprise est notée séparément avec le système des 10 points : le boxeur qui gagne la reprise reçoit 10, l'autre moins.</p>
+        <div class="scale">
+          <b>10–10</b><span>Reprise vraiment égale (rare).</span>
+          <b>10–9</b><span>Un boxeur a été meilleur.</span>
+          <b>10–8</b><span>Nette domination ou un compté (knockdown).</span>
+          <b>10–7</b><span>Écrasement total ou deux comptés.</span>
+        </div>
+        <h4>Ce que regarde le juge</h4>
+        <ul>
+          <li>Les coups nets et appuyés, portés avec la partie avant du gant fermé, sur la zone valable : la face et l'avant du corps au-dessus de la ceinture.</li>
+          <li>La domination du combat : qui impose sa distance et son rythme.</li>
+          <li>L'agressivité efficace : avancer ne compte que si ça touche.</li>
+          <li>La défense : esquives, parades, blocages qui annulent les attaques.</li>
+          <li>Les coups dans les gants ou les bras ne comptent pas.</li>
+        </ul>
+        <h4>Fautes (avertissement, puis point retiré)</h4>
+        <ul>
+          <li>Frapper sous la ceinture, dans le dos, sur la nuque ou derrière la tête.</li>
+          <li>Coup de tête, d'épaule, de coude, gant ouvert.</li>
+          <li>Tenir, pousser, frapper en tenant, frapper après « Stop » ou un adversaire au sol.</li>
+        </ul>
+        <h4>Fins de combat</h4>
+        <ul>
+          <li><b>Aux points</b> : total des cartes à la dernière reprise.</li>
+          <li><b>KO</b> : le boxeur ne se relève pas avant le compte de 10.</li>
+          <li><b>Arrêt de l'arbitre</b> : il juge qu'un boxeur ne peut plus se défendre.</li>
+          <li><b>Abandon</b> du coin, <b>disqualification</b> après fautes répétées, <b>match nul</b>.</li>
+        </ul>
+        <h4>Ordres de l'arbitre</h4>
+        <p>« Box » pour lancer ou reprendre, « Stop » pour arrêter, « Break » pour séparer un corps-à-corps.</p>
+      </div>
+      <div class="panel bf">
+        <div><div class="eyebrow">Française</div><h2>Juger un assaut de boxe française</h2></div>
+        <p>En boxe française on combine poings et pieds (chaussures). En <b>assaut</b>, la forme la plus pratiquée en loisir, les touches sont contrôlées : on gagne par la précision et la technique, pas par la puissance. En <b>combat</b>, la puissance est autorisée et le KO possible.</p>
+        <h4>Armes autorisées</h4>
+        <ul>
+          <li><b>Pieds</b> : fouetté (figure, corps), chassé (frontal ou latéral), revers, coup de pied bas au tibia.</li>
+          <li><b>Poings</b> : direct, crochet, uppercut, swing.</li>
+          <li>Zones valables : face, avant et flancs du corps, et le bas de la jambe pour le coup de pied bas.</li>
+        </ul>
+        <h4>Ce que regarde le juge</h4>
+        <ul>
+          <li>Les touches nettes, portées avec la bonne surface (semelle, pointe, gant fermé).</li>
+          <li>La variété : enchaîner pieds et poings et changer de cibles vaut mieux que répéter la même arme.</li>
+          <li>Les touches de pied, plus difficiles, sont souvent valorisées par rapport aux poings.</li>
+          <li>La maîtrise : en assaut, une touche trop appuyée est sanctionnée, pas récompensée.</li>
+          <li>La garde, les déplacements et la tenue générale.</li>
+        </ul>
+        <h4>Fautes</h4>
+        <ul>
+          <li>Coups de genou, de tibia, de tête ou de coude ; coup de pied avec la pointe du tibia.</li>
+          <li>Frapper dans le dos, la nuque, les parties ; balayer une jambe d'appui.</li>
+          <li>Saisir la jambe de l'adversaire, tourner le dos, touches appuyées en assaut.</li>
+        </ul>
+        <h4>Dans l'appli</h4>
+        <p>Compte les touches poing et pied de chaque coin pendant la reprise, puis désigne le vainqueur de la reprise : l'appli applique la notation 10 / 9 et retire les points des comptés et avertissements.</p>
+        <p class="hint">Pour une compétition officielle, référez-vous au règlement fédéral (FFBoxe pour l'anglaise, FFSbf&amp;DA pour la française).</p>
+      </div>
+    </div>
+  </section>
+</div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ==========================================================
+   CONFIGURATION FIREBASE — remplace ce bloc par celui que
+   Firebase te donne (Paramètres du projet > Vos applications)
+   ========================================================== */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAYQYcjdtKYyzn0BU1jo5YEBMf1HDWsoEs",
+  authDomain: "amicale-des-bagarreurs.firebaseapp.com",
+  projectId: "amicale-des-bagarreurs",
+  storageBucket: "amicale-des-bagarreurs.firebasestorage.app",
+  messagingSenderId: "1048082458359",
+  appId: "1:1048082458359:web:330923261e0bb4ef0d95f2"
+};
+</script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const lsGet=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parseYmd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const MONTHS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const DAYS=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const COURSE={BA:'Boxe anglaise',BF:'Boxe française',SP:'Sparring',PP:'Préparation physique',MX:'Cours mixte'};
+const courseCls=t=>t==='BA'?'':t==='BF'?'bf':'o';
+const METHODS={PTS:'aux points',KO:'par KO',ARB:"par arrêt de l'arbitre",ABD:'par abandon',DQ:'par disqualification',NUL:'Match nul'};
+
+const S={members:new Map(),fights:new Map(),courses:new Map(),attendance:new Map()};
+const loaded={members:false,fights:false,courses:false,attendance:false};
+const localF=new Map(), fTimer={}, Q={};
+let db=null, canWrite=true, connected=false;
+const today=ymd(new Date());
+let ui={tab:'membres',fightId:null,round:0,month:new Date(new Date().getFullYear(),new Date().getMonth(),1),day:today,appel:null,confirm:null};
+let me=lsGet('adb-me');
+let chrono={running:false,start:0,elapsed:0};
+
+/* ---------- plumbing ---------- */
+function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+function banner(msg){const b=$('#banner');b.hidden=!msg;b.textContent=msg||''}
+function applyRO(){document.querySelectorAll('[data-w]').forEach(el=>{el.disabled=!canWrite||!connected})}
+function handleErr(e){
+  const c=e&&e.code;
+  if(c==='permission-denied'){banner("La base refuse l'accès : les règles Firestore ne sont pas encore publiées (étape 3 du guide).")}
+  else if(c==='resource-exhausted')toast("Limite gratuite du jour atteinte, réessaie demain.");
+  else if(c==='invalid-argument')toast("Donnée refusée par la base.");
+  else toast("Connexion instable, la modification sera envoyée dès le retour du réseau.");
+}
+function enqueue(path,fn){Q[path]=(Q[path]||Promise.resolve()).then(fn).catch(handleErr);return Q[path]}
+const setDoc=(path,data)=>enqueue(path,()=>db.doc(path).set(data));
+const delDoc=path=>enqueue(path,()=>db.doc(path).delete());
+const newId=col=>db.collection(col).doc().id;
+
+function member(id){return S.members.get(id)}
+function mName(id,short){const m=member(id);if(!m)return 'Membre supprimé';return short?m.first+' '+(m.last||'').charAt(0)+'.':m.first+' '+m.last}
+function sortedMembers(){return [...S.members.entries()].sort((a,b)=>(a[1].last+a[1].first).localeCompare(b[1].last+b[1].first,'fr'))}
+function getFight(id){return localF.get(id)||S.fights.get(id)}
+
+/* ---------- boot ---------- */
+async function boot(){
+  if(!window.firebase){banner("Impossible de joindre la base de données. Vérifie ta connexion internet puis recharge la page.");renderAll();return}
+  if(!FIREBASE_CONFIG.apiKey||FIREBASE_CONFIG.apiKey==='COLLE_ICI'||!FIREBASE_CONFIG.projectId){banner("Configuration manquante : colle la configuration Firebase en haut du fichier.");renderAll();return}
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db=firebase.firestore();
+    db.settings({ignoreUndefinedProperties:true,merge:true});
+    db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+  }catch(e){banner("La configuration Firebase est invalide.");renderAll();return}
+  connected=true;
+  for(const col of Object.keys(S)){
+    db.collection(col).onSnapshot(snap=>{
+      const m=new Map();snap.docs.forEach(d=>m.set(d.id,d.data()));
+      if(col==='fights'){for(const [id,l] of localF){const s=m.get(id);if(s&&s.rev===l.rev)localF.delete(id)}}
+      S[col]=m;loaded[col]=true;renderAll();
+    },handleErr);
+  }
+  applyRO();
+}
+
+/* ---------- tabs ---------- */
+function showTab(t){
+  ui.tab=t;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t))
+  for(const id of ['membres','combats','calendrier','regles'])$('#tab-'+id).hidden=id!==t;
+  try{history.replaceState(null,'','#'+t)}catch(e){}
+}
+document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(b)showTab(b.dataset.tab)});
+{const h=(location.hash||'').slice(1);if(['membres','combats','calendrier','regles'].includes(h))showTab(h)}
+
+/* ---------- identity ---------- */
+function fillMemberSelect(sel,placeholder,keep){
+  const v=keep??sel.value;
+  sel.innerHTML=`<option value="">${esc(placeholder)}</option>`+sortedMembers().map(([id,m])=>`<option value="${id}">${esc(m.first+' '+m.last)}</option>`).join('');
+  if(v&&S.members.has(v))sel.value=v;
+}
+$('#me').addEventListener('change',e=>{me=e.target.value;lsSet('adb-me',me);renderCalendar()});
+
+/* ---------- members ---------- */
+function memberStats(id){
+  let w=0,l=0,n=0,p=0;
+  for(const f of S.fights.values()){if(f.status!=='fini')continue;if(f.red!==id&&f.blue!==id)continue;n++;const win=f.result&&f.result.winner;if(win==='r'&&f.red===id||win==='b'&&f.blue===id)w++;else if(win==='r'||win==='b')l++}
+  for(const a of S.attendance.values())if(a.memberId===id&&a.status==='present'&&S.courses.has(a.courseId)&&S.courses.get(a.courseId).date<=today)p++;
+  return {w,l,n,p};
+}
+function renderMembers(){
+  const list=sortedMembers();
+  $('#mCount').textContent=list.length?list.length+' inscrit'+(list.length>1?'s':''):'';
+  const el=$('#membersList');
+  if(!loaded.members&&connected){el.innerHTML='<div class="empty">Chargement du groupe…</div>';return}
+  if(!list.length){el.innerHTML='<div class="empty"><strong>Personne sur le ring</strong>Les inscrits apparaîtront ici avec leur poids, leur taille, leur bilan de combats et leurs présences. Remplis le formulaire pour être le premier.</div>';return}
+  el.innerHTML='<div class="members">'+list.map(([id,m])=>{
+    const s=memberStats(id);
+    const conf=ui.confirm==='m:'+id;
+    return `<div class="member"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}</div>
+      <div class="hint num">${esc(m.weight)} kg · ${esc(m.height)} cm</div>
+      <div class="stats"><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
+      <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
+}
+function resetMemberForm(){$('#fMember').reset();$('#mId').value='';$('#fMemberTitle').textContent='Inscription';$('#mSubmit').textContent="Je m'inscris";$('#mCancel').hidden=true}
+$('#mCancel').addEventListener('click',resetMemberForm);
+$('#fMember').addEventListener('submit',e=>{
+  e.preventDefault();if(!db)return;
+  const data={first:$('#mFirst').value.trim(),last:$('#mLast').value.trim(),weight:Number($('#mWeight').value),height:Number($('#mHeight').value)};
+  if(!data.first||!data.last)return;
+  const id=$('#mId').value||newId('members');
+  const prev=S.members.get(id);data.createdAt=prev?.createdAt||Date.now();
+  setDoc('members/'+id,data);
+  if(!$('#mId').value&&!me){me=id;lsSet('adb-me',id)}
+  toast(prev?'Fiche mise à jour':'Inscription enregistrée');resetMemberForm();
+});
+
+/* ---------- fights ---------- */
+function emptyRound(){return {r:{poing:0,pied:0,kd:0,warn:0},b:{poing:0,pied:0,kd:0,warn:0},win:null}}
+function roundPts(rd){
+  if(!rd.win)return null;
+  let r=rd.win==='b'?9:10,b=rd.win==='r'?9:10;
+  r-=rd.r.kd+rd.r.warn;b-=rd.b.kd+rd.b.warn;
+  return {r:Math.max(r,5),b:Math.max(b,5)};
+}
+function totals(f){let r=0,b=0,n=0;for(const rd of f.scores){const p=roundPts(rd);if(p){r+=p.r;b+=p.b;n++}}return {r,b,n}}
+function updateDiff(){
+  const r=member($('#fRed').value),b=member($('#fBlue').value),el=$('#fDiff');
+  if(!r||!b||$('#fRed').value===$('#fBlue').value){el.hidden=true;return}
+  const dw=Math.abs(r.weight-b.weight),dh=Math.abs(r.height-b.height);
+  el.hidden=false;el.className='diff'+(dw>5?' warn':'');
+  el.textContent=`Écart : ${dw.toFixed(1).replace('.',',')} kg et ${dh} cm`+(dw>5?' — gros écart de poids, adaptez l’intensité.':'');
+}
+['#fRed','#fBlue'].forEach(s=>$(s).addEventListener('change',updateDiff));
+$('#fDate').value=today;
+$('#fFight').addEventListener('submit',e=>{
+  e.preventDefault();if(!db)return;
+  const red=$('#fRed').value,blue=$('#fBlue').value;
+  if(!red||!blue){toast('Choisis un boxeur dans chaque coin.');return}
+  if(red===blue){toast('Il faut deux boxeurs différents.');return}
+  const n=Number($('#fRounds').value);
+  const id=newId('fights');
+  const data={disc:$('#fDisc').value,red,blue,rounds:n,dur:Number($('#fDur').value),ref:$('#fRef').value.trim(),date:$('#fDate').value||today,
+    status:'prevu',scores:Array.from({length:n},emptyRound),log:[],result:null,createdAt:Date.now(),rev:Date.now()};
+  setDoc('fights/'+id,data);localF.set(id,data);
+  $('#fRef').value='';openFight(id);
+});
+function fightStatusPill(f){return f.status==='fini'?'<span class="pill done">Terminé</span>':f.status==='live'?'<span class="pill live">En cours</span>':'<span class="pill">Prévu</span>'}
+function renderFightList(){
+  const all=[...new Set([...S.fights.keys(),...localF.keys()])].map(id=>[id,getFight(id)]).filter(x=>x[1]).sort((a,b)=>(b[1].date||'').localeCompare(a[1].date||'')||b[1].createdAt-a[1].createdAt);
+  $('#fCount').textContent=all.length?all.length+' combat'+(all.length>1?'s':''):'';
+  const el=$('#fightsList');
+  if(!all.length){el.innerHTML='<div class="empty"><strong>Aucun combat</strong>Chaque combat créé apparaîtra ici avec ses deux coins et le score. Ouvre-le pour arbitrer reprise par reprise.</div>';return}
+  el.innerHTML=all.map(([id,f])=>{const t=totals(f);const d=f.date?parseYmd(f.date):null;
+    return `<button class="fcard" data-act="open" data-id="${id}">
+      <div class="side r">${esc(mName(f.red))}</div>
+      <div class="mid"><span class="score">${t.n?t.r+' – '+t.b:'vs'}</span></div>
+      <div class="side b">${esc(mName(f.blue))}</div>
+      <div class="meta">${fightStatusPill(f)}<span class="pill ${f.disc==='BF'?'bf':''}">${f.disc==='BF'?'Française':'Anglaise'}</span><span class="num">${f.rounds} × ${f.dur/60>=1?String(f.dur/60).replace('.',','):f.dur/60} min</span>${d?`<span>${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}</span>`:''}${f.status==='fini'&&f.result?`<span>· ${esc(resultText(f))}</span>`:''}</div>
+    </button>`}).join('');
+}
+function resultText(f){
+  const r=f.result;if(!r)return '';
+  if(r.method==='NUL'||!r.winner)return 'Match nul';
+  return 'Victoire de '+mName(r.winner==='r'?f.red:f.blue,true)+' '+METHODS[r.method];
+}
+function openFight(id){ui.fightId=id;ui.round=0;const f=getFight(id);if(f){const i=f.scores.findIndex(r=>!r.win);ui.round=i<0?f.rounds-1:i}chrono={running:false,start:0,elapsed:0};renderFights();window.scrollTo({top:0})}
+function mutateFight(fn){
+  const id=ui.fightId,cur=getFight(id);if(!cur||!db)return;
+  if(!canWrite){toast('Lecture seule.');return}
+  const f=structuredClone(cur);fn(f);f.rev=Date.now()+Math.random();
+  localF.set(id,f);renderFights();
+  clearTimeout(fTimer[id]);
+  fTimer[id]=setTimeout(()=>enqueue('fights/'+id,()=>{const l=localF.get(id);return l?db.doc('fights/'+id).set(l):undefined}),350);
+}
+const EV={poing:'touche poing',pied:'touche pied',kd:'compté',warn:'avertissement'};
+function fmt(sec){sec=Math.max(0,Math.floor(sec));return Math.floor(sec/60)+':'+pad(sec%60)}
+function chronoSec(){return (chrono.elapsed+(chrono.running?Date.now()-chrono.start:0))/1000}
+function renderBout(){
+  const f=getFight(ui.fightId),el=$('#bout');
+  if(!f){ui.fightId=null;return false}
+  const t=totals(f),rd=f.scores[ui.round]||emptyRound(),bf=f.disc==='BF',done=f.status==='fini',conf=ui.confirm==='f:'+ui.fightId;
+  const R=member(f.red),B=member(f.blue);
+  const ctr=(c,k,label)=>`<div class="ctr"><span>${label}</span><button data-w data-act="dec" data-c="${c}" data-k="${k}" aria-label="Retirer ${label}" ${done?'disabled':''}>−</button><span class="v">${rd[c][k]}</span><button class="plus" data-w data-act="inc" data-c="${c}" data-k="${k}" aria-label="Ajouter ${label}" ${done?'disabled':''}>+</button></div>`;
+  const col=c=>`<div class="jcol ${c}"><div class="eyebrow">${c==='r'?'Coin rouge':'Coin bleu'} · reprise ${ui.round+1}</div>
+    ${ctr(c,'poing','Touches poing')}${bf?ctr(c,'pied','Touches pied'):''}${ctr(c,'kd','Compté (au sol)')}${ctr(c,'warn','Avertissement (−1)')}</div>`;
+  const pts=roundPts(rd);
+  const touchR=rd.r.poing+rd.r.pied,touchB=rd.b.poing+rd.b.pied;
+  const suggestWin=t.r>t.b?'r':t.b>t.r?'b':'';
+  el.innerHTML=`
+  <div class="row" style="align-items:center"><button class="btn ghost small" data-act="back" style="flex:0 0 auto">‹ Tous les combats</button><span style="flex:1 1 auto" class="hint">${bf?'Boxe française':'Boxe anglaise'} · ${f.rounds} reprise${f.rounds>1?'s':''} de ${fmt(f.dur)}${f.ref?' · arbitre '+esc(f.ref):''}</span>${fightStatusPill(f)}</div>
+  <div class="bout-head">
+    <div class="corner r"><div class="sub">Coin rouge</div><div class="nm">${esc(mName(f.red))}</div><div class="sub num">${R?R.weight+' kg · '+R.height+' cm':''}</div></div>
+    <div class="tot"><div class="num"><span style="color:var(--red)">${t.r}</span> – <span style="color:var(--blue)">${t.b}</span></div><div class="hint">${t.n}/${f.rounds} notée${t.n>1?'s':''}</div></div>
+    <div class="corner b"><div class="sub">Coin bleu</div><div class="nm">${esc(mName(f.blue))}</div><div class="sub num">${B?B.weight+' kg · '+B.height+' cm':''}</div></div>
+  </div>
+  ${done?`<div class="panel"><div class="result">${esc(resultText(f))}</div><div class="row"><button class="btn ghost small" data-w data-act="reopen" style="flex:0 0 auto">Rouvrir le combat</button></div></div>`:''}
+  <div class="rounds">${f.scores.map((r,i)=>{const p=roundPts(r);return `<button data-act="round" data-i="${i}" aria-pressed="${i===ui.round}">R${i+1}<small>${p?p.r+'-'+p.b:'—'}</small></button>`}).join('')}</div>
+  ${done?'':`<div class="chrono"><span class="clock ${chronoSec()>=f.dur?'over':''}" id="clock">${fmt(chronoSec())}</span><span class="hint">/ ${fmt(f.dur)}</span>
+    <button class="btn small" data-act="chrono">${chrono.running?'Pause':chronoSec()>0?'Reprendre':'Box !'}</button><button class="btn ghost small" data-act="chronoReset">Remettre à zéro</button></div>`}
+  <div class="judge">${col('r')}${col('b')}</div>
+  <div class="panel">
+    <div class="cal-head"><h3>Qui gagne la reprise ${ui.round+1} ?</h3><span class="hint num">Touches ${touchR} – ${touchB}</span></div>
+    <div class="win">
+      <button class="r" data-w data-act="win" data-v="r" aria-pressed="${rd.win==='r'}" ${done?'disabled':''}>Rouge</button>
+      <button class="e" data-w data-act="win" data-v="=" aria-pressed="${rd.win==='='}" ${done?'disabled':''}>Égalité</button>
+      <button class="b" data-w data-act="win" data-v="b" aria-pressed="${rd.win==='b'}" ${done?'disabled':''}>Bleu</button>
+    </div>
+    <div class="hint">${pts?`Carte de la reprise : <b class="num" style="color:var(--red)">${pts.r}</b> – <b class="num" style="color:var(--blue)">${pts.b}</b>. Chaque compté et chaque avertissement retire un point.`:'Le gagnant de la reprise marque 10, l’autre 9. Les comptés et avertissements retirent un point chacun.'}</div>
+    ${!done&&ui.round<f.rounds-1&&rd.win?`<button class="btn ghost small" data-act="round" data-i="${ui.round+1}" style="justify-self:start">Reprise suivante ›</button>`:''}
+  </div>
+  <div class="panel card-tbl"><h3>Carte de pointage</h3>
+    <table><thead><tr><th>Coin</th>${f.scores.map((_,i)=>`<th>R${i+1}</th>`).join('')}<th>Total</th></tr></thead><tbody>
+    <tr><td class="r">Rouge</td>${f.scores.map(r=>{const p=roundPts(r);return `<td>${p?p.r:'–'}</td>`}).join('')}<td class="r">${t.r}</td></tr>
+    <tr><td class="b">Bleu</td>${f.scores.map(r=>{const p=roundPts(r);return `<td>${p?p.b:'–'}</td>`}).join('')}<td class="b">${t.b}</td></tr>
+    <tr><td class="hint">Touches</td>${f.scores.map(r=>`<td class="hint">${r.r.poing+r.r.pied}-${r.b.poing+r.b.pied}</td>`).join('')}<td></td></tr>
+    </tbody></table></div>
+  ${done?'':`<form class="panel" id="fEnd"><h3>Fin du combat</h3>
+    <div class="row">
+      <label for="endMethod">Décision<select id="endMethod">${Object.entries({PTS:'Aux points',KO:'KO',ARB:"Arrêt de l'arbitre",ABD:'Abandon',DQ:'Disqualification',NUL:'Match nul'}).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
+      <label for="endWinner">Vainqueur<select id="endWinner"><option value="r" ${suggestWin==='r'?'selected':''}>Rouge · ${esc(mName(f.red,true))}</option><option value="b" ${suggestWin==='b'?'selected':''}>Bleu · ${esc(mName(f.blue,true))}</option></select></label>
+    </div>
+    <button class="btn" data-w type="submit" style="justify-self:start">Terminer le combat</button></form>`}
+  <div class="panel"><h3>Journal de l'arbitre</h3>
+    <div class="log">${f.log.length?f.log.slice().reverse().map(l=>`<div><span class="dot ${l.c}"></span><span class="num hint">R${l.round+1} ${l.t||''}</span><span>${esc(mName(l.c==='r'?f.red:f.blue,true))} : ${EV[l.k]||l.k}${l.undo?' (annulé)':''}</span></div>`).join(''):'<span class="hint">Chaque touche, compté et avertissement noté apparaîtra ici.</span>'}</div>
+  </div>
+  <div class="row">${conf?`<button class="btn danger small" data-w data-act="fDelYes" style="flex:0 0 auto">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm" style="flex:0 0 auto">Garder</button>`:`<button class="btn ghost small" data-w data-act="fDel" style="flex:0 0 auto">Supprimer ce combat</button>`}</div>`;
+  return true;
+}
+function renderFights(){
+  fillMemberSelect($('#fRed'),'Choisir…');fillMemberSelect($('#fBlue'),'Choisir…');updateDiff();
+  const open=ui.fightId&&renderBout();
+  $('#bout').hidden=!open;$('#fightList').hidden=!!open;
+  if(!open)renderFightList();
+  applyRO();
+}
+setInterval(()=>{if(!chrono.running)return;const c=$('#clock');const f=getFight(ui.fightId);if(c&&f){c.textContent=fmt(chronoSec());c.classList.toggle('over',chronoSec()>=f.dur)}},250);
+
+$('#tab-combats').addEventListener('submit',e=>{
+  if(e.target.id!=='fEnd')return;e.preventDefault();
+  const method=$('#endMethod').value,winner=method==='NUL'?null:$('#endWinner').value;
+  mutateFight(f=>{f.status='fini';f.result={method,winner}});chrono.running=false;toast('Combat terminé');
+});
+
+/* ---------- calendar ---------- */
+function attOf(courseId){const m=new Map();for(const a of S.attendance.values())if(a.courseId===courseId&&S.members.has(a.memberId))m.set(a.memberId,a.status);return m}
+function coursesOn(d){return [...S.courses.entries()].filter(([,c])=>c.date===d).sort((a,b)=>a[1].time.localeCompare(b[1].time))}
+function courseHtml(id,c,showDate){
+  const att=attOf(id),mine=me&&att.get(me),pres=[...att].filter(x=>x[1]==='present'),abs=[...att].filter(x=>x[1]==='absent');
+  const d=parseYmd(c.date),endMin=Number(c.time.slice(0,2))*60+Number(c.time.slice(3))+(c.dur||90);
+  const end=pad(Math.floor(endMin/60)%24)+':'+pad(endMin%60);
+  const appel=ui.appel===id,conf=ui.confirm==='c:'+id,past=c.date<today;
+  return `<div class="course ${courseCls(c.type)}">
+    <div class="top"><span class="when num">${showDate?`${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} · `:''}${esc(c.time)}–${end}</span><span class="pill ${c.type==='BF'?'bf':''}">${esc(COURSE[c.type]||c.type)}</span></div>
+    <div class="hint">${[c.place,c.coach?'coach '+c.coach:''].filter(Boolean).map(esc).join(' · ')||'&nbsp;'}</div>
+    <div class="pres">${me&&S.members.has(me)?`<button class="btn small ghost yes" data-w data-act="att" data-id="${id}" data-v="present" aria-pressed="${mine==='present'}">${past?'J’étais là':'Je serai là'}</button><button class="btn small ghost no" data-w data-act="att" data-id="${id}" data-v="absent" aria-pressed="${mine==='absent'}">Absent</button>`:'<span class="hint">Choisis ton nom en haut de la page pour indiquer ta présence.</span>'}
+      <span class="hint num" style="margin-left:auto">${pres.length} présent${pres.length>1?'s':''}${abs.length?' · '+abs.length+' absent'+(abs.length>1?'s':''):''}</span></div>
+    ${appel?`<div class="chips">${sortedMembers().map(([mid])=>{const s=att.get(mid);return `<button class="chip ${s==='present'?'p':s==='absent'?'a':''}" data-w data-act="appel" data-id="${id}" data-m="${mid}">${esc(mName(mid,true))}</button>`}).join('')||'<span class="hint">Aucun membre inscrit.</span>'}</div><div class="hint">Touche un nom : présent, puis absent, puis sans réponse.</div>`
+      :(pres.length||abs.length?`<div class="chips">${pres.map(([m])=>`<span class="chip p">${esc(mName(m,true))}</span>`).join('')}${abs.map(([m])=>`<span class="chip a">${esc(mName(m,true))}</span>`).join('')}</div>`:'')}
+    <div class="row">
+      <button class="btn ghost small" data-act="appelToggle" data-id="${id}" style="flex:0 0 auto">${appel?'Fermer l’appel':'Faire l’appel'}</button>
+      ${conf?`<button class="btn danger small" data-w data-act="cDelYes" data-id="${id}" style="flex:0 0 auto">Supprimer ce cours</button>${c.serie?`<button class="btn danger small" data-w data-act="cDelSerie" data-id="${id}" style="flex:0 0 auto">Toute la série à venir</button>`:''}<button class="btn ghost small" data-act="noConfirm" style="flex:0 0 auto">Garder</button>`:`<button class="btn ghost small" data-w data-act="cDel" data-id="${id}" style="flex:0 0 auto">Supprimer</button>`}
+    </div></div>`;
+}
+function renderCalendar(){
+  fillMemberSelect($('#me'),'Choisis ton nom',me);
+  const m=ui.month,y=m.getFullYear(),mo=m.getMonth();
+  $('#calTitle').textContent=MONTHS[mo]+' '+y;
+  const first=new Date(y,mo,1),offset=(first.getDay()+6)%7,start=new Date(y,mo,1-offset);
+  const byDate={};for(const c of S.courses.values())(byDate[c.date]=byDate[c.date]||[]).push(c);
+  let h=['L','M','M','J','V','S','D'].map(d=>`<div class="dow">${d}</div>`).join('');
+  const weeks=Math.ceil((offset+new Date(y,mo+1,0).getDate())/7);
+  for(let i=0;i<weeks*7;i++){
+    const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i),s=ymd(d),cs=byDate[s]||[];
+    h+=`<button data-act="day" data-d="${s}" class="${d.getMonth()!==mo?'out':''} ${s===today?'today':''}" aria-pressed="${s===ui.day}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}, ${cs.length} cours"><span>${d.getDate()}</span><span class="dots">${cs.slice(0,4).map(c=>`<i class="${courseCls(c.type)}"></i>`).join('')}</span></button>`;
+  }
+  $('#cal').innerHTML=h;
+  const dd=parseYmd(ui.day);
+  $('#dayTitle').textContent=`${DAYS[dd.getDay()]} ${dd.getDate()} ${MONTHS[dd.getMonth()]}`;
+  const day=coursesOn(ui.day);
+  $('#dayList').innerHTML=day.length?day.map(([id,c])=>courseHtml(id,c,false)).join(''):`<div class="empty">Pas de cours ce jour-là. Ajoute-le avec le formulaire${ui.day>=today?' : la date est déjà remplie.':'.'}</div>`;
+  if(!$('#cDate').value||$('#cDate').dataset.auto==='1'){$('#cDate').value=ui.day;$('#cDate').dataset.auto='1'}
+  const next=[...S.courses.entries()].filter(([,c])=>c.date>=today&&c.date!==ui.day).sort((a,b)=>(a[1].date+a[1].time).localeCompare(b[1].date+b[1].time)).slice(0,5);
+  $('#nextList').innerHTML=next.length?next.map(([id,c])=>courseHtml(id,c,true)).join(''):'<div class="empty"><strong>Saison à remplir</strong>Les cours à venir de toute l’année s’afficheront ici. Astuce : utilise « Répéter chaque semaine » pour poser un créneau régulier jusqu’en juin.</div>';
+  applyRO();
+}
+$('#cDate').addEventListener('input',e=>e.target.dataset.auto='0');
+$('#calPrev').addEventListener('click',()=>{ui.month=new Date(ui.month.getFullYear(),ui.month.getMonth()-1,1);renderCalendar()});
+$('#calNext').addEventListener('click',()=>{ui.month=new Date(ui.month.getFullYear(),ui.month.getMonth()+1,1);renderCalendar()});
+$('#fCourse').addEventListener('submit',async e=>{
+  e.preventDefault();if(!db)return;
+  const base={type:$('#cType').value,time:$('#cTime').value,dur:Number($('#cDurMin').value),place:$('#cPlace').value.trim(),coach:$('#cCoach').value.trim()};
+  const d0=$('#cDate').value,until=$('#cUntil').value;if(!d0)return;
+  const dates=[d0];
+  if(until&&until>d0){let d=parseYmd(d0);while(dates.length<60){d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+7);const s=ymd(d);if(s>until)break;dates.push(s)}}
+  const serie=dates.length>1?newId('courses'):null;
+  $('#cSubmit').disabled=true;
+  for(const date of dates){await setDoc('courses/'+newId('courses'),{...base,date,serie,createdAt:Date.now()})}
+  $('#cSubmit').disabled=false;$('#cUntil').value='';
+  toast(dates.length>1?dates.length+' cours ajoutés':'Cours ajouté');
+  ui.day=d0;const dd=parseYmd(d0);ui.month=new Date(dd.getFullYear(),dd.getMonth(),1);renderCalendar();
+});
+async function deleteCourse(id){
+  for(const [aid,a] of S.attendance)if(a.courseId===id)delDoc('attendance/'+aid);
+  await delDoc('courses/'+id);
+}
+function setAtt(courseId,memberId,status){
+  const path='attendance/'+courseId+'_'+memberId;
+  if(!status)delDoc(path);else setDoc(path,{courseId,memberId,status,at:Date.now()});
+}
+
+/* ---------- global clicks ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
+  const a=b.dataset.act,id=b.dataset.id;
+  switch(a){
+    case 'noConfirm':ui.confirm=null;renderAll();break;
+    case 'mEdit':{const m=member(id);if(!m)break;$('#mId').value=id;$('#mFirst').value=m.first;$('#mLast').value=m.last;$('#mWeight').value=m.weight;$('#mHeight').value=m.height;$('#fMemberTitle').textContent='Modifier la fiche';$('#mSubmit').textContent='Enregistrer';$('#mCancel').hidden=false;$('#mFirst').focus();break}
+    case 'mDel':ui.confirm='m:'+id;renderMembers();break;
+    case 'mDelYes':delDoc('members/'+id);if(me===id){me='';lsSet('adb-me','')}ui.confirm=null;toast('Membre supprimé');break;
+    case 'open':openFight(id);break;
+    case 'back':ui.fightId=null;ui.confirm=null;chrono.running=false;renderFights();break;
+    case 'round':ui.round=Number(b.dataset.i);chrono={running:false,start:0,elapsed:0};renderFights();break;
+    case 'chrono':if(chrono.running){chrono.elapsed+=Date.now()-chrono.start;chrono.running=false}else{chrono.start=Date.now();chrono.running=true;const f=getFight(ui.fightId);if(f&&f.status==='prevu')mutateFight(x=>{x.status='live'})}renderFights();break;
+    case 'chronoReset':chrono={running:false,start:0,elapsed:0};renderFights();break;
+    case 'inc':case 'dec':{const c=b.dataset.c,k=b.dataset.k,up=a==='inc';
+      mutateFight(f=>{const rd=f.scores[ui.round];if(!up&&rd[c][k]===0)return;rd[c][k]+=up?1:-1;if(f.status==='prevu')f.status='live';
+        f.log.push({round:ui.round,c,k,t:fmt(chronoSec()),undo:!up||undefined});if(f.log.length>300)f.log=f.log.slice(-300)});break}
+    case 'win':mutateFight(f=>{const rd=f.scores[ui.round];rd.win=rd.win===b.dataset.v?null:b.dataset.v;if(f.status==='prevu')f.status='live'});break;
+    case 'reopen':mutateFight(f=>{f.status='live';f.result=null});break;
+    case 'fDel':ui.confirm='f:'+ui.fightId;renderFights();break;
+    case 'fDelYes':{const fid=ui.fightId;clearTimeout(fTimer[fid]);localF.delete(fid);delDoc('fights/'+fid);ui.fightId=null;ui.confirm=null;toast('Combat supprimé');renderFights();break}
+    case 'day':ui.day=b.dataset.d;const dd=parseYmd(ui.day);if(dd.getMonth()!==ui.month.getMonth())ui.month=new Date(dd.getFullYear(),dd.getMonth(),1);$('#cDate').dataset.auto='1';renderCalendar();break;
+    case 'att':{const cur=attOf(id).get(me);setAtt(id,me,cur===b.dataset.v?null:b.dataset.v);break}
+    case 'appelToggle':ui.appel=ui.appel===id?null:id;renderCalendar();break;
+    case 'appel':{const cur=attOf(id).get(b.dataset.m);setAtt(id,b.dataset.m,!cur?'present':cur==='present'?'absent':null);break}
+    case 'cDel':ui.confirm='c:'+id;renderCalendar();break;
+    case 'cDelYes':deleteCourse(id);ui.confirm=null;toast('Cours supprimé');break;
+    case 'cDelSerie':{const c=S.courses.get(id);if(c&&c.serie){for(const [cid,x] of S.courses)if(x.serie===c.serie&&x.date>=c.date)deleteCourse(cid)}ui.confirm=null;toast('Série supprimée');break}
+  }
+});
+
+function renderAll(){
+  if(me&&loaded.members&&!S.members.has(me)){me='';lsSet('adb-me','')}
+  renderMembers();renderFights();renderCalendar();applyRO();
+}
+renderAll();
+boot();
+</script>
+</body>
+</html>
