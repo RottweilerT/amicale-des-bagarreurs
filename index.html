@@ -296,7 +296,7 @@ button.chip{cursor:pointer;border-color:var(--line)}
           <option value="SP">Sparring</option>
           <option value="PP">Préparation physique</option>
           <option value="MX">Cours mixte</option>
-          <option value="BS">Bob Style</option>
+          <option value="BT">Boxe thaï</option>
         </select></label>
         <div class="row">
           <label for="cDate">Date<input id="cDate" type="date" required></label>
@@ -413,7 +413,7 @@ const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const parseYmd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
 const MONTHS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const DAYS=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
-const COURSE={BA:'Boxe anglaise',BF:'Boxe française',SP:'Sparring',PP:'Préparation physique',MX:'Cours mixte',BS:'Bob Style'};
+const COURSE={BA:'Boxe anglaise',BF:'Boxe française',SP:'Sparring',PP:'Préparation physique',MX:'Cours mixte',BT:'Boxe thaï'};
 const courseCls=t=>t==='BA'?'':t==='BF'?'bf':'o';
 const METHODS={PTS:'aux points',KO:'par KO',ARB:"par arrêt de l'arbitre",ABD:'par abandon',DQ:'par disqualification',NUL:'Match nul'};
 
