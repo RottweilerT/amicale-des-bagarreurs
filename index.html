@@ -54,6 +54,13 @@ h3{font-size:1.25rem}
 .brand h1 span{color:var(--red)}
 .who{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
 .who select{max-width:190px}
+.gate{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:30;padding:16px}
+.gate .panel{width:min(360px,100%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.pin{letter-spacing:.35em;font-family:var(--f-data);font-size:1.2rem}
+.err{color:var(--red);font-size:.88rem;margin:0}
+.lock{font-size:.8rem;color:var(--muted)}
+.check{display:flex;align-items:center;gap:8px;font-weight:500;color:var(--ink)}
+.check input{width:auto}
 nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--ink);margin-bottom:18px;scrollbar-width:none}
 nav.tabs button{flex:0 0 auto;border:0;background:none;color:var(--muted);font:700 1.05rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px 10px;cursor:pointer;border-bottom:4px solid transparent;margin-bottom:-2px}
 nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
@@ -243,10 +250,16 @@ button.chip{cursor:pointer;border-color:var(--line)}
         <label for="mHeight">Taille (cm)<input id="mHeight" type="number" inputmode="numeric" min="120" max="230" step="1" required></label>
       </div>
       <div class="row">
+        <label for="mPin"><span id="mPinLabel">Code d'accès (facultatif)</span><input id="mPin" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></label>
+        <label for="mPin2">Confirme le code<input id="mPin2" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></label>
+      </div>
+      <label class="check" for="mPinOff" id="mPinOffRow" hidden><input type="checkbox" id="mPinOff"> Supprimer mon code d'accès</label>
+      <p class="err" id="mErr" hidden></p>
+      <div class="row">
         <button class="btn" data-w type="submit" id="mSubmit">Je m'inscris</button>
         <button class="btn ghost" type="button" id="mCancel" hidden>Annuler</button>
       </div>
-      <p class="hint">Chacun s'inscrit une fois. Ensuite, choisis ton nom en haut pour indiquer tes présences aux cours.</p>
+      <p class="hint">Chacun s'inscrit une fois. Ensuite, choisis ton nom en haut pour indiquer tes présences aux cours. Le code d'accès (4 à 8 chiffres) sera demandé pour te sélectionner et pour modifier ou supprimer ta fiche.</p>
     </form>
     <div style="display:grid;gap:12px;min-width:0">
       <div class="cal-head"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
@@ -424,6 +437,13 @@ button.chip{cursor:pointer;border-color:var(--line)}
     </div>
   </section>
 </div>
+<div id="gate" class="gate" hidden><form id="gateForm" class="panel" autocomplete="off" novalidate>
+  <h3 id="gateTitle">Code d'accès</h3>
+  <label for="gatePin" id="gateLabel">Entre ton code</label>
+  <input id="gatePin" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="off">
+  <p class="err" id="gateErr" hidden>Code incorrect, réessaie.</p>
+  <div class="row"><button class="btn" type="submit">Valider</button><button class="btn ghost" type="button" id="gateCancel">Annuler</button></div>
+</form></div>
 <div id="toast" class="toast" hidden></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -523,7 +543,27 @@ function fillMemberSelect(sel,placeholder,keep){
   sel.innerHTML=`<option value="">${esc(placeholder)}</option>`+sortedMembers().map(([id,m])=>`<option value="${id}">${esc(m.first+' '+m.last)}</option>`).join('');
   if(v&&S.members.has(v))sel.value=v;
 }
-$('#me').addEventListener('change',e=>{me=e.target.value;lsSet('adb-me',me);renderCalendar()});
+async function hashPin(id,pin){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('adb:'+id+':'+pin));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+let gateResolve=null,gateId=null;
+function askPin(id,why){
+  const m=member(id);if(!m||!m.pin)return Promise.resolve(true);
+  gateId=id;$('#gateTitle').textContent='Code de '+m.first;$('#gateLabel').textContent=why||'Entre le code d\u2019accès de ce profil';
+  $('#gatePin').value='';$('#gateErr').hidden=true;$('#gate').hidden=false;setTimeout(()=>$('#gatePin').focus(),30);
+  return new Promise(r=>{gateResolve=r});
+}
+function closeGate(ok){$('#gate').hidden=true;const r=gateResolve;gateResolve=null;gateId=null;if(r)r(ok)}
+$('#gateCancel').addEventListener('click',()=>closeGate(false));
+$('#gate').addEventListener('click',e=>{if(e.target.id==='gate')closeGate(false)});
+$('#gateForm').addEventListener('submit',async e=>{
+  e.preventDefault();const m=member(gateId);if(!m){closeGate(false);return}
+  const h=await hashPin(gateId,$('#gatePin').value.trim());
+  if(h===m.pin)closeGate(true);else{$('#gateErr').hidden=false;$('#gatePin').select()}
+});
+$('#me').addEventListener('change',async e=>{
+  const v=e.target.value;e.target.value=me||'';
+  if(v&&!(await askPin(v,'Entre ton code pour te connecter')))return;
+  me=v;lsSet('adb-me',me);e.target.value=me;renderAll();
+});
 
 /* ---------- members ---------- */
 function memberStats(id){
@@ -541,19 +581,24 @@ function renderMembers(){
   el.innerHTML='<div class="members">'+list.map(([id,m])=>{
     const s=memberStats(id);
     const conf=ui.confirm==='m:'+id;
-    return `<div class="member"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}</div>
+    return `<div class="member"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}</div>${m.pin?'<div class="lock">Protégé par un code</div>':''}
       <div class="hint num">${esc(m.weight)} kg · ${esc(m.height)} cm</div>
       <div class="stats"><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
       <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
 }
-function resetMemberForm(){$('#fMember').reset();$('#mId').value='';$('#fMemberTitle').textContent='Inscription';$('#mSubmit').textContent="Je m'inscris";$('#mCancel').hidden=true}
+function resetMemberForm(){$('#fMember').reset();$('#mId').value='';$('#fMemberTitle').textContent='Inscription';$('#mSubmit').textContent="Je m'inscris";$('#mCancel').hidden=true;$('#mPinLabel').textContent="Code d'accès (facultatif)";$('#mPinOffRow').hidden=true;$('#mErr').hidden=true}
 $('#mCancel').addEventListener('click',resetMemberForm);
-$('#fMember').addEventListener('submit',e=>{
+$('#fMember').addEventListener('submit',async e=>{
   e.preventDefault();if(!db)return;
+  const err=t=>{$('#mErr').textContent=t;$('#mErr').hidden=false};$('#mErr').hidden=true;
   const data={first:$('#mFirst').value.trim(),last:$('#mLast').value.trim(),weight:Number($('#mWeight').value),height:Number($('#mHeight').value)};
   if(!data.first||!data.last)return;
+  const pin=$('#mPin').value.trim(),pin2=$('#mPin2').value.trim();
+  if(pin&&!/^\d{4,8}$/.test(pin))return err('Le code doit contenir 4 à 8 chiffres.');
+  if(pin!==pin2)return err('Les deux codes ne sont pas identiques.');
   const id=$('#mId').value||newId('members');
   const prev=S.members.get(id);data.createdAt=prev?.createdAt||Date.now();
+  data.pin=pin?await hashPin(id,pin):($('#mPinOff').checked?null:(prev?.pin||null));
   setDoc('members/'+id,data);
   if(!$('#mId').value&&!me){me=id;lsSet('adb-me',id)}
   toast(prev?'Fiche mise à jour':'Inscription enregistrée');resetMemberForm();
@@ -758,13 +803,13 @@ function setAtt(courseId,memberId,status){
 }
 
 /* ---------- global clicks ---------- */
-document.addEventListener('click',e=>{
+document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
   const a=b.dataset.act,id=b.dataset.id;
   switch(a){
     case 'noConfirm':ui.confirm=null;renderAll();break;
-    case 'mEdit':{const m=member(id);if(!m)break;$('#mId').value=id;$('#mFirst').value=m.first;$('#mLast').value=m.last;$('#mWeight').value=m.weight;$('#mHeight').value=m.height;$('#fMemberTitle').textContent='Modifier la fiche';$('#mSubmit').textContent='Enregistrer';$('#mCancel').hidden=false;$('#mFirst').focus();break}
-    case 'mDel':ui.confirm='m:'+id;renderMembers();break;
+    case 'mEdit':{const m=member(id);if(!m)break;if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour le modifier')))break;$('#mPinLabel').textContent=m.pin?'Nouveau code (laisse vide pour garder)':"Code d'accès (facultatif)";$('#mPinOffRow').hidden=!m.pin;$('#mPinOff').checked=false;$('#mPin').value='';$('#mPin2').value='';$('#mErr').hidden=true;$('#mId').value=id;$('#mFirst').value=m.first;$('#mLast').value=m.last;$('#mWeight').value=m.weight;$('#mHeight').value=m.height;$('#fMemberTitle').textContent='Modifier la fiche';$('#mSubmit').textContent='Enregistrer';$('#mCancel').hidden=false;$('#mFirst').focus();break}
+    case 'mDel':if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour le supprimer')))break;ui.confirm='m:'+id;renderMembers();break;
     case 'mDelYes':delDoc('members/'+id);if(me===id){me='';lsSet('adb-me','')}ui.confirm=null;toast('Membre supprimé');break;
     case 'open':openFight(id);break;
     case 'back':ui.fightId=null;ui.confirm=null;chrono.running=false;renderFights();break;
