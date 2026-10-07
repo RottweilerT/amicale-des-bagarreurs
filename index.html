@@ -15,6 +15,7 @@
   --red:#C22F2B; --red-soft:#F7DEDC; --blue:#1E4BB0; --blue-soft:#DCE4F7;
   --gold:#A87412; --gold-soft:#F3E6C8; --ok:#1F7A4A; --ok-soft:#D8F0E2;
   --orange:#D2601A; --orange-soft:#FBE2D0;
+  --golden:#D4AF37; --golden-ink:#8A6D10; --golden-soft:#F6EDCC; --brown:#7A4A26; --brown-soft:#EEDFD2;
   --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
   --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-data:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
@@ -23,11 +24,11 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#101318; --surface:#191D24; --sunk:#232833; --line:#2F3643; --ink:#ECEFF4; --muted:#9AA3B2;
   --red:#F0605A; --red-soft:#3A1C1C; --blue:#6E97F2; --blue-soft:#1B2640;
-  --gold:#E0B454; --gold-soft:#3A2F17; --ok:#5CCB8E; --ok-soft:#17322A; --orange:#F28A45; --orange-soft:#3D2414; color-scheme:dark}}
+  --gold:#E0B454; --gold-soft:#3A2F17; --ok:#5CCB8E; --ok-soft:#17322A; --orange:#F28A45; --orange-soft:#3D2414; --golden:#E2C14E; --golden-ink:#EBCB5E; --golden-soft:#3A3214; --brown:#C08B62; --brown-soft:#35261B; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#101318; --surface:#191D24; --sunk:#232833; --line:#2F3643; --ink:#ECEFF4; --muted:#9AA3B2;
   --red:#F0605A; --red-soft:#3A1C1C; --blue:#6E97F2; --blue-soft:#1B2640;
-  --gold:#E0B454; --gold-soft:#3A2F17; --ok:#5CCB8E; --ok-soft:#17322A; --orange:#F28A45; --orange-soft:#3D2414; color-scheme:dark}
+  --gold:#E0B454; --gold-soft:#3A2F17; --ok:#5CCB8E; --ok-soft:#17322A; --orange:#F28A45; --orange-soft:#3D2414; --golden:#E2C14E; --golden-ink:#EBCB5E; --golden-soft:#3A3214; --brown:#C08B62; --brown-soft:#35261B; color-scheme:dark}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0}
@@ -84,6 +85,8 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .pill.bf{background:var(--gold-soft);color:var(--gold)}
 .pill.bt{background:var(--orange-soft);color:var(--orange)}
 .pill.o{background:var(--ok-soft);color:var(--ok)}
+.pill.sp{background:var(--golden-soft);color:var(--golden-ink)}
+.pill.pp{background:var(--brown-soft);color:var(--brown)}
 
 /* Members */
 .members{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
@@ -163,10 +166,10 @@ td.r{color:var(--red);font-weight:700} td.b{color:var(--blue);font-weight:700}
 .cal button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .cal .dots{display:flex;gap:2px;flex-wrap:wrap}
 .cal .dots i{width:7px;height:7px;border-radius:50%;background:var(--red)}
-.cal .dots i.bf{background:var(--gold)} .cal .dots i.o{background:var(--ok)} .cal .dots i.bt{background:var(--orange)}
+.cal .dots i.bf{background:var(--gold)} .cal .dots i.o{background:var(--ok)} .cal .dots i.bt{background:var(--orange)} .cal .dots i.sp{background:var(--golden)} .cal .dots i.pp{background:var(--brown)}
 .courses{display:grid;gap:10px}
 .course{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--red);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;min-width:0}
-.course.bf{border-left-color:var(--gold)} .course.o{border-left-color:var(--ok)} .course.bt{border-left-color:var(--orange)}
+.course.bf{border-left-color:var(--gold)} .course.o{border-left-color:var(--ok)} .course.bt{border-left-color:var(--orange)} .course.sp{border-left-color:var(--golden)} .course.pp{border-left-color:var(--brown)}
 .course .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
 .course .when{font:700 1.1rem var(--f-data)}
 .course .title{font-weight:700}
@@ -291,7 +294,7 @@ button.chip{cursor:pointer;border-color:var(--line)}
           <button class="btn ghost small" id="calNext" aria-label="Mois suivant">›</button>
         </div>
         <div class="cal" id="cal"></div>
-        <div class="chips hint"><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red)"></i> Anglaise</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold)"></i> Française</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--orange)"></i> Thaï</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok)"></i> Autre</span></div>
+        <div class="chips hint"><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red)"></i> Anglaise</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold)"></i> Française</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--orange)"></i> Thaï</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--golden)"></i> Sparring</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--brown)"></i> Prépa physique</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok)"></i> Mixte</span></div>
       </div>
       <form id="fCourse" class="panel" autocomplete="off">
         <h3>Ajouter un cours</h3>
@@ -442,7 +445,7 @@ const parseYmd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c
 const MONTHS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const DAYS=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
 const COURSE={BA:'Boxe anglaise',BF:'Boxe française',SP:'Sparring',PP:'Préparation physique',MX:'Cours mixte',BT:'Boxe thaï'};
-const courseCls=t=>t==='BA'?'':t==='BF'?'bf':t==='BT'?'bt':'o';
+const courseCls=t=>({BA:'',BF:'bf',BT:'bt',SP:'sp',PP:'pp'})[t]??'o';
 const METHODS={PTS:'aux points',KO:'par KO',ARB:"par arrêt de l'arbitre",ABD:'par abandon',DQ:'par disqualification',NUL:'Match nul'};
 
 const S={members:new Map(),fights:new Map(),courses:new Map(),attendance:new Map()};
