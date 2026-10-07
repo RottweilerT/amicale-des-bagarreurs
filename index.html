@@ -80,7 +80,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
 .hint{font-size:.85rem;color:var(--muted)}
 .empty{border:2px dashed var(--line);border-radius:var(--r);padding:22px;text-align:center;color:var(--muted)}
 .empty strong{display:block;color:var(--ink);font-family:var(--f-display);text-transform:uppercase;font-size:1.3rem;margin-bottom:4px}
-.pill{display:inline-block;font:700 .72rem var(--f-data);letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:5px;font:700 .72rem var(--f-data);letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--sunk);color:var(--muted)}
 .pill.live{background:var(--red-soft);color:var(--red)}
 .pill.done{background:var(--ok-soft);color:var(--ok)}
 .pill.ba{background:var(--eng-soft);color:var(--eng-line)}
@@ -167,11 +167,17 @@ td.r{color:var(--red);font-weight:700} td.b{color:var(--blue);font-weight:700}
 .cal button.today{border-color:var(--ink);border-width:2px}
 .cal button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .cal .dots{display:flex;gap:2px;flex-wrap:wrap}
-.cal .dots i{width:7px;height:7px;border-radius:50%;background:var(--red)}
-.cal .dots i.ba,.dot-ba{background:var(--eng)!important;box-shadow:inset 0 0 0 1.5px var(--eng-line)} .cal .dots i.bf{background:var(--fra)} .cal .dots i.o{background:var(--mix)} .cal .dots i.bt{background:var(--tha)} .cal .dots i.sp{background:var(--spar)} .cal .dots i.pp{background:var(--brown)}
+.cal .dots i{width:11px;height:11px;border-radius:50%;background:center/contain no-repeat}
+.ic{display:inline-block;width:14px;height:14px;border-radius:50%;background:center/contain no-repeat;flex:0 0 auto;vertical-align:-2px}
+.ic.ba,.cal .dots i.ba{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx='10' cy='10' r='10' fill='%2300247D'/%3E%3Ccircle cx='10' cy='10' r='6.6' fill='%23fff'/%3E%3Ccircle cx='10' cy='10' r='3.4' fill='%23C8102E'/%3E%3C/svg%3E")}
+.ic.bf,.cal .dots i.bf{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx='10' cy='10' r='10' fill='%23E1000F'/%3E%3Ccircle cx='10' cy='10' r='6.6' fill='%23fff'/%3E%3Ccircle cx='10' cy='10' r='3.4' fill='%23002395'/%3E%3C/svg%3E")}
+.ic.bt,.cal .dots i.bt{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Cdefs%3E%3CclipPath id='c'%3E%3Ccircle cx='10' cy='10' r='10'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23c)'%3E%3Crect width='20' height='20' fill='%23A51931'/%3E%3Crect y='3.33' width='20' height='13.34' fill='%23F4F5F8'/%3E%3Crect y='6.67' width='20' height='6.66' fill='%232D2A4A'/%3E%3C/g%3E%3Ccircle cx='10' cy='10' r='9.6' fill='none' stroke='rgba(0,0,0,.25)' stroke-width='.8'/%3E%3C/svg%3E")}
+.ic.sp,.cal .dots i.sp{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Cpath d='M10 0a10 10 0 0 0 0 20z' fill='%231E4BB0'/%3E%3Cpath d='M10 0a10 10 0 0 1 0 20z' fill='%23C22F2B'/%3E%3Cpath d='M6.4 9.4c0-2.7 1.6-4.4 3.8-4.4 2.4 0 3.9 1.7 3.9 4.2 0 1.6-.6 2.7-1.4 3.4v.9H8.1v-.9c-.5-.3-.9-.7-1.1-1.1-.9.1-1.7-.5-1.7-1.4 0-.8.6-1.3 1.1-.7z' fill='%23111'/%3E%3Crect x='7.8' y='13.9' width='4.8' height='2.4' rx='.6' fill='%23111'/%3E%3Cpath d='M8 13.6h4.4' stroke='%23fff' stroke-width='.5'/%3E%3C/svg%3E")}
+.ic.pp,.cal .dots i.pp{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx='10' cy='10' r='9.6' fill='%23fff' stroke='%239AA0A8' stroke-width='.8'/%3E%3Cg stroke='%23111' stroke-width='1.3' stroke-linecap='round' fill='none'%3E%3Cpath d='M4.2 5h11.6'/%3E%3Cpath d='M8.7 9.3 6.6 5M11.3 9.3 13.4 5M10 9v3.8M10 12.8l-2 3.4M10 12.8l2 3.4'/%3E%3C/g%3E%3Cg fill='%23111'%3E%3Crect x='3.2' y='3.4' width='1.5' height='3.2' rx='.4'/%3E%3Crect x='15.3' y='3.4' width='1.5' height='3.2' rx='.4'/%3E%3Ccircle cx='10' cy='7.4' r='1.35'/%3E%3C/g%3E%3C/svg%3E")}
+.ic.o,.cal .dots i.o{background-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx='10' cy='10' r='10' fill='%238E8E93'/%3E%3C/svg%3E")}
 .courses{display:grid;gap:10px}
 .course{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--red);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;min-width:0}
-.course.ba{border-left-color:var(--eng-line);border-image:linear-gradient(var(--eng) 0 30%,var(--eng-line) 30% 70%,var(--eng) 70%) 1} .course.bf{border-left-color:var(--fra)} .course.o{border-left-color:var(--mix)} .course.bt{border-left-color:var(--tha)} .course.sp{border-left-color:var(--spar)} .course.pp{border-left-color:var(--brown)}
+.course{border-left-color:var(--line)}
 .course .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
 .course .when{font:700 1.1rem var(--f-data)}
 .course .title{font-weight:700}
@@ -205,7 +211,7 @@ button.chip{cursor:pointer;border-color:var(--line)}
     <div class="ropes" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="brand">
       <div>
-        <div class="eyebrow">Boxe anglaise · Boxe française</div>
+        <div class="eyebrow">Boxe anglaise · française · thaï</div>
         <h1>Amicale des <span>Bagarreurs</span></h1>
       </div>
       <label class="who" for="me">Tu es
@@ -296,14 +302,14 @@ button.chip{cursor:pointer;border-color:var(--line)}
           <button class="btn ghost small" id="calNext" aria-label="Mois suivant">›</button>
         </div>
         <div class="cal" id="cal"></div>
-        <div class="chips hint"><span><i class="dot-ba" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--eng)"></i> Anglaise</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--fra)"></i> Française</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--tha)"></i> Thaï</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--spar)"></i> Sparring</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--brown)"></i> Prépa physique</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mix)"></i> Mixte</span></div>
+        <div class="chips hint"><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic ba"></i>Anglaise</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic bf"></i>Française</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic bt"></i>Thaï</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic sp"></i>Combat</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic pp"></i>Prépa physique</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic o"></i>Mixte</span></div>
       </div>
       <form id="fCourse" class="panel" autocomplete="off">
         <h3>Ajouter un cours</h3>
         <label for="cType">Cours<select id="cType">
           <option value="BA">Boxe anglaise</option>
           <option value="BF">Boxe française</option>
-          <option value="SP">Sparring</option>
+          <option value="SP">Combat</option>
           <option value="PP">Préparation physique</option>
           <option value="MX">Cours mixte</option>
           <option value="BT">Boxe thaï</option>
@@ -446,7 +452,7 @@ const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const parseYmd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
 const MONTHS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const DAYS=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
-const COURSE={BA:'Boxe anglaise',BF:'Boxe française',SP:'Sparring',PP:'Préparation physique',MX:'Cours mixte',BT:'Boxe thaï'};
+const COURSE={BA:'Boxe anglaise',BF:'Boxe française',SP:'Combat',PP:'Préparation physique',MX:'Cours mixte',BT:'Boxe thaï'};
 const courseCls=t=>({BA:'ba',BF:'bf',BT:'bt',SP:'sp',PP:'pp'})[t]??'o';
 const METHODS={PTS:'aux points',KO:'par KO',ARB:"par arrêt de l'arbitre",ABD:'par abandon',DQ:'par disqualification',NUL:'Match nul'};
 
@@ -598,7 +604,7 @@ function renderFightList(){
       <div class="side r">${esc(mName(f.red))}</div>
       <div class="mid"><span class="score">${t.n?t.r+' – '+t.b:'vs'}</span></div>
       <div class="side b">${esc(mName(f.blue))}</div>
-      <div class="meta">${fightStatusPill(f)}<span class="pill ${disc(f).cls}">${disc(f).short}</span><span class="num">${f.rounds} × ${f.dur/60>=1?String(f.dur/60).replace('.',','):f.dur/60} min</span>${d?`<span>${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}</span>`:''}${f.status==='fini'&&f.result?`<span>· ${esc(resultText(f))}</span>`:''}</div>
+      <div class="meta">${fightStatusPill(f)}<span class="pill ${disc(f).cls}"><i class="ic ${disc(f).cls}"></i>${disc(f).short}</span><span class="num">${f.rounds} × ${f.dur/60>=1?String(f.dur/60).replace('.',','):f.dur/60} min</span>${d?`<span>${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}</span>`:''}${f.status==='fini'&&f.result?`<span>· ${esc(resultText(f))}</span>`:''}</div>
     </button>`}).join('');
 }
 function resultText(f){
@@ -693,7 +699,7 @@ function courseHtml(id,c,showDate){
   const end=pad(Math.floor(endMin/60)%24)+':'+pad(endMin%60);
   const appel=ui.appel===id,conf=ui.confirm==='c:'+id,past=c.date<today;
   return `<div class="course ${courseCls(c.type)}">
-    <div class="top"><span class="when num">${showDate?`${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} · `:''}${esc(c.time)}–${end}</span><span class="pill ${courseCls(c.type)}">${esc(COURSE[c.type]||c.type)}</span></div>
+    <div class="top"><span class="when num">${showDate?`${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} · `:''}${esc(c.time)}–${end}</span><span class="pill ${courseCls(c.type)}"><i class="ic ${courseCls(c.type)}"></i>${esc(COURSE[c.type]||c.type)}</span></div>
     <div class="hint">${[c.place,c.coach?'coach '+c.coach:''].filter(Boolean).map(esc).join(' · ')||'&nbsp;'}</div>
     <div class="pres">${me&&S.members.has(me)?`<button class="btn small ghost yes" data-w data-act="att" data-id="${id}" data-v="present" aria-pressed="${mine==='present'}">${past?'J’étais là':'Je serai là'}</button><button class="btn small ghost no" data-w data-act="att" data-id="${id}" data-v="absent" aria-pressed="${mine==='absent'}">Absent</button>`:'<span class="hint">Choisis ton nom en haut de la page pour indiquer ta présence.</span>'}
       <span class="hint num" style="margin-left:auto">${pres.length} présent${pres.length>1?'s':''}${abs.length?' · '+abs.length+' absent'+(abs.length>1?'s':''):''}</span></div>
@@ -714,7 +720,7 @@ function renderCalendar(){
   const weeks=Math.ceil((offset+new Date(y,mo+1,0).getDate())/7);
   for(let i=0;i<weeks*7;i++){
     const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i),s=ymd(d),cs=byDate[s]||[];
-    h+=`<button data-act="day" data-d="${s}" class="${d.getMonth()!==mo?'out':''} ${s===today?'today':''}" aria-pressed="${s===ui.day}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}, ${cs.length} cours"><span>${d.getDate()}</span><span class="dots">${cs.slice(0,4).map(c=>`<i class="${courseCls(c.type)}"></i>`).join('')}</span></button>`;
+    h+=`<button data-act="day" data-d="${s}" class="${d.getMonth()!==mo?'out':''} ${s===today?'today':''}" aria-pressed="${s===ui.day}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}, ${cs.length} cours"><span>${d.getDate()}</span><span class="dots">${cs.slice(0,3).map(c=>`<i class="${courseCls(c.type)}"></i>`).join('')}</span></button>`;
   }
   $('#cal').innerHTML=h;
   const dd=parseYmd(ui.day);
