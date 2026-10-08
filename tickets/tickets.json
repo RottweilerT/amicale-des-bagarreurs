@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "n-muzzadcsl4wmii",
+    "titre": "Tous",
+    "details": "Ajoute un onglet « Minuteur Boxe » à l'application, sans modifier les onglets existants.\n\nOBJECTIF\nMinuteur d'intervalles pour la boxe : il enchaîne effort et repos, avec des bips distincts pour savoir quand reprendre et quand se reposer.\n\nRÉGLAGES\n- Nombre de rounds, durée d'effort et durée de repos (min/s).\n- Échauffement et retour au calme facultatifs.\n- Durée totale de séance calculée automatiquement.\n- Préréglages : Boxe (3 min/1 min ×6), Amateur (2/1 ×3), Tabata (20 s/10 s ×8), Sac (1 min/30 s ×10).\n- Enregistrer, nommer et supprimer mes propres préréglages.\n\nSONS (Web Audio API, sans fichier externe)\n- Début d'effort : deux bips aigus rapides.\n- Début de repos : un bip grave et long.\n- 10 s avant la fin de chaque phase : clics réguliers.\n- Décompte 3-2-1 avant le départ et chaque reprise.\n- Fin de séance : mélodie de trois notes.\n- Volume réglable et bouton pour tester chaque son.\n\nÉCRAN DE SÉANCE\n- Très gros chrono.\n- Fond rouge en effort, vert en repos, orange les 10 dernières secondes.\n- « Round 3 / 6 » et nom de la phase.\n- Barres de progression de la phase et de la séance.\n- Gros boutons : Démarrer, Pause, Passer, Arrêter.\n\nBONUS\n- Annonces vocales facultatives : « Round 2 », « Repos », « 10 secondes ».\n- Mode Coach facultatif : annonce aléatoire d'enchaînements pendant l'effort (jab-cross, crochet, esquive…), fréquence réglable.\n- Vibration à chaque changement de phase.\n- Écran maintenu allumé (Wake Lock), sans erreur si non pris en charge.\n- Historique des séances : date, préréglage, durée.\n\nCONTRAINTES\n- Pensé pour mobile, boutons utilisables avec des gants.\n- Chrono basé sur l'heure réelle pour rester précis.\n- Son activé au premier appui (règle des navigateurs).\n- Réglages sauvegardés entre deux ouvertures.\n- Même style visuel que le reste de l'application.",
+    "categorie": "tache",
+    "priorite": 1,
+    "statut": "open",
+    "auteur": "Armand Charrin",
+    "cree_le": "2026-10-08T20:17:46.780Z",
+    "modifie_le": "2026-10-08T20:17:46.780Z"
+  }
+]
