@@ -1,0 +1,91 @@
+name: Exporter les tickets
+
+# Copie les tickets de l'onglet Notes (base Firebase amicale-des-bagarreurs) dans tickets/tickets.json,
+# pour que Claude puisse les lire depuis le dépôt.
+# Lancée avec l'entrée « resoudre », elle passe d'abord ces tickets en Résolu.
+on:
+  workflow_dispatch:
+    inputs:
+      resoudre:
+        description: "Identifiants des tickets à passer en Résolu (séparés par des virgules), ex. n-abc,n-def"
+        required: false
+        default: ""
+  schedule:
+    - cron: "47 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Passer en Résolu les tickets traités
+        if: ${{ github.event.inputs.resoudre != '' }}
+        env:
+          RESOUDRE: ${{ github.event.inputs.resoudre }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, datetime
+          # Même clé web publique que l'appli : relue dans index.html.
+          KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
+          base = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/courses"
+          ids = [x for x in re.split(r"[,\s]+", os.environ.get("RESOUDRE", "")) if x]
+          now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+          for i in ids:
+              if not re.fullmatch(r"n-[a-z0-9]{4,40}", i):
+                  print("Ignoré (identifiant invalide) :", i); continue
+              try:
+                  doc = json.load(urllib.request.urlopen(f"{base}/{i}?key={KEY}"))
+              except Exception as e:
+                  print("Introuvable :", i, e); continue
+              if doc.get("fields", {}).get("kind", {}).get("stringValue") != "note":
+                  print("Ignoré (pas un ticket) :", i); continue
+              body = json.dumps({"fields": {"status": {"stringValue": "done"}, "updated": {"stringValue": now}}}).encode()
+              url = (f"{base}/{i}?key={KEY}&updateMask.fieldPaths=status&updateMask.fieldPaths=updated"
+                     "&currentDocument.exists=true")
+              req = urllib.request.Request(url, data=body, method="PATCH", headers={"Content-Type": "application/json"})
+              urllib.request.urlopen(req).read()
+              print("Résolu :", i)
+          PY
+      - name: Lire les tickets dans Firebase
+        run: |
+          python3 - <<'PY'
+          import json, re, urllib.request
+          KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
+          base = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/courses"
+          def val(v):
+              if "stringValue" in v: return v["stringValue"]
+              if "integerValue" in v: return int(v["integerValue"])
+              if "doubleValue" in v: return v["doubleValue"]
+              if "booleanValue" in v: return v["booleanValue"]
+              if "nullValue" in v: return None
+              if "arrayValue" in v: return [val(x) for x in v["arrayValue"].get("values", [])]
+              if "mapValue" in v: return {k: val(x) for k, x in v["mapValue"].get("fields", {}).items()}
+              return None
+          docs, token = [], ""
+          while True:
+              url = f"{base}?pageSize=300&key={KEY}" + (f"&pageToken={token}" if token else "")
+              data = json.load(urllib.request.urlopen(url))
+              docs += data.get("documents", [])
+              token = data.get("nextPageToken")
+              if not token: break
+          notes = []
+          for d in docs:
+              f = {k: val(v) for k, v in d.get("fields", {}).items()}
+              if f.get("kind") != "note": continue
+              notes.append({"id": d["name"].split("/")[-1], "titre": f.get("title", ""), "details": f.get("body", ""),
+                            "categorie": f.get("cat", ""), "priorite": f.get("prio", 1), "statut": f.get("status", "open"),
+                            "auteur": f.get("author", ""), "cree_le": f.get("at", ""), "modifie_le": f.get("updated", "")})
+          notes.sort(key=lambda n: (n["statut"] == "done", -(n["priorite"] or 0), n["cree_le"]))
+          with open("tickets/tickets.json", "w", encoding="utf-8") as fh:
+              json.dump(notes, fh, ensure_ascii=False, indent=2)
+          print(len(notes), "tickets exportés")
+          PY
+      - name: Enregistrer dans le dépôt
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tickets/tickets.json
+          git diff --cached --quiet || (git commit -m "Mise à jour des tickets" && git push)
