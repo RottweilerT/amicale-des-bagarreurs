@@ -66,6 +66,8 @@ h3{font-size:1.25rem}
 nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--ink);margin-bottom:18px;scrollbar-width:none}
 nav.tabs button{flex:0 0 auto;border:0;background:none;color:var(--muted);font:700 1.05rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px 10px;cursor:pointer;border-bottom:4px solid transparent;margin-bottom:-2px}
 nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
+nav.tabs button[data-tab="notes"]{color:var(--red)}
+nav.tabs button[data-tab="notes"][aria-selected="true"]{color:var(--red)}
 nav.tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
 
 .banner{border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:.92rem;background:var(--gold-soft);color:var(--ink);border:1px solid var(--gold)}
