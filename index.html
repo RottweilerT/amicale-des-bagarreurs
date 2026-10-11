@@ -895,7 +895,7 @@ function renderMembers(){
     const conf=ui.confirm==='m:'+id;
     return `<div class="member"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}</div>${m.pin?'<div class="lock">Protégé par un code</div>':''}
       <div class="hint num">${esc(m.weight)} kg · ${esc(m.height)} cm</div>
-      <div class="stats"><span><b>${eloOf(id,'all').r}</b>Elo</span><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
+      <div class="stats"><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
       <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
 }
 /* ----- Inscription : même écran que FC St Léon et Apnée ----- */
