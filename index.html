@@ -64,16 +64,14 @@ h3{font-size:1.25rem}
 .lock{font-size:.8rem;color:var(--muted)}
 .check{display:flex;align-items:center;gap:8px;font-weight:500;color:var(--ink)}
 .check input{width:auto}
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;border-bottom:0;background:linear-gradient(90deg,var(--blue) 0 33.33%,var(--flag-white) 33.33% 66.66%,var(--red) 66.66%) bottom/100% 2px no-repeat,var(--bg);margin-bottom:18px;scrollbar-width:none}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:0;overflow-x:auto;border-bottom:0;background:var(--bg);margin-bottom:18px;scrollbar-width:none;align-items:flex-end}
 nav.tabs button{flex:0 0 auto;border:0;background:none;color:var(--muted);font:700 1.05rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px 10px;cursor:pointer;border-bottom:4px solid transparent;margin-bottom:-2px}
-nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
-nav.tabs button:nth-of-type(3n+1){color:var(--blue)}
-nav.tabs button:nth-of-type(3n+2){color:var(--tab-white)}
-nav.tabs button:nth-of-type(3n){color:var(--red)}
-nav.tabs button:nth-of-type(3n+1)[aria-selected="true"]{border-bottom-color:var(--blue)}
-nav.tabs button:nth-of-type(3n+2)[aria-selected="true"]{border-bottom-color:var(--tab-white)}
-nav.tabs button:nth-of-type(3n)[aria-selected="true"]{border-bottom-color:var(--red)}
-nav.tabs button:not([aria-selected="true"]){opacity:.72}
+nav.tabs button:nth-of-type(3n+1){--tc:var(--blue)}
+nav.tabs button:nth-of-type(3n+2){--tc:var(--tab-white)}
+nav.tabs button:nth-of-type(3n){--tc:var(--red)}
+nav.tabs button{color:color-mix(in srgb,var(--tc) 62%,var(--bg));border-bottom:4px solid var(--tc);margin-bottom:0;border-radius:8px 8px 0 0;transition:background-color .15s,color .15s}
+nav.tabs button[aria-selected="true"]{color:var(--tc);border-bottom-width:7px;padding-bottom:7px;background:color-mix(in srgb,var(--tc) 18%,transparent);text-shadow:0 0 1px var(--tc)}
+@media (prefers-reduced-motion:reduce){nav.tabs button{transition:none}}
 nav.tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
 
 .banner{border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:.92rem;background:var(--gold-soft);color:var(--ink);border:1px solid var(--gold)}
