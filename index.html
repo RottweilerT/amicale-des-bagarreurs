@@ -91,8 +91,10 @@ nav.tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
 .elo-row .dl{font:600 .8rem var(--f-data);display:block;text-align:right}
 .up{color:var(--ok)} .down{color:var(--red)}
 .spark{width:64px;height:22px;display:block}
-.elo-help{font-size:.88rem;color:var(--muted)}
-.elo-help summary{cursor:pointer;font-weight:600;color:var(--ink)}
+.elo-help{font-size:.9rem;color:var(--muted)}
+
+@media (max-width:760px){.elo-tab>div:first-child{order:2}}
+.elo-help h3{color:var(--ink)}
 .elo-help p{margin:.5em 0;max-width:65ch}
 .elo-change{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--f-data);font-size:1rem}
 .panel>h3:first-child::after,.cal-head>h2::after{content:"";display:block;width:42px;height:4px;margin-top:8px;border-radius:2px;background:linear-gradient(90deg,var(--blue) 0 33.33%,var(--flag-white) 33.33% 66.66%,var(--red) 66.66%);box-shadow:0 0 0 1px var(--line)}
@@ -354,6 +356,7 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
   <nav class="tabs" role="tablist">
     <button role="tab" data-tab="membres" aria-selected="true">Membres</button>
     <button role="tab" data-tab="combats" aria-selected="false">Combats</button>
+    <button role="tab" data-tab="elo" aria-selected="false">Classement</button>
     <button role="tab" data-tab="calendrier" aria-selected="false">Calendrier</button>
     <button role="tab" data-tab="regles" aria-selected="false">Règles</button>
     <button role="tab" data-tab="minuteur" aria-selected="false">Minuteur boxe</button>
@@ -412,16 +415,7 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
       </div>
     </section>
     <div style="display:grid;gap:12px;min-width:0">
-      <div class="cal-head"><h2>Classement Elo</h2><span class="eyebrow" id="eloCount"></span></div>
-      <div class="seg" id="eloFilter"><button type="button" data-d="all" aria-selected="true">Toutes</button><button type="button" data-d="BA" aria-selected="false">Anglaise</button><button type="button" data-d="BF" aria-selected="false">Française</button><button type="button" data-d="BT" aria-selected="false">Thaï</button></div>
-      <div id="eloList" class="elo-list"></div>
-      <details class="elo-help"><summary>Comment est calculé le classement ?</summary>
-        <p>Chaque boxeur démarre à <b>1200</b>. Après chaque combat terminé, le vainqueur prend des points au perdant. Le nombre de points dépend de l'écart de niveau : battre plus fort que soi rapporte beaucoup, battre plus faible rapporte peu. Un match nul fait gagner des points au moins bien classé.</p>
-        <p>Une victoire avant la limite (KO, arrêt de l'arbitre, abandon) compte 25 % de plus. Une victoire aux points compte jusqu'à 30 % de plus selon l'écart sur la carte de pointage.</p>
-        <p>Les 10 premiers combats comptent davantage (coefficient 40, puis 24), pour que chacun trouve vite son niveau. Un classement est dit « provisoire » tant que le boxeur a disputé moins de 5 combats. Chaque discipline a aussi son propre classement.</p>
-        <p>Avant un combat, l'appli affiche les chances estimées de chaque coin d'après ces classements.</p>
-      </details>
-      <div class="cal-head" style="margin-top:8px"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
+      <div class="cal-head"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
       <div id="membersList"></div>
     </div>
   </section>
@@ -462,6 +456,23 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
       </div>
     </div>
     <div id="bout" class="bout" hidden></div>
+  </section>
+
+  <!-- CLASSEMENT ELO -->
+  <section id="tab-elo" class="grid2 elo-tab" hidden>
+    <div style="display:grid;gap:12px;min-width:0">
+      <div class="panel elo-help"><h3>Comment ça marche</h3>
+        <p>Chaque boxeur démarre à <b>1200</b>. Après chaque combat terminé, le vainqueur prend des points au perdant. Le nombre de points dépend de l'écart de niveau : battre plus fort que soi rapporte beaucoup, battre plus faible rapporte peu. Un match nul fait gagner des points au moins bien classé.</p>
+        <p>Une victoire avant la limite (KO, arrêt de l'arbitre, abandon) compte 25 % de plus. Une victoire aux points compte jusqu'à 30 % de plus selon l'écart sur la carte de pointage.</p>
+        <p>Les 10 premiers combats comptent davantage (coefficient 40, puis 24), pour que chacun trouve vite son niveau. Un classement est dit « provisoire » tant que le boxeur a disputé moins de 5 combats. Chaque discipline a aussi son propre classement.</p>
+        <p>Avant un combat, l'appli affiche les chances estimées de chaque coin d'après ces classements.</p>
+      </div>
+    </div>
+    <div style="display:grid;gap:12px;min-width:0">
+      <div class="cal-head"><h2>Classement Elo</h2><span class="eyebrow" id="eloCount"></span></div>
+      <div class="seg" id="eloFilter"><button type="button" data-d="all" aria-selected="true">Toutes</button><button type="button" data-d="BA" aria-selected="false">Anglaise</button><button type="button" data-d="BF" aria-selected="false">Française</button><button type="button" data-d="BT" aria-selected="false">Thaï</button></div>
+      <div id="eloList" class="elo-list"></div>
+    </div>
   </section>
 
   <!-- CALENDRIER -->
@@ -511,7 +522,7 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
   <section id="tab-notes" class="grid2" hidden>
     <form id="ntForm" class="panel" autocomplete="off">
       <h3 id="ntTitle">Nouveau ticket</h3>
-      <label for="ntSubject">Titre (onglet concerné)<select id="ntSubject" required><option value="" disabled selected>Choisis un onglet…</option><option>Membres</option><option>Combats</option><option>Calendrier</option><option>Règles</option><option>Minuteur boxe</option><option>Notes</option><option value="Tous">Tous (toute l'appli)</option></select></label>
+      <label for="ntSubject">Titre (onglet concerné)<select id="ntSubject" required><option value="" disabled selected>Choisis un onglet…</option><option>Membres</option><option>Combats</option><option>Classement</option><option>Calendrier</option><option>Règles</option><option>Minuteur boxe</option><option>Notes</option><option value="Tous">Tous (toute l'appli)</option></select></label>
       <label for="ntBody">Détails<textarea id="ntBody" maxlength="2000" placeholder="Facultatif"></textarea></label>
       <div class="row">
         <label for="ntCat">Catégorie<select id="ntCat"><option value="idee">Idée</option><option value="tache">À faire</option><option value="probleme">Problème</option><option value="info">Info</option></select></label>
@@ -779,11 +790,11 @@ async function boot(){
 function showTab(t){
   ui.tab=t;
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t))
-  for(const id of ['membres','combats','calendrier','regles','minuteur','notes'])$('#tab-'+id).hidden=id!==t;
+  for(const id of ['membres','combats','elo','calendrier','regles','minuteur','notes'])$('#tab-'+id).hidden=id!==t;
   try{history.replaceState(null,'','#'+t)}catch(e){}
 }
 document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(b)showTab(b.dataset.tab)});
-{const h=(location.hash||'').slice(1);if(['membres','combats','calendrier','regles','minuteur','notes'].includes(h))showTab(h)}
+{const h=(location.hash||'').slice(1);if(['membres','combats','elo','calendrier','regles','minuteur','notes'].includes(h))showTab(h)}
 
 /* ---------- identity ---------- */
 function fillMemberSelect(sel,placeholder,keep){
@@ -873,7 +884,7 @@ function memberStats(id){
   return {w,l,n,p};
 }
 function renderMembers(){
-  renderReg();renderElo();
+  renderReg();
   const list=sortedMembers();
   $('#mCount').textContent=list.length?list.length+' inscrit'+(list.length>1?'s':''):'';
   const el=$('#membersList');
@@ -1484,7 +1495,7 @@ fillForm();renderPresets();renderHist();paint();
 
 function renderAll(){
   if(me&&loaded.members&&!S.members.has(me)){me='';lsSet('adb-me','')}
-  renderMembers();renderFights();renderCalendar();renderNotes();applyRO();
+  renderMembers();renderElo();renderFights();renderCalendar();renderNotes();applyRO();
 }
 renderAll();
 boot();
