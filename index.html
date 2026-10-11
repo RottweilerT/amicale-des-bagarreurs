@@ -268,6 +268,54 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
 .tm-h .num{min-width:5ch}
 .tm-h .nm{flex:1 1 auto;font-weight:600;min-width:0;overflow-wrap:anywhere}
 @media (prefers-reduced-motion:no-preference){.fcard,.btn,.cal button{transition:border-color .15s,background-color .15s}}
+/* ===== Inscription : écran commun (FC St Léon · Amicale des Bagarreurs · Apnée) =====
+   Même structure partout : 1 · Toi  →  2 · le sport  →  3 · Accès ; carte « Mon inscription » ; « Déjà inscrit ? ».
+   Seules les variables --reg-* changent d'une appli à l'autre (couleurs et polices de l'appli). */
+.reg{display:grid;gap:14px;min-width:0}
+.reg-card{background:var(--reg-surface);border:1px solid var(--reg-line);border-radius:var(--reg-r);padding:18px;display:grid;gap:14px;min-width:0;margin:0}
+.reg-kicker{margin:0;font:700 .72rem/1.2 var(--reg-body);letter-spacing:.12em;text-transform:uppercase;color:var(--reg-kicker)}
+.reg-title{margin:-8px 0 0;font-family:var(--reg-display);font-weight:700;font-size:1.5rem;line-height:1.1;color:var(--reg-ink);text-transform:none;letter-spacing:0}
+.reg-lead{margin:-6px 0 0;color:var(--reg-muted);font-size:.9rem;line-height:1.45}
+.reg-block{border:0;border-top:1px solid var(--reg-line);margin:0;padding:12px 0 0;display:grid;gap:10px;min-width:0}
+.reg-block legend{float:left;width:100%;padding:0;margin:0 0 2px;font:700 .85rem var(--reg-body);color:var(--reg-ink);display:flex;align-items:center;gap:8px}
+.reg-block legend + *{clear:both}
+.reg-step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--reg-accent);color:var(--reg-on-accent);font-size:.75rem;font-weight:700;flex:none}
+.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0}
+.reg-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;min-width:0}
+.reg .reg-f{display:grid;gap:5px;align-content:start;min-width:0;margin:0;font-size:inherit;color:inherit}
+.reg .reg-f > span{font-size:.82rem;font-weight:600;color:var(--reg-muted);text-transform:none;letter-spacing:0}
+.reg .reg-f small{color:var(--reg-muted);font-size:.78rem;font-weight:400}
+.reg input:not([type=checkbox]),.reg select{width:100%;min-width:0;box-sizing:border-box;min-height:44px;font:inherit;font-size:1rem;color:var(--reg-ink);background:var(--reg-field);border:1.5px solid var(--reg-line);border-radius:8px;padding:9px 10px;margin:0}
+.reg input:focus-visible,.reg select:focus-visible,.reg button:focus-visible{outline:2px solid var(--reg-accent);outline-offset:1px}
+.reg .reg-check{display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:500;color:var(--reg-ink);margin:0}
+.reg .reg-check input{width:18px;height:18px;margin:0;accent-color:var(--reg-accent)}
+.reg-note{margin:0;font-size:.82rem;color:var(--reg-muted);line-height:1.45}
+.reg-err{margin:0;padding:8px 10px;border-radius:8px;background:var(--reg-danger-soft);color:var(--reg-danger);font-size:.88rem}
+.reg-ok{margin:0;padding:8px 10px;border-radius:8px;background:var(--reg-soft);color:var(--reg-ink);font-size:.88rem}
+.reg-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.reg .reg-btn{appearance:none;font:600 .95rem var(--reg-body);letter-spacing:0;text-transform:none;border-radius:10px;padding:10px 16px;min-height:44px;border:1.5px solid var(--reg-accent);background:var(--reg-accent);color:var(--reg-on-accent);cursor:pointer;width:auto;margin:0}
+.reg .reg-btn.ghost{background:transparent;color:var(--reg-ink);border-color:var(--reg-line)}
+.reg .reg-btn.danger{background:transparent;color:var(--reg-danger);border-color:var(--reg-danger)}
+.reg .reg-btn.danger.armed{background:var(--reg-danger);color:var(--reg-surface)}
+.reg .reg-btn.wide{flex:1 1 100%}
+.reg .reg-btn:disabled{opacity:.5;cursor:not-allowed}
+.reg .reg-btn svg{vertical-align:-4px;margin-right:8px}
+.reg-who{display:flex;gap:14px;align-items:center;min-width:0}
+.reg-avatar{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--reg-accent);color:var(--reg-on-accent);font:700 1.2rem var(--reg-display)}
+.reg-name{font:700 1.3rem/1.15 var(--reg-display);color:var(--reg-ink);overflow-wrap:anywhere}
+.reg-line{font-size:.88rem;color:var(--reg-muted);line-height:1.4}
+.reg-line b{color:var(--reg-ink);font-weight:600}
+.reg-badge{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:999px;font-size:.72rem;font-weight:700;background:var(--reg-soft);color:var(--reg-ink)}
+.reg-or{display:flex;align-items:center;gap:10px;color:var(--reg-muted);font-size:.82rem}
+.reg-or::before,.reg-or::after{content:"";flex:1;height:1px;background:var(--reg-line)}
+.reg .reg-link{background:none;border:0;padding:0;min-height:0;color:var(--reg-ink);text-decoration:underline;font:inherit;font-size:.88rem;cursor:pointer;justify-self:start;width:auto}
+.reg-inline{display:flex;gap:8px;align-items:stretch}
+.reg-inline input{flex:1}
+@media (max-width:480px){.reg-grid3{grid-template-columns:1fr}}
+@media (max-width:360px){.reg-grid{grid-template-columns:1fr}}
+.reg{--reg-accent:var(--ink);--reg-on-accent:var(--bg);--reg-soft:var(--sunk);--reg-surface:var(--surface);--reg-field:var(--bg);--reg-line:var(--line);--reg-ink:var(--ink);--reg-muted:var(--muted);--reg-kicker:var(--red);--reg-danger:var(--red);--reg-danger-soft:var(--red-soft);--reg-display:var(--f-display);--reg-body:var(--f-body);--reg-r:var(--r)}
+.reg-title,.reg-name{text-transform:uppercase;letter-spacing:.02em}
+.reg input.pin::placeholder{letter-spacing:0}
 </style>
 </head>
 <body>
@@ -299,29 +347,53 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
 
   <!-- MEMBRES -->
   <section id="tab-membres" class="grid2">
-    <form id="fMember" class="panel" autocomplete="off">
-      <h3 id="fMemberTitle">Inscription</h3>
-      <input type="hidden" id="mId">
-      <div class="row">
-        <label for="mFirst">Prénom<input id="mFirst" required maxlength="40"></label>
-        <label for="mLast">Nom<input id="mLast" required maxlength="40"></label>
+    <section class="reg" id="reg" aria-label="Inscription">
+      <!-- Inscrit : carte « Mon inscription » -->
+      <div class="reg-card" id="bxMe" hidden>
+        <p class="reg-kicker">Mon inscription</p>
+        <div class="reg-who"><span class="reg-avatar" id="bxAvatar" aria-hidden="true"></span>
+          <div style="min-width:0"><div class="reg-name" id="bxName"></div><div class="reg-line" id="bxProf"></div><div class="reg-line" id="bxStats"></div><span class="reg-badge" id="bxLock"></span></div></div>
+        <div class="reg-actions"><button class="reg-btn ghost" type="button" id="bxEdit">Modifier</button><button class="reg-btn ghost" type="button" id="bxForget">Ce n'est pas moi</button><button class="reg-btn danger" data-w type="button" id="bxDel">Me désinscrire</button></div>
+        <p class="reg-note" id="bxDelNote" hidden>Ta fiche sera effacée du groupe. Touche encore pour confirmer.</p>
+        <button class="reg-link" type="button" id="bxOther">Inscrire quelqu'un d'autre</button>
       </div>
-      <div class="row">
-        <label for="mWeight">Poids (kg)<input id="mWeight" type="number" inputmode="decimal" min="30" max="200" step="0.1" required></label>
-        <label for="mHeight">Taille (cm)<input id="mHeight" type="number" inputmode="numeric" min="120" max="230" step="1" required></label>
+      <!-- Formulaire : inscription ou modification -->
+      <form id="fMember" class="reg-card" autocomplete="off" novalidate>
+        <p class="reg-kicker">Amicale des Bagarreurs</p>
+        <h2 class="reg-title" id="fMemberTitle">Je m'inscris</h2>
+        <p class="reg-lead" id="fMemberLead">Une seule fois, depuis ton téléphone. Ensuite tu indiques tes présences aux cours et tu montes sur le ring.</p>
+        <input type="hidden" id="mId">
+        <fieldset class="reg-block"><legend><span class="reg-step">1</span>Toi</legend>
+          <div class="reg-grid">
+            <label class="reg-f" for="mFirst"><span>Prénom</span><input id="mFirst" required maxlength="40" autocomplete="given-name"></label>
+            <label class="reg-f" for="mLast"><span>Nom</span><input id="mLast" required maxlength="40" autocomplete="family-name"></label>
+          </div>
+        </fieldset>
+        <fieldset class="reg-block"><legend><span class="reg-step">2</span>La boxe</legend>
+          <div class="reg-grid">
+            <label class="reg-f" for="mWeight"><span>Poids (kg)</span><input id="mWeight" type="number" inputmode="decimal" min="30" max="200" step="0.1" required placeholder="ex. 72"></label>
+            <label class="reg-f" for="mHeight"><span>Taille (cm)</span><input id="mHeight" type="number" inputmode="numeric" min="120" max="230" step="1" required placeholder="ex. 178"></label>
+          </div>
+        </fieldset>
+        <fieldset class="reg-block"><legend><span class="reg-step">3</span>Accès</legend>
+          <div class="reg-grid">
+            <label class="reg-f" for="mPin"><span id="mPinLabel">Code d'accès</span><input id="mPin" class="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="new-password" placeholder="Facultatif"></label>
+            <label class="reg-f" for="mPin2"><span>Confirme le code</span><input id="mPin2" class="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="new-password"></label>
+          </div>
+          <label class="reg-check" for="mPinOff" id="mPinOffRow" hidden><input type="checkbox" id="mPinOff"> Supprimer mon code d'accès</label>
+          <p class="reg-note" id="mPinHint">4 à 8 chiffres. Avec un code, personne d'autre ne peut ouvrir ta fiche sur son téléphone ni la supprimer.</p>
+        </fieldset>
+        <p class="reg-err" id="mErr" role="alert" hidden></p>
+        <div class="reg-actions"><button class="reg-btn" data-w type="submit" id="mSubmit">Je m'inscris</button><button class="reg-btn ghost" type="button" id="mCancel" hidden>Annuler</button></div>
+      </form>
+      <!-- Déjà inscrit -->
+      <div class="reg-card" id="bxPickRow" hidden>
+        <p class="reg-kicker">Déjà inscrit ?</p>
+        <label class="reg-f" for="bxPick"><span>Choisis ton nom pour retrouver ta fiche sur ce téléphone</span><select id="bxPick"></select></label>
+        <form id="bxPinAsk" class="reg-inline" hidden><input type="password" id="bxPinInput" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="current-password" placeholder="Code d'accès" aria-label="Code d'accès"><button class="reg-btn" type="submit">Valider</button></form>
+        <p class="reg-note" id="bxPinMsg" hidden></p>
       </div>
-      <div class="row">
-        <label for="mPin"><span id="mPinLabel">Code d'accès (facultatif)</span><input id="mPin" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></label>
-        <label for="mPin2">Confirme le code<input id="mPin2" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></label>
-      </div>
-      <label class="check" for="mPinOff" id="mPinOffRow" hidden><input type="checkbox" id="mPinOff"> Supprimer mon code d'accès</label>
-      <p class="err" id="mErr" hidden></p>
-      <div class="row">
-        <button class="btn" data-w type="submit" id="mSubmit">Je m'inscris</button>
-        <button class="btn ghost" type="button" id="mCancel" hidden>Annuler</button>
-      </div>
-      <p class="hint">Chacun s'inscrit une fois. Ensuite, choisis ton nom en haut pour indiquer tes présences aux cours. Le code d'accès (4 à 8 chiffres) sera demandé pour te sélectionner et pour modifier ou supprimer ta fiche.</p>
-    </form>
+    </section>
     <div style="display:grid;gap:12px;min-width:0">
       <div class="cal-head"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
       <div id="membersList"></div>
@@ -723,6 +795,7 @@ function memberStats(id){
   return {w,l,n,p};
 }
 function renderMembers(){
+  renderReg();
   const list=sortedMembers();
   $('#mCount').textContent=list.length?list.length+' inscrit'+(list.length>1?'s':''):'';
   const el=$('#membersList');
@@ -736,22 +809,74 @@ function renderMembers(){
       <div class="stats"><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
       <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
 }
-function resetMemberForm(){$('#fMember').reset();$('#mId').value='';$('#fMemberTitle').textContent='Inscription';$('#mSubmit').textContent="Je m'inscris";$('#mCancel').hidden=true;$('#mPinLabel').textContent="Code d'accès (facultatif)";$('#mPinOffRow').hidden=true;$('#mErr').hidden=true}
+/* ----- Inscription : même écran que FC St Léon et Apnée ----- */
+let pickId=null,pinFails=0,pinLockUntil=0;
+const LEAD_NEW='Une seule fois, depuis ton téléphone. Ensuite tu indiques tes présences aux cours et tu montes sur le ring.';
+function openMemberForm(id){
+  const m=id?member(id):null;resetFields();ui.regForm=true;
+  if(m){$('#mId').value=id;$('#mFirst').value=m.first;$('#mLast').value=m.last;$('#mWeight').value=m.weight;$('#mHeight').value=m.height}
+  renderReg();$('#fMember').scrollIntoView({block:'start',behavior:'smooth'});$('#mFirst').focus({preventScroll:true});
+}
+function resetFields(){$('#fMember').reset();$('#mId').value='';$('#mErr').hidden=true;$('#mPinOff').checked=false}
+function resetMemberForm(){resetFields();ui.regForm=false;renderReg()}
 $('#mCancel').addEventListener('click',resetMemberForm);
+$('#bxEdit').addEventListener('click',()=>openMemberForm(me));
+$('#bxOther').addEventListener('click',()=>openMemberForm(null));
+$('#bxForget').addEventListener('click',()=>{me='';lsSet('adb-me','');ui.confirm=null;renderAll()});
+$('#bxDel').addEventListener('click',()=>{
+  if(ui.confirm!=='me'){ui.confirm='me';renderReg();setTimeout(()=>{if(ui.confirm==='me'){ui.confirm=null;renderReg()}},4000);return}
+  ui.confirm=null;delDoc('members/'+me);S.members.delete(me);me='';lsSet('adb-me','');toast('Tu es désinscrit.');renderAll();
+});
+function pickAs(id){me=id;lsSet('adb-me',id);pickId=null;toast('Bonjour '+member(id).first+' !');renderAll()}
+$('#bxPick').addEventListener('change',e=>{
+  const v=e.target.value,m=v&&member(v);$('#bxPinAsk').hidden=true;$('#bxPinMsg').hidden=true;pickId=null;
+  if(!m)return;if(!m.pin){pickAs(v);return}
+  pickId=v;$('#bxPinAsk').hidden=false;$('#bxPinMsg').hidden=false;$('#bxPinMsg').textContent='Cette fiche est protégée : entre son code d’accès.';$('#bxPinInput').value='';$('#bxPinInput').focus();
+});
+$('#bxPinAsk').addEventListener('submit',async e=>{
+  e.preventDefault();const m=member(pickId);if(!m)return;
+  if(Date.now()<pinLockUntil){$('#bxPinMsg').textContent='Trop d’essais : réessaie dans 30 secondes.';return}
+  if(await hashPin(pickId,$('#bxPinInput').value.trim())===m.pin){pinFails=0;pickAs(pickId);return}
+  if(++pinFails>=5){pinFails=0;pinLockUntil=Date.now()+30000}
+  $('#bxPinMsg').textContent=Date.now()<pinLockUntil?'Trop d’essais : réessaie dans 30 secondes.':'Code incorrect.';$('#bxPinInput').value='';
+});
+function renderReg(){
+  const mine=me&&member(me),editId=$('#mId').value,edited=editId?member(editId):null,showForm=!mine||ui.regForm;
+  $('#bxMe').hidden=showForm;$('#fMember').hidden=!showForm;
+  $('#bxPickRow').hidden=!!mine||ui.regForm||!S.members.size;
+  if(!mine&&!pickId)fillMemberSelect($('#bxPick'),'Choisis ton nom…','');
+  if(mine&&!showForm){const m=mine,s=memberStats(me);
+    $('#bxAvatar').textContent=((m.first||'?')[0]+((m.last||'')[0]||'')).toUpperCase();$('#bxName').textContent=m.first+' '+m.last;
+    $('#bxProf').textContent=m.weight+' kg · '+m.height+' cm';
+    $('#bxStats').textContent=`${s.w} victoire${s.w>1?'s':''} · ${s.l} défaite${s.l>1?'s':''} · ${s.n-s.w-s.l} nul${s.n-s.w-s.l>1?'s':''} · ${s.p} cours`;
+    $('#bxLock').textContent=m.pin?'Protégé par un code':'Sans code d’accès';
+    const armed=ui.confirm==='me';$('#bxDel').textContent=armed?'Confirmer la désinscription':'Me désinscrire';$('#bxDel').classList.toggle('armed',armed);$('#bxDelNote').hidden=!armed;}
+  if(showForm){
+    const self=editId&&editId===me;
+    $('#fMemberTitle').textContent=edited?(self?'Modifier mon inscription':'Modifier la fiche de '+edited.first):(mine?'Inscrire quelqu’un':'Je m’inscris');
+    $('#fMemberLead').textContent=edited?'Change ce que tu veux puis enregistre.':(mine?'Pour un membre qui n’a pas le lien : il pourra ensuite retrouver sa fiche sur son téléphone.':LEAD_NEW);
+    $('#mSubmit').textContent=edited?'Enregistrer':(mine?'Inscrire':'Je m’inscris');$('#mCancel').hidden=!ui.regForm;
+    const hasPin=!!(edited&&edited.pin);
+    $('#mPinLabel').textContent=hasPin?'Nouveau code':'Code d’accès';$('#mPin').placeholder=hasPin?'Laisse vide pour garder':'Facultatif';$('#mPinOffRow').hidden=!hasPin;
+    $('#mPinHint').textContent=hasPin?'Il y a déjà un code : laisse vide pour le garder, ou tape un nouveau code (4 à 8 chiffres).':'4 à 8 chiffres. Avec un code, personne d’autre ne peut ouvrir ta fiche sur son téléphone ni la supprimer.';
+  }
+}
 $('#fMember').addEventListener('submit',async e=>{
   e.preventDefault();if(!db)return;
   const err=t=>{$('#mErr').textContent=t;$('#mErr').hidden=false};$('#mErr').hidden=true;
-  const data={first:$('#mFirst').value.trim(),last:$('#mLast').value.trim(),weight:Number($('#mWeight').value),height:Number($('#mHeight').value)};
-  if(!data.first||!data.last)return;
+  const data={first:$('#mFirst').value.trim().replace(/\s+/g,' '),last:$('#mLast').value.trim().replace(/\s+/g,' '),weight:Number($('#mWeight').value),height:Number($('#mHeight').value)};
+  if(!data.first||!data.last)return err('Indique ton prénom et ton nom.');
+  if(!(data.weight>=30&&data.weight<=200))return err('Le poids doit être entre 30 et 200 kg.');
+  if(!(data.height>=120&&data.height<=230))return err('La taille doit être entre 120 et 230 cm.');
   const pin=$('#mPin').value.trim(),pin2=$('#mPin2').value.trim();
   if(pin&&!/^\d{4,8}$/.test(pin))return err('Le code doit contenir 4 à 8 chiffres.');
   if(pin!==pin2)return err('Les deux codes ne sont pas identiques.');
   const id=$('#mId').value||newId('members');
   const prev=S.members.get(id);data.createdAt=prev?.createdAt||Date.now();
   data.pin=pin?await hashPin(id,pin):($('#mPinOff').checked?null:(prev?.pin||null));
-  setDoc('members/'+id,data);
-  if(!$('#mId').value&&!me){me=id;lsSet('adb-me',id)}
-  toast(prev?'Fiche mise à jour':'Inscription enregistrée');resetMemberForm();
+  setDoc('members/'+id,data);S.members.set(id,data);
+  if(!prev&&!me){me=id;lsSet('adb-me',id)}
+  toast(prev?'Fiche mise à jour':'Inscription enregistrée');resetMemberForm();renderAll();
 });
 
 /* ---------- fights ---------- */
@@ -1013,7 +1138,7 @@ document.addEventListener('click',async e=>{
   const a=b.dataset.act,id=b.dataset.id;
   switch(a){
     case 'noConfirm':ui.confirm=null;renderAll();break;
-    case 'mEdit':{const m=member(id);if(!m)break;if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour le modifier')))break;$('#mPinLabel').textContent=m.pin?'Nouveau code (laisse vide pour garder)':"Code d'accès (facultatif)";$('#mPinOffRow').hidden=!m.pin;$('#mPinOff').checked=false;$('#mPin').value='';$('#mPin2').value='';$('#mErr').hidden=true;$('#mId').value=id;$('#mFirst').value=m.first;$('#mLast').value=m.last;$('#mWeight').value=m.weight;$('#mHeight').value=m.height;$('#fMemberTitle').textContent='Modifier la fiche';$('#mSubmit').textContent='Enregistrer';$('#mCancel').hidden=false;$('#mFirst').focus();break}
+    case 'mEdit':{const m=member(id);if(!m)break;if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour le modifier')))break;openMemberForm(id);break}
     case 'mDel':if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour le supprimer')))break;ui.confirm='m:'+id;renderMembers();break;
     case 'mDelYes':delDoc('members/'+id);if(me===id){me='';lsSet('adb-me','')}ui.confirm=null;toast('Membre supprimé');break;
     case 'open':openFight(id);break;
