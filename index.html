@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0D1B3E">
 <title>Amicale Des Bagarreurs</title>
-<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Bagarreurs"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Bagarreurs"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
@@ -54,6 +54,8 @@ h3{font-size:1.25rem}
 .ropes i:nth-child(1){background:var(--blue)} .ropes i:nth-child(2){background:var(--flag-white)} .ropes i:nth-child(3){background:var(--red)}
 .brand{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand h1{font-size:clamp(2.3rem,8vw,3.8rem);font-weight:900}
+.brand-id{display:flex;align-items:center;gap:14px;min-width:0}
+.logo{width:clamp(64px,18vw,96px);height:auto;aspect-ratio:1;max-width:100%;border-radius:50%;background:#fff;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--line);flex:0 0 auto}
 .brand h1 span{color:var(--red)} .brand h1 .b{color:var(--blue)}
 .who{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
 .who select{max-width:190px}
@@ -343,9 +345,12 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
   <header class="hero">
     <div class="ropes" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="brand">
-      <div>
+      <div class="brand-id">
+        <img class="logo" src="logo.png" alt="Logo de l'Amicale des Bagarreurs" width="84" height="84">
+        <div>
         <div class="eyebrow">Boxe anglaise · française · thaï</div>
         <h1><span class="b">Amicale</span> des <span>Bagarreurs</span></h1>
+        </div>
       </div>
       <label class="who" for="me">Tu es
         <select id="me"><option value="">Choisis ton nom</option></select>
