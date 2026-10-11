@@ -81,6 +81,20 @@ nav.tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
 .grid2{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:20px;align-items:start}
 @media (max-width:760px){.grid2{grid-template-columns:minmax(0,1fr)}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0}
+.elo-list{display:grid;gap:6px}
+.elo-row{display:grid;grid-template-columns:2.2rem minmax(0,1fr) auto auto;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px}
+.elo-row .rk{font:700 1.3rem var(--f-data);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.elo-row.p1 .rk{color:#C9A227} .elo-row.p2 .rk{color:#9AA3B2} .elo-row.p3 .rk{color:#B87333}
+.elo-row .nm{font-weight:700;min-width:0;overflow-wrap:anywhere}
+.elo-row .sub{font-size:.8rem;color:var(--muted)}
+.elo-row .val{font:700 1.5rem var(--f-data);font-variant-numeric:tabular-nums;text-align:right;line-height:1}
+.elo-row .dl{font:600 .8rem var(--f-data);display:block;text-align:right}
+.up{color:var(--ok)} .down{color:var(--red)}
+.spark{width:64px;height:22px;display:block}
+.elo-help{font-size:.88rem;color:var(--muted)}
+.elo-help summary{cursor:pointer;font-weight:600;color:var(--ink)}
+.elo-help p{margin:.5em 0;max-width:65ch}
+.elo-change{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--f-data);font-size:1rem}
 .panel>h3:first-child::after,.cal-head>h2::after{content:"";display:block;width:42px;height:4px;margin-top:8px;border-radius:2px;background:linear-gradient(90deg,var(--blue) 0 33.33%,var(--flag-white) 33.33% 66.66%,var(--red) 66.66%);box-shadow:0 0 0 1px var(--line)}
 form.panel{gap:10px}
 label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
@@ -398,7 +412,16 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
       </div>
     </section>
     <div style="display:grid;gap:12px;min-width:0">
-      <div class="cal-head"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
+      <div class="cal-head"><h2>Classement Elo</h2><span class="eyebrow" id="eloCount"></span></div>
+      <div class="seg" id="eloFilter"><button type="button" data-d="all" aria-selected="true">Toutes</button><button type="button" data-d="BA" aria-selected="false">Anglaise</button><button type="button" data-d="BF" aria-selected="false">Française</button><button type="button" data-d="BT" aria-selected="false">Thaï</button></div>
+      <div id="eloList" class="elo-list"></div>
+      <details class="elo-help"><summary>Comment est calculé le classement ?</summary>
+        <p>Chaque boxeur démarre à <b>1200</b>. Après chaque combat terminé, le vainqueur prend des points au perdant. Le nombre de points dépend de l'écart de niveau : battre plus fort que soi rapporte beaucoup, battre plus faible rapporte peu. Un match nul fait gagner des points au moins bien classé.</p>
+        <p>Une victoire avant la limite (KO, arrêt de l'arbitre, abandon) compte 25 % de plus. Une victoire aux points compte jusqu'à 30 % de plus selon l'écart sur la carte de pointage.</p>
+        <p>Les 10 premiers combats comptent davantage (coefficient 40, puis 24), pour que chacun trouve vite son niveau. Un classement est dit « provisoire » tant que le boxeur a disputé moins de 5 combats. Chaque discipline a aussi son propre classement.</p>
+        <p>Avant un combat, l'appli affiche les chances estimées de chaque coin d'après ces classements.</p>
+      </details>
+      <div class="cal-head" style="margin-top:8px"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
       <div id="membersList"></div>
     </div>
   </section>
@@ -791,6 +814,58 @@ $('#me').addEventListener('change',async e=>{
 });
 
 /* ---------- members ---------- */
+/* ----- Classement Elo ----- */
+const ELO_START=1200;
+let eloDisc='all',eloCache=null,eloKey='';
+function fightOrder(a,b){return (a[1].date||'').localeCompare(b[1].date||'')||((a[1].createdAt||0)-(b[1].createdAt||0))}
+function computeElo(disc){
+  const r={},n={},hist={},per={};
+  const done=[...S.fights.entries()].filter(([,f])=>f.status==='fini'&&f.result&&f.red&&f.blue&&f.red!==f.blue&&(disc==='all'||(f.disc||'BA')===disc)).sort(fightOrder);
+  for(const [id,f] of done){
+    const ra=r[f.red]??ELO_START,rb=r[f.blue]??ELO_START,na=n[f.red]||0,nb=n[f.blue]||0;
+    const ea=1/(1+Math.pow(10,(rb-ra)/400));
+    const w=f.result.winner,sa=w==='r'?1:w==='b'?0:.5,m=f.result.method;
+    let mult=1;
+    if(w&&(m==='KO'||m==='ARB'||m==='ABD'))mult=1.25;
+    else if(w&&m==='PTS'){const t=totals(f);mult=1+Math.min(.3,Math.abs(t.r-t.b)/30)}
+    const ka=na<10?40:24,kb=nb<10?40:24;
+    const da=Math.round(ka*mult*(sa-ea)),db=Math.round(kb*mult*((1-sa)-(1-ea)));
+    r[f.red]=ra+da;r[f.blue]=rb+db;n[f.red]=na+1;n[f.blue]=nb+1;
+    (hist[f.red]=hist[f.red]||[ELO_START]).push(r[f.red]);(hist[f.blue]=hist[f.blue]||[ELO_START]).push(r[f.blue]);
+    per[id]={ra,rb,da,db,pa:ea};
+  }
+  return {r,n,hist,per};
+}
+function elo(disc){
+  const key=[...S.fights.entries()].map(([id,f])=>id+(f.status||'')+(f.result?f.result.method+f.result.winner:'')+(f.date||'')+f.disc+f.red+f.blue+JSON.stringify(totals(f))).join(',');
+  if(!eloCache||eloKey!==key){eloCache={};eloKey=key}
+  return eloCache[disc]||(eloCache[disc]=computeElo(disc));
+}
+function eloOf(id,disc){const E=elo(disc);return {r:E.r[id]??ELO_START,n:E.n[id]||0}}
+function winProb(redId,blueId,disc){const a=eloOf(redId,disc).r,b=eloOf(blueId,disc).r;return 1/(1+Math.pow(10,(b-a)/400))}
+function spark(h){
+  if(!h||h.length<2)return '';
+  const lo=Math.min(...h),hi=Math.max(...h),sp=Math.max(hi-lo,1),W=64,H=22;
+  const pts=h.map((v,i)=>`${(i/(h.length-1)*(W-4)+2).toFixed(1)},${(H-3-(v-lo)/sp*(H-6)).toFixed(1)}`).join(' ');
+  const last=pts.split(' ').pop().split(',');
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="var(--blue)" stroke-width="1.6" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="2.4" fill="var(--red)"/></svg>`;
+}
+function renderElo(){
+  const E=elo(eloDisc);
+  const rows=Object.keys(E.r).filter(id=>S.members.has(id)).sort((a,b)=>E.r[b]-E.r[a]||E.n[b]-E.n[a]);
+  const unranked=S.members.size-rows.length;
+  $('#eloCount').textContent=rows.length?rows.length+' classé'+(rows.length>1?'s':''):'';
+  const el=$('#eloList');
+  if(!rows.length){el.innerHTML=`<div class="empty">Aucun combat terminé${eloDisc==='all'?'':' dans cette discipline'} pour l’instant. Le classement apparaîtra dès le premier combat arbitré jusqu’au bout dans l’onglet Combats.</div>`;return}
+  el.innerHTML=rows.map((id,i)=>{const m=member(id),h=E.hist[id]||[],d=h.length>1?h[h.length-1]-h[h.length-2]:0,st=memberStats(id);
+    return `<div class="elo-row p${i+1}"><span class="rk">${i+1}</span>
+      <div style="min-width:0"><div class="nm">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}</div><div class="sub">${E.n[id]} combat${E.n[id]>1?'s':''}${E.n[id]<5?' · provisoire':''}${eloDisc==='all'?` · ${st.w} V – ${st.l} D`:''}</div></div>
+      ${spark(h)}
+      <div><span class="val">${E.r[id]}</span><span class="dl ${d>0?'up':d<0?'down':''}">${d>0?'+':''}${d||'='}</span></div></div>`}).join('')
+    +(unranked>0?`<p class="hint" style="margin:4px 0 0">${unranked} membre${unranked>1?'s':''} pas encore classé${unranked>1?'s':''} : il${unranked>1?'s démarreront':' démarrera'} à ${ELO_START}.</p>`:'');
+}
+$('#eloFilter').addEventListener('click',e=>{const b=e.target.closest('button[data-d]');if(!b)return;eloDisc=b.dataset.d;[...$('#eloFilter').children].forEach(x=>x.setAttribute('aria-selected',x===b));renderElo()});
+
 function memberStats(id){
   let w=0,l=0,n=0,p=0;
   for(const f of S.fights.values()){if(f.status!=='fini')continue;if(f.red!==id&&f.blue!==id)continue;n++;const win=f.result&&f.result.winner;if(win==='r'&&f.red===id||win==='b'&&f.blue===id)w++;else if(win==='r'||win==='b')l++}
@@ -798,7 +873,7 @@ function memberStats(id){
   return {w,l,n,p};
 }
 function renderMembers(){
-  renderReg();
+  renderReg();renderElo();
   const list=sortedMembers();
   $('#mCount').textContent=list.length?list.length+' inscrit'+(list.length>1?'s':''):'';
   const el=$('#membersList');
@@ -809,7 +884,7 @@ function renderMembers(){
     const conf=ui.confirm==='m:'+id;
     return `<div class="member"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}</div>${m.pin?'<div class="lock">Protégé par un code</div>':''}
       <div class="hint num">${esc(m.weight)} kg · ${esc(m.height)} cm</div>
-      <div class="stats"><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
+      <div class="stats"><span><b>${eloOf(id,'all').r}</b>Elo</span><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
       <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
 }
 /* ----- Inscription : même écran que FC St Léon et Apnée ----- */
@@ -900,8 +975,10 @@ function updateDiff(){
   if(!r||!b||$('#fRed').value===$('#fBlue').value){el.hidden=true;return}
   const dw=Math.abs(r.weight-b.weight),dh=Math.abs(r.height-b.height);
   el.hidden=false;el.className='diff'+(dw>5?' warn':'');
-  el.textContent=`Écart : ${dw.toFixed(1).replace('.',',')} kg et ${dh} cm`+(dw>5?' — gros écart de poids, adaptez l’intensité.':'');
+  const disc=$('#fDisc').value,p=winProb($('#fRed').value,$('#fBlue').value,disc),er=eloOf($('#fRed').value,disc).r,eb=eloOf($('#fBlue').value,disc).r;
+  el.textContent=`Écart : ${dw.toFixed(1).replace('.',',')} kg et ${dh} cm`+(dw>5?' — gros écart de poids, adaptez l’intensité.':'')+` · Elo ${er} contre ${eb} : chances estimées ${Math.round(p*100)} % rouge, ${100-Math.round(p*100)} % bleu.`;
 }
+$('#fDisc').addEventListener('change',updateDiff);
 ['#fRed','#fBlue'].forEach(s=>$(s).addEventListener('change',updateDiff));
 $('#fDate').value=today;
 $('#fFight').addEventListener('submit',e=>{
@@ -965,7 +1042,7 @@ function renderBout(){
     <div class="tot"><div class="num"><span style="color:var(--red)">${t.r}</span> – <span style="color:var(--blue)">${t.b}</span></div><div class="hint">${t.n}/${f.rounds} notée${t.n>1?'s':''}</div></div>
     <div class="corner b"><div class="sub">Coin bleu</div><div class="nm">${esc(mName(f.blue))}</div><div class="sub num">${B?B.weight+' kg · '+B.height+' cm':''}</div></div>
   </div>
-  ${done?`<div class="panel"><div class="result">${esc(resultText(f))}</div><div class="row"><button class="btn ghost small" data-w data-act="reopen" style="flex:0 0 auto">Rouvrir le combat</button></div></div>`:''}
+  ${done?`<div class="panel"><div class="result">${esc(resultText(f))}</div>${(()=>{const pf=elo('all').per[ui.fightId];if(!pf)return '';const sg=v=>(v>0?'+':'')+v;return `<div class="elo-change"><span style="color:var(--red)">${esc(mName(f.red,true))} : ${pf.ra} → ${pf.ra+pf.da} (${sg(pf.da)})</span><span style="color:var(--blue)">${esc(mName(f.blue,true))} : ${pf.rb} → ${pf.rb+pf.db} (${sg(pf.db)})</span></div><p class="hint" style="margin:0">Classement Elo général · chances estimées avant le combat : ${Math.round(pf.pa*100)} % rouge.</p>`})()}<div class="row"><button class="btn ghost small" data-w data-act="reopen" style="flex:0 0 auto">Rouvrir le combat</button></div></div>`:''}
   <div class="rounds">${f.scores.map((r,i)=>{const p=roundPts(r);return `<button data-act="round" data-i="${i}" aria-pressed="${i===ui.round}">R${i+1}<small>${p?p.r+'-'+p.b:'—'}</small></button>`}).join('')}</div>
   ${done?'':`<div class="chrono"><span class="clock ${chronoSec()>=f.dur?'over':''}" id="clock">${fmt(chronoSec())}</span><span class="hint">/ ${fmt(f.dur)}</span>
     <button class="btn small" data-act="chrono">${chrono.running?'Pause':chronoSec()>0?'Reprendre':'Box !'}</button><button class="btn ghost small" data-act="chronoReset">Remettre à zéro</button></div>`}
