@@ -1,0 +1,52 @@
+name: Restaurer la base
+
+# Remet dans Firebase (projet amicale-des-bagarreurs) le contenu d'une sauvegarde chiffrée (sauvegarde/base.json.enc).
+# Chaque document de la sauvegarde est réécrit tel qu'il était ; les documents créés depuis ne sont pas effacés.
+# À lancer à la main : onglet Actions → « Restaurer la base » → Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Commit de la sauvegarde à remettre (laisser vide = la plus récente)"
+        required: false
+        default: ""
+      confirmer:
+        description: "Tape RESTAURER pour confirmer"
+        required: true
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  restaurer:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.confirmer == 'RESTAURER' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Déchiffrer la sauvegarde
+        env:
+          CLE: ${{ secrets.SAUVEGARDE_CLE }}
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ -n "$VERSION" ]; then git show "$VERSION:sauvegarde/base.json.enc" > /tmp/base.enc; else cp sauvegarde/base.json.enc /tmp/base.enc; fi
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in /tmp/base.enc -out /tmp/base.json -pass env:CLE
+      - name: Réécrire les documents
+        run: |
+          python3 - <<'PY'
+          import json, re, urllib.request, urllib.error
+          KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
+          HDR = {"Referer": "https://rottweilert.github.io/amicale-des-bagarreurs/", "Content-Type": "application/json"}
+          b = json.load(open("/tmp/base.json"))
+          base = f"https://firestore.googleapis.com/v1/projects/{b['projet']}/databases/(default)/documents"
+          ok = err = 0
+          for col, docs in b["collections"].items():
+              for i, fields in docs.items():
+                  req = urllib.request.Request(f"{base}/{col}/{i}?key={KEY}", data=json.dumps({"fields": fields}).encode(), method="PATCH", headers=HDR)
+                  try: urllib.request.urlopen(req).read(); ok += 1
+                  except urllib.error.HTTPError as e: err += 1; print("Échec", col, i, e.code)
+          print(f"::notice::Restauration : {ok} documents réécrits, {err} échecs")
+          raise SystemExit(1 if err else 0)
+          PY

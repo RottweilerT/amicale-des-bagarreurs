@@ -1,0 +1,67 @@
+name: Sauvegarde de la base
+
+# Chaque nuit, copie TOUTE la base Firebase (projet amicale-des-bagarreurs) dans sauvegarde/base.json.enc.
+# Le dépôt est public : la copie est chiffrée (AES-256) avec le secret du dépôt SAUVEGARDE_CLE,
+# personne ne peut la lire sans cette clé. Un nouveau fichier n'est enregistré que si la base a changé ;
+# l'historique Git garde toutes les versions. Pour remettre une version : Action « Restaurer la base ».
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: sauvegarde
+
+jobs:
+  sauvegarde:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lire toute la base
+        env:
+          PROJET: amicale-des-bagarreurs
+          COLLECTIONS: "members fights courses attendance"
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.error
+          KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
+          HDR = {"Referer": "https://rottweilert.github.io/amicale-des-bagarreurs/"}
+          base = f"https://firestore.googleapis.com/v1/projects/{os.environ['PROJET']}/databases/(default)/documents"
+          out, total = {}, 0
+          for col in os.environ["COLLECTIONS"].split():
+              docs, token = {}, ""
+              while True:
+                  url = f"{base}/{col}?pageSize=300&key={KEY}" + (f"&pageToken={token}" if token else "")
+                  try:
+                      data = json.load(urllib.request.urlopen(urllib.request.Request(url, headers=HDR)))
+                  except urllib.error.HTTPError as e:
+                      msg = " ".join(e.read().decode("utf-8", "replace").split())[:500]
+                      print(f"::error::Lecture de {col} impossible ({e.code}) : {msg}"); raise SystemExit(1)
+                  for d in data.get("documents", []):
+                      docs[d["name"].split("/")[-1]] = d.get("fields", {})
+                  token = data.get("nextPageToken")
+                  if not token: break
+              out[col] = docs; total += len(docs)
+              print(f"{col} : {len(docs)} documents")
+          json.dump({"projet": os.environ["PROJET"], "collections": out}, open("/tmp/base.json", "w"), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+          print(f"::notice::Sauvegarde : {total} documents lus ({', '.join(f'{c} {len(v)}' for c, v in out.items())})")
+          PY
+      - name: Chiffrer et enregistrer
+        env:
+          CLE: ${{ secrets.SAUVEGARDE_CLE }}
+        run: |
+          if [ -z "$CLE" ]; then echo "::error::Le secret SAUVEGARDE_CLE manque dans les réglages du dépôt"; exit 1; fi
+          mkdir -p sauvegarde
+          new=$(openssl dgst -sha256 -hmac "$CLE" /tmp/base.json | awk '{print $NF}')
+          old=$(cat sauvegarde/empreinte.txt 2>/dev/null || true)
+          if [ "$new" = "$old" ]; then echo "::notice::Base inchangée depuis la dernière sauvegarde"; exit 0; fi
+          openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -in /tmp/base.json -out sauvegarde/base.json.enc -pass env:CLE
+          echo "$new" > sauvegarde/empreinte.txt
+          rm -f /tmp/base.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sauvegarde/
+          git commit -m "Sauvegarde chiffrée de la base"
+          for i in 1 2 3; do git pull --rebase -q && git push && break; sleep 5; done
