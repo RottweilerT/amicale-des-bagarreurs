@@ -1,7 +1,7 @@
 // Mode hors ligne : la page et ses ressources sont gardées sur l'appareil.
 // La page est toujours redemandée au réseau d'abord (pour avoir la dernière version),
 // et la copie locale ne sert que sans connexion. Les données Firebase ne passent pas par ici.
-const CACHE = 'adb-v2';
+const CACHE = 'adb-v3';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png'];
 const EXTERNAL = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
@@ -34,5 +34,24 @@ self.addEventListener('fetch', e => {
       return res;
     }).catch(() => cached);
     return cached || fresh;
+  }));
+});
+
+// Notifications (envoyées par la GitHub Action « Notifications » via Firebase Cloud Messaging).
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (_) { d = { data: { body: e.data ? e.data.text() : '' } }; }
+  const x = Object.assign({}, d.notification || {}, d.data || {});
+  e.waitUntil(self.registration.showNotification(x.title || 'Amicale des Bagarreurs', {
+    body: x.body || '', icon: 'icon-192.png', badge: 'icon-192.png', tag: x.tag || undefined, renotify: !!x.tag,
+    data: { url: x.url || './' }
+  }));
+});
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const url = new URL((e.notification.data && e.notification.data.url) || './', self.registration.scope).href;
+  e.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(ws => {
+    for (const w of ws) if (w.url.startsWith(self.registration.scope)) { w.focus(); return w.navigate ? w.navigate(url).catch(() => {}) : null; }
+    return clients.openWindow(url);
   }));
 });

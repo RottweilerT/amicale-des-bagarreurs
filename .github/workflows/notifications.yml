@@ -1,0 +1,69 @@
+name: Notifications
+
+# Envoie les notifications de l'appli aux téléphones qui les ont activées (Firebase Cloud Messaging) :
+#  - toutes les 15 minutes : une séance à venir modifiée ou annulée ;
+#  - le samedi à 16 h (heure de Paris) : rappel d'indiquer ses présences pour la semaine.
+# Le programme est dans .github/notifications.py. Le secret FCM_COMPTE contient le compte de service Firebase.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+    - cron: "0 14 * * 6"
+    - cron: "0 15 * * 6"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "test = notification de test à tous ; rappel = rappel du samedi tout de suite ; changements = vérifier le calendrier"
+        required: true
+        default: "test"
+        type: choice
+        options: [test, rappel, changements]
+
+permissions:
+  contents: read
+
+concurrency: notifications
+
+jobs:
+  notifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Choisir le mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then m="${{ github.event.inputs.mode }}"; f=1
+          elif [ "${{ github.event.schedule }}" = "*/15 * * * *" ]; then m=changements; f=0
+          else m=rappel; f=0; fi
+          echo "mode=$m" >> "$GITHUB_OUTPUT"; echo "forcer=$f" >> "$GITHUB_OUTPUT"
+      - name: Vérifier le secret
+        id: secret
+        env:
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
+        run: |
+          if [ -z "$FCM_COMPTE" ]; then echo "::warning::Secret FCM_COMPTE absent : notifications pas encore activées."; echo "ok=0" >> "$GITHUB_OUTPUT"; else echo "ok=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Reprendre l'état du calendrier
+        if: steps.secret.outputs.ok == '1' && steps.mode.outputs.mode == 'changements'
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/etat-notifs
+          key: etat-notifs-${{ github.run_id }}
+          restore-keys: etat-notifs-
+      - name: Envoyer
+        id: envoi
+        if: steps.secret.outputs.ok == '1'
+        env:
+          APP: boxe
+          PROJET: amicale-des-bagarreurs
+          SITE: https://rottweilert.github.io/amicale-des-bagarreurs/
+          MODE: ${{ steps.mode.outputs.mode }}
+          FORCER: ${{ steps.mode.outputs.forcer }}
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
+        run: |
+          pip install -q google-auth requests
+          python3 .github/notifications.py
+      - name: Garder l'état du calendrier
+        if: steps.envoi.outputs.change == '1'
+        uses: actions/cache/save@v4
+        with:
+          path: /tmp/etat-notifs
+          key: etat-notifs-${{ github.run_id }}

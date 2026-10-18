@@ -382,6 +382,15 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
         <p class="reg-note" id="bxDelNote" hidden>Ta fiche sera effacée du groupe. Touche encore pour confirmer.</p>
         <button class="reg-link" type="button" id="bxOther">Inscrire quelqu'un d'autre</button>
       </div>
+      <!-- Sur ton téléphone : installation et notifications -->
+      <div class="reg-card" id="telCard" hidden>
+        <p class="reg-kicker">Sur ton téléphone</p>
+        <p class="reg-line" id="telInstallTxt"></p>
+        <div class="reg-actions" id="telInstallRow" hidden><button class="reg-btn ghost" type="button" id="telInstall">Installer l'appli</button></div>
+        <p class="reg-line" id="telPushTxt"></p>
+        <div class="reg-actions"><button class="reg-btn" type="button" id="telOn" hidden>Activer les notifications</button><button class="reg-btn ghost" type="button" id="telOff" hidden>Couper les notifications</button></div>
+        <p class="reg-note" id="telMsg" role="status" hidden></p>
+      </div>
       <!-- Formulaire : inscription ou modification -->
       <form id="fMember" class="reg-card" autocomplete="off" novalidate>
         <p class="reg-kicker">Amicale des Bagarreurs</p>
@@ -710,6 +719,7 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 <script>
 /* ==========================================================
    CONFIGURATION FIREBASE — remplace ce bloc par celui que
@@ -954,7 +964,79 @@ function renderReg(){
     $('#mPinLabel').textContent=hasPin?'Nouveau code':'Code d’accès';$('#mPin').placeholder=hasPin?'Laisse vide pour garder':'Facultatif';$('#mPinOffRow').hidden=!hasPin;
     $('#mPinHint').textContent=hasPin?'Il y a déjà un code : laisse vide pour le garder, ou tape un nouveau code (4 à 8 chiffres).':'4 à 8 chiffres. Avec un code, personne d’autre ne peut ouvrir ta fiche sur son téléphone ni la supprimer.';
   }
+  $('#telCard').hidden=!(mine&&!showForm);Tel.render();Tel.sync();
 }
+const PUSH={vapid:'',path:id=>'members/'+id,me:()=>me&&member(me)?me:'',mot:'un cours',fem:false};
+/* ----- Sur ton téléphone : installation de l'appli et notifications (même code dans le foot et la boxe) -----
+   Le jeton de notification de chaque téléphone est rangé dans la fiche du membre (champ « push »).
+   Les envois sont faits par la GitHub Action « Notifications » (séance modifiée ou annulée, rappel du samedi 16 h). */
+const Tel=(()=>{
+  const K='push-token',KW='push-who';
+  const get=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}};
+  const put=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
+  const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const ios=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const supported=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window&&!!(window.firebase&&firebase.messaging);
+  let installEvt=null,busy=false,synced='',msgT;
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;render()});
+  addEventListener('appinstalled',()=>{installEvt=null;render()});
+  const el=id=>document.getElementById(id);
+  function msg(t){const m=el('telMsg');m.textContent=t||'';m.hidden=!t;clearTimeout(msgT);if(t)msgT=setTimeout(()=>{m.hidden=true},6000)}
+  const messaging=()=>{try{return firebase.messaging()}catch(e){return null}};
+  async function token(){const reg=await navigator.serviceWorker.ready;return messaging().getToken({vapidKey:PUSH.vapid,serviceWorkerRegistration:reg})}
+  const FV=()=>firebase.firestore.FieldValue;
+  const add=(id,t)=>db.doc(PUSH.path(id)).set({push:FV().arrayUnion(t)},{merge:true});
+  const remove=(id,t)=>db.doc(PUSH.path(id)).set({push:FV().arrayRemove(t)},{merge:true});
+  const active=()=>!!(get(K)&&get(KW)&&'Notification' in window&&Notification.permission==='granted');
+  async function on(){
+    const id=PUSH.me();if(!id||busy)return;busy=true;render();msg('');
+    try{
+      const p=await Notification.requestPermission();
+      if(p!=='granted'){msg(p==='denied'?'Notifications refusées. Pour changer d’avis, autorise-les dans les réglages du navigateur pour ce site.':'Notifications non activées.');return}
+      const t=await token();if(!t)throw new Error('jeton vide');
+      await add(id,t);put(K,t);put(KW,id);synced=id+'|'+t;msg('C’est activé sur ce téléphone.');
+    }catch(e){console.error(e);msg('Impossible d’activer les notifications pour l’instant. Vérifie ta connexion et réessaie.')}
+    finally{busy=false;render()}
+  }
+  async function off(){
+    if(busy)return;busy=true;render();
+    const t=get(K),who=get(KW);
+    try{if(t&&who)await remove(who,t).catch(()=>{});await messaging().deleteToken().catch(()=>{})}
+    finally{put(K,null);put(KW,null);synced='';busy=false;msg('Notifications coupées sur ce téléphone.');render()}
+  }
+  /* Garde le jeton rattaché à la bonne personne (changement de profil, jeton renouvelé). */
+  async function sync(){
+    if(!active()||!supported()||busy)return;
+    const id=PUSH.me()||'',who=get(KW),t=get(K);
+    if(synced===id+'|'+t)return;synced=id+'|'+t;
+    try{
+      if(who&&who!==id){await remove(who,t).catch(()=>{});put(KW,id||null)}
+      if(!id)return;
+      const nt=await token();
+      if(nt&&nt!==t){await remove(id,t).catch(()=>{});put(K,nt)}
+      await add(id,nt||t);put(KW,id);synced=id+'|'+(nt||t);
+    }catch(e){console.warn('notifications',e)}
+  }
+  function render(){
+    const card=el('telCard');if(!card||card.hidden)return;
+    const it=el('telInstallTxt'),ir=el('telInstallRow');ir.hidden=true;
+    if(standalone())it.textContent='✓ L’appli est installée sur ce téléphone.';
+    else if(installEvt){it.textContent='Ajoute l’appli à ton écran d’accueil pour l’ouvrir en un geste, comme une vraie appli.';ir.hidden=false}
+    else if(ios())it.textContent='Sur iPhone : dans Safari, touche Partager (le carré avec une flèche), puis «\u00A0Sur l’écran d’accueil\u00A0». Ouvre ensuite l’appli depuis son icône.';
+    else it.textContent='Pour l’installer : menu ⋮ du navigateur, puis «\u00A0Installer l’appli\u00A0» ou «\u00A0Ajouter à l’écran d’accueil\u00A0».';
+    const pt=el('telPushTxt'),bOn=el('telOn'),bOff=el('telOff');bOn.hidden=bOff.hidden=true;bOn.disabled=bOff.disabled=busy;
+    const what=`une alerte si ${PUSH.mot} est modifié${PUSH.fem?'e':''} ou annulé${PUSH.fem?'e':''}, et un rappel le samedi à 16 h pour indiquer tes présences`;
+    if(!PUSH.vapid)pt.textContent='Les notifications arrivent bientôt.';
+    else if(ios()&&!standalone())pt.textContent='Notifications : installe d’abord l’appli (voir ci-dessus), puis ouvre-la depuis son icône pour les activer.';
+    else if(!supported())pt.textContent='Ce navigateur ne gère pas les notifications. Essaie avec Chrome (Android) ou l’appli installée (iPhone).';
+    else if(Notification.permission==='denied')pt.textContent='Les notifications sont bloquées pour ce site : autorise-les dans les réglages du navigateur, puis reviens ici.';
+    else if(active()&&get(KW)===PUSH.me()){pt.textContent='🔔 Notifications activées : '+what+'.';bOff.hidden=false}
+    else{pt.textContent='Reçois '+what+'.';bOn.hidden=false}
+  }
+  el('telInstall').addEventListener('click',async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice}catch(e){}installEvt=null;render()});
+  el('telOn').addEventListener('click',on);el('telOff').addEventListener('click',off);
+  return {render,sync};
+})();
 $('#fMember').addEventListener('submit',async e=>{
   e.preventDefault();if(!db)return;
   const err=t=>{$('#mErr').textContent=t;$('#mErr').hidden=false};$('#mErr').hidden=true;
@@ -967,6 +1049,7 @@ $('#fMember').addEventListener('submit',async e=>{
   if(pin!==pin2)return err('Les deux codes ne sont pas identiques.');
   const id=$('#mId').value||newId('members');
   const prev=S.members.get(id);data.createdAt=prev?.createdAt||Date.now();
+  if(prev&&Array.isArray(prev.push))data.push=prev.push;
   data.pin=pin?await hashPin(id,pin):($('#mPinOff').checked?null:(prev?.pin||null));
   setDoc('members/'+id,data);S.members.set(id,data);
   if(!prev&&!me){me=id;lsSet('adb-me',id)}
