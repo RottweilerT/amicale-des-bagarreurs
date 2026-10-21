@@ -1425,10 +1425,10 @@ const SOUNDS={
 };
 const MOMENTS=[
   {k:'start',n:'Début de séance',d:'à l’appui sur Démarrer',v:()=>'C’est parti'},
-  {k:'count',n:'Compte à rebours',d:'5, 4, 3, 2, 1 avant chaque effort',v:x=>String(x||5)},
+  {k:'count',n:'Compte à rebours',d:'5 fois, une par seconde (5, 4, 3, 2, 1) avant chaque effort',v:x=>String(x||5)},
   {k:'restEnd',n:'Début de l’effort',d:'fin du repos, début du round',v:x=>x?'Round '+x:'Au travail'},
   {k:'interval',n:'Temps restant',d:'à 30 s, 1 min, 1 min 30… de la fin de l’effort',v:x=>'Plus que '+sayDur(x||60)},
-  {k:'last10',n:'10 dernières secondes',d:'quand il reste 10 s d’effort',v:()=>'10 secondes'},
+  {k:'last10',n:'10 dernières secondes',d:'10 fois, une par seconde, jusqu’à la fin de l’effort',v:x=>!x||x===10?'10 secondes':String(x)},
   {k:'workEnd',n:'Fin de l’effort',d:'fin du round, début du repos',v:()=>'Repos'},
   {k:'end',n:'Fin de séance',d:'après le dernier round',v:()=>'Séance terminée'}
 ];
@@ -1482,7 +1482,7 @@ function cueSec(rem){
   if(rem<1||p.d<=rem)return;
   if(p.k!=='work'&&nx&&nx.k==='work'&&rem<=5){play('count',rem);return}
   if(p.k==='work'){
-    if(rem===10&&p.d>10){play('last10');if(cfg.snd.last10!=='voice')speak('10 secondes');return}
+    if(rem<=10&&p.d>10){play('last10',rem);if(rem===10&&cfg.snd.last10!=='voice')speak('10 secondes');return}
     if(rem%30===0&&rem<p.d)play('interval',rem);
   }
 }
