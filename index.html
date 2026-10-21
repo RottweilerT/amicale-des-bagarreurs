@@ -1396,13 +1396,20 @@ function noise(dur,at,freq,g){
   src.connect(bp);bp.connect(v);v.connect(master);src.start(t);src.stop(t+dur+.02);
 }
 function whistle(dur,at){
+  // sifflet d'arbitre à bille : note aiguë, trille rapide (fréquence + volume) et souffle
   const a=audio();if(!a)return;
-  const t=a.currentTime+(at||0)+.01,lfo=a.createOscillator(),lg=a.createGain(),v=a.createGain();
-  lfo.frequency.value=28;lg.gain.value=110;lfo.connect(lg);
-  const oscs=[['sine',2900,1],['sine',2945,.7],['triangle',2900,.6],['square',1450,.12]].map(([ty,f,g])=>{const o=a.createOscillator(),og=a.createGain();o.type=ty;o.frequency.value=f;lg.connect(o.frequency);og.gain.value=g;o.connect(og);og.connect(v);return o});
-  v.gain.setValueAtTime(.0001,t);v.gain.exponentialRampToValueAtTime(.95,t+.015);v.gain.setValueAtTime(.95,t+dur-.05);v.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  v.connect(master);lfo.start(t);lfo.stop(t+dur+.05);oscs.forEach(o=>{o.start(t);o.stop(t+dur+.05)});
-  noise(dur,at,2900,.5);
+  const t=a.currentTime+(at||0)+.01,end=t+dur;
+  const lfo=a.createOscillator();lfo.type='sine';lfo.frequency.value=34;
+  const fm=a.createGain();fm.gain.value=170;lfo.connect(fm);
+  const amD=a.createGain();amD.gain.value=.42;lfo.connect(amD);
+  const am=a.createGain();am.gain.value=.58;amD.connect(am.gain);
+  const env=a.createGain();env.gain.setValueAtTime(.0001,t);env.gain.exponentialRampToValueAtTime(1,t+.012);env.gain.setValueAtTime(1,end-.04);env.gain.exponentialRampToValueAtTime(.0001,end);
+  const o=a.createOscillator();o.type='sine';o.frequency.value=3250;fm.connect(o.frequency);
+  const o2=a.createOscillator();o2.type='sine';o2.frequency.value=6500;const g2=a.createGain();g2.gain.value=.12;fm.connect(o2.frequency);o2.connect(g2);
+  if(!noiseBuf){noiseBuf=a.createBuffer(1,a.sampleRate*.5,a.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+  const n=a.createBufferSource();n.buffer=noiseBuf;n.loop=true;const bp=a.createBiquadFilter();bp.type='bandpass';bp.frequency.value=3250;bp.Q.value=6;const ng=a.createGain();ng.gain.value=.35;n.connect(bp);bp.connect(ng);
+  o.connect(am);g2.connect(am);ng.connect(am);am.connect(env);env.connect(master);
+  [lfo,o,o2,n].forEach(x=>{x.start(t);x.stop(end+.05)});
 }
 const bellAt=at=>{ring(880,1.5,at,.55);ring(880*2.76,.7,at,.18);ring(880*5.4,.35,at,.08)};
 const SOUNDS={
@@ -1416,7 +1423,7 @@ const SOUNDS={
   high_beep:{n:'Bip aigu',f:()=>tone(1760,.18,0,'sine',.6)},
   clapper:{n:'Claquoir (10 s)',f:()=>{noise(.07,0,2200,1.4);noise(.07,.13,2200,1.4)}},
   woodblock:{n:'Bloc de bois',f:()=>{ring(1100,.2,0,1,'triangle');ring(1100,.09,0,.55,'square');ring(2350,.1,0,.45);ring(680,.14,0,.5,'sine');noise(.05,0,2600,1.6)}},
-  whistle:{n:'Sifflet',f:()=>whistle(.6,0)},
+  whistle:{n:'Sifflet d’arbitre',f:()=>{whistle(.16,0);whistle(.6,.24)}},
   buzzer:{n:'Buzzer',f:()=>{tone(140,.8,0,'sawtooth',.45);tone(147,.8,0,'sawtooth',.35)}},
   chime_up:{n:'Carillon montant',f:()=>{ring(659,.6,0,.5);ring(784,.6,.18,.5);ring(1046,.9,.36,.5)}},
   chime_down:{n:'Carillon descendant',f:()=>{ring(1046,.6,0,.5);ring(784,.6,.18,.5);ring(659,.9,.36,.5)}},
