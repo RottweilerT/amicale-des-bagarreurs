@@ -282,7 +282,13 @@ button.chip{cursor:pointer;border-color:var(--line)}
 .tm-presets .chip.del{padding:8px 10px;color:var(--red)}
 .tm-total{display:flex;justify-content:space-between;align-items:baseline;background:var(--sunk);border-radius:8px;padding:8px 12px}
 .tm-total b{font-size:1.6rem}
-.tm-tests{display:flex;gap:6px;flex-wrap:wrap}
+.tm-snds{display:grid;gap:8px}
+.tm-snd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,150px) auto;gap:8px;align-items:center}
+.tm-snd .lb{font-size:.9rem;font-weight:600;line-height:1.2}
+.tm-snd .lb small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
+.tm-snd select{padding:7px 8px;font-size:.92rem}
+.tm-snd .btn{padding:7px 10px}
+@media (max-width:420px){.tm-snd{grid-template-columns:minmax(0,1fr) auto}.tm-snd .lb{grid-column:1/-1}}
 input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
 .tm-hist{display:grid;gap:6px;font-size:.92rem}
 .tm-h{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:6px}
@@ -597,15 +603,10 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
         <div class="panel">
           <h3>Sons et options</h3>
           <label for="tmVol">Volume<input id="tmVol" type="range" min="0" max="100" step="5"></label>
-          <div class="tm-tests">
-            <button class="btn ghost small" type="button" data-tm="test" data-s="work">Effort</button>
-            <button class="btn ghost small" type="button" data-tm="test" data-s="rest">Repos</button>
-            <button class="btn ghost small" type="button" data-tm="test" data-s="click">10 s</button>
-            <button class="btn ghost small" type="button" data-tm="test" data-s="count">3-2-1</button>
-            <button class="btn ghost small" type="button" data-tm="test" data-s="end">Fin</button>
-            <button class="btn ghost small" type="button" data-tm="test" data-s="voice" id="tmTestVoice">Voix</button>
-          </div>
-          <label class="check"><input type="checkbox" id="tmVoice"> Annonces vocales (« Round 2 », « Repos », « 10 secondes »)</label>
+          <div class="tm-tl">Un son pour chaque moment</div>
+          <div class="tm-snds" id="tmSnds"></div>
+          <button class="btn ghost small" type="button" data-tm="test" data-s="voice" id="tmTestVoice" style="justify-self:start">Tester la voix</button>
+          <label class="check"><input type="checkbox" id="tmVoice"> Annonces vocales en plus des sons (« Round 2 », « Repos »)</label>
           <label class="check"><input type="checkbox" id="tmCoach"> Mode Coach : enchaînements annoncés pendant l’effort</label>
           <label for="tmCoachEvery">Fréquence du coach<select id="tmCoachEvery"><option value="3">Toutes les 3 s</option><option value="4">Toutes les 4 s</option><option value="6">Toutes les 6 s</option><option value="8">Toutes les 8 s</option><option value="10">Toutes les 10 s</option><option value="15">Toutes les 15 s</option></select></label>
           <label class="check"><input type="checkbox" id="tmVib"> Vibration à chaque changement de phase</label>
@@ -1345,14 +1346,15 @@ document.addEventListener('click',async e=>{
 /* ---------- minuteur boxe ---------- */
 (()=>{
 const BUILTIN=[{name:'Boxe',rounds:6,work:180,rest:60},{name:'Amateur',rounds:3,work:120,rest:60},{name:'Tabata',rounds:8,work:20,rest:10},{name:'Sac',rounds:10,work:60,rest:30}];
-const DEF={preset:'Boxe',rounds:6,work:180,rest:60,warmOn:false,warm:300,coolOn:false,cool:300,vol:100,voice:false,coach:false,coachEvery:6,vib:true};
+const DEF={preset:'Boxe',rounds:6,work:180,rest:60,warmOn:false,warm:300,coolOn:false,cool:300,vol:100,voice:false,coach:false,coachEvery:6,vib:true,snd:{start:'bell',restEnd:'bell',workEnd:'triple_bell',count:'beep',interval:'double_beep',last10:'clapper',end:'fanfare'}};
 const PH={prep:'Prêt ?',warm:'Échauffement',work:'Effort',rest:'Repos',cool:'Retour au calme'};
 const COMBOS=['Jab','Double jab','Jab – cross','Jab – cross – crochet','Jab – cross – crochet – cross','Crochet – uppercut','Uppercut – crochet','Jab au corps – cross','Cross – crochet – cross','Esquive – cross','Esquive – crochet','Rotation – crochet – cross','Parade – contre','Jab – esquive – cross','Double uppercut – crochet','Pas de côté – jab – cross'];
-const PREP=5;
+const PREP=6;
 const jget=(k,d)=>{try{const v=JSON.parse(lsGet(k)||'null');return v??d}catch(e){return d}};
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 let cfg=Object.assign({},DEF,jget('adb-tm-cfg',{}));
 cfg.vol=100; // volume toujours au maximum à l'ouverture
+cfg.snd=Object.assign({},DEF.snd,cfg.snd||{});
 let mine=jget('adb-tm-presets',[]);if(!Array.isArray(mine))mine=[];
 let hist=jget('adb-tm-hist',[]);if(!Array.isArray(hist))hist=[];
 let run=null,armedDel=null,armedHist=false,lastCombo='';
@@ -1377,13 +1379,65 @@ function tone(f,dur,at,type,g){
   v.gain.setValueAtTime(g,Math.max(t+.012,t+dur-.03));v.gain.exponentialRampToValueAtTime(.0001,t+dur);
   o.connect(v);v.connect(master);o.start(t);o.stop(t+dur+.03);
 }
-const SFX={
-  work:()=>{tone(1320,.11,0,'square',.3);tone(1320,.11,.17,'square',.3)},
-  rest:()=>tone(330,.9,0,'triangle',.75),
-  click:()=>tone(2000,.03,0,'square',.22),
-  count:()=>tone(880,.18,0,'sine',.6),
-  end:()=>{tone(523.25,.22,0);tone(659.25,.22,.25);tone(783.99,.6,.5)}
+function ring(f,dur,at,g,type){
+  const a=audio();if(!a)return;
+  const t=a.currentTime+(at||0)+.01,o=a.createOscillator(),v=a.createGain();
+  o.type=type||'sine';o.frequency.value=f;g=g||.5;
+  v.gain.setValueAtTime(.0001,t);v.gain.exponentialRampToValueAtTime(g,t+.006);v.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(v);v.connect(master);o.start(t);o.stop(t+dur+.05);
+}
+let noiseBuf=null;
+function noise(dur,at,freq,g){
+  const a=audio();if(!a)return;
+  if(!noiseBuf){noiseBuf=a.createBuffer(1,a.sampleRate*.5,a.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+  const t=a.currentTime+(at||0)+.01,src=a.createBufferSource(),bp=a.createBiquadFilter(),v=a.createGain();
+  src.buffer=noiseBuf;bp.type='bandpass';bp.frequency.value=freq||1800;bp.Q.value=4;
+  v.gain.setValueAtTime(g||1,t);v.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  src.connect(bp);bp.connect(v);v.connect(master);src.start(t);src.stop(t+dur+.02);
+}
+function whistle(dur,at){
+  const a=audio();if(!a)return;
+  const t=a.currentTime+(at||0)+.01,o=a.createOscillator(),lfo=a.createOscillator(),lg=a.createGain(),v=a.createGain();
+  o.type='sine';o.frequency.value=2900;lfo.frequency.value=28;lg.gain.value=90;lfo.connect(lg);lg.connect(o.frequency);
+  v.gain.setValueAtTime(.0001,t);v.gain.exponentialRampToValueAtTime(.55,t+.02);v.gain.setValueAtTime(.55,t+dur-.05);v.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(v);v.connect(master);o.start(t);lfo.start(t);o.stop(t+dur+.05);lfo.stop(t+dur+.05);
+}
+const bellAt=at=>{ring(880,1.5,at,.55);ring(880*2.76,.7,at,.18);ring(880*5.4,.35,at,.08)};
+const SOUNDS={
+  bell:{n:'Cloche de ring',f:()=>bellAt(0)},
+  double_bell:{n:'Double cloche',f:()=>{bellAt(0);bellAt(.35)}},
+  triple_bell:{n:'Triple cloche',f:()=>{bellAt(0);bellAt(.3);bellAt(.6)}},
+  gong:{n:'Gong',f:()=>{ring(98,3,0,.8);ring(147,2.4,0,.35);ring(233,1.6,0,.2)}},
+  beep:{n:'Bip court',f:()=>tone(1000,.15,0,'square',.35)},
+  double_beep:{n:'Double bip',f:()=>{tone(1200,.1,0,'square',.33);tone(1200,.1,.16,'square',.33)}},
+  long_beep:{n:'Bip long',f:()=>tone(880,.7,0,'square',.33)},
+  high_beep:{n:'Bip aigu',f:()=>tone(1760,.18,0,'sine',.6)},
+  clapper:{n:'Claquoir (10 s)',f:()=>{noise(.07,0,2200,1.4);noise(.07,.13,2200,1.4)}},
+  woodblock:{n:'Bloc de bois',f:()=>{ring(1050,.12,0,.7,'triangle');noise(.03,0,3000,.6)}},
+  whistle:{n:'Sifflet',f:()=>whistle(.6,0)},
+  buzzer:{n:'Buzzer',f:()=>{tone(140,.8,0,'sawtooth',.45);tone(147,.8,0,'sawtooth',.35)}},
+  chime_up:{n:'Carillon montant',f:()=>{ring(659,.6,0,.5);ring(784,.6,.18,.5);ring(1046,.9,.36,.5)}},
+  chime_down:{n:'Carillon descendant',f:()=>{ring(1046,.6,0,.5);ring(784,.6,.18,.5);ring(659,.9,.36,.5)}},
+  fanfare:{n:'Fanfare',f:()=>{tone(523.25,.16,0);tone(659.25,.16,.18);tone(783.99,.16,.36);tone(1046.5,.7,.54)}},
+  tick:{n:'Tic',f:()=>tone(2000,.035,0,'square',.25)},
+  voice:{n:'Voix',f:null},
+  none:{n:'Aucun son',f:()=>{}}
 };
+const MOMENTS=[
+  {k:'start',n:'Début de séance',d:'à l’appui sur Démarrer',v:()=>'C’est parti'},
+  {k:'count',n:'Compte à rebours',d:'5, 4, 3, 2, 1 avant chaque effort',v:x=>String(x||5)},
+  {k:'restEnd',n:'Début de l’effort',d:'fin du repos, début du round',v:x=>x?'Round '+x:'Au travail'},
+  {k:'interval',n:'Temps restant',d:'à 30 s, 1 min, 1 min 30… de la fin de l’effort',v:x=>'Plus que '+sayDur(x||60)},
+  {k:'last10',n:'10 dernières secondes',d:'quand il reste 10 s d’effort',v:()=>'10 secondes'},
+  {k:'workEnd',n:'Fin de l’effort',d:'fin du round, début du repos',v:()=>'Repos'},
+  {k:'end',n:'Fin de séance',d:'après le dernier round',v:()=>'Séance terminée'}
+];
+function sayDur(sec){const m=Math.floor(sec/60),r=sec%60;return m?(m+(m>1?' minutes':' minute')+(r?' '+r:'')):r+' secondes'}
+function play(k,arg){
+  const id=cfg.snd[k]||'none',mo=MOMENTS.find(x=>x.k===k);
+  if(id==='voice'){speak(mo?mo.v(arg):'',true);return}
+  const snd=SOUNDS[id];if(snd&&snd.f){audio();snd.f()}
+}
 const canSpeak='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
 function speak(t,force){
   if(!canSpeak||!(force||cfg.voice))return;
@@ -1417,23 +1471,26 @@ function doneSec(now){
 }
 function cueEnter(p){
   run.combo='';run.nextCombo=performance.now()+cfg.coachEvery*1000;
-  if(p.k==='work'){SFX.work();speak('Round '+p.r);vib([200,100,200])}
-  else if(p.k==='rest'){SFX.rest();speak('Repos');vib([600])}
-  else if(p.k==='warm'){SFX.rest();speak('Échauffement');vib([300])}
-  else if(p.k==='cool'){SFX.rest();speak('Retour au calme');vib([300])}
+  const voiced=id=>cfg.snd[id]==='voice';
+  if(p.k==='work'){play('restEnd',p.r);if(!voiced('restEnd'))speak('Round '+p.r);vib([200,100,200])}
+  else if(p.k==='rest'){play('workEnd');if(!voiced('workEnd'))speak('Repos');vib([600])}
+  else if(p.k==='warm'){speak('Échauffement');vib([300])}
+  else if(p.k==='cool'){play('workEnd');speak('Retour au calme');vib([300])}
 }
 function cueSec(rem){
   const p=run.phases[run.i],nx=run.phases[run.i+1];
   if(rem<1||p.d<=rem)return;
-  if(rem<=3&&(p.k==='prep'||(nx&&nx.k==='work')))SFX.count();
-  else if(rem<=10&&p.d>10&&p.k!=='prep')SFX.click();
-  if(rem===10&&p.d>10&&(p.k==='work'||p.k==='rest'))speak('10 secondes');
+  if(p.k!=='work'&&nx&&nx.k==='work'&&rem<=5){play('count',rem);return}
+  if(p.k==='work'){
+    if(rem===10&&p.d>10){play('last10');if(cfg.snd.last10!=='voice')speak('10 secondes');return}
+    if(rem%30===0&&rem<p.d)play('interval',rem);
+  }
 }
 function finish(complete){
   const now=performance.now(),sec=Math.round(complete?totalOf(run.phases):doneSec(now));
   if(sec>=10||complete){hist.unshift({at:new Date().toISOString(),name:cfg.preset||'Personnalisé',sec,done:!!complete});hist=hist.slice(0,100);lsSet('adb-tm-hist',JSON.stringify(hist))}
   run=null;lockOff();
-  if(complete){SFX.end();speak('Séance terminée');vib([200,100,200,100,400]);toast('Séance terminée, bravo !')}
+  if(complete){play('end');if(cfg.snd.end!=='voice')speak('Séance terminée');vib([200,100,200,100,400]);toast('Séance terminée, bravo !')}
   renderHist();paint();
 }
 function tick(){
@@ -1459,7 +1516,7 @@ function start(){
   if(run)return;
   const now=performance.now(),phases=plan();
   run={phases,i:0,end:now+phases[0].d*1000,paused:false,left:0,lastRem:null,combo:'',nextCombo:now};
-  speak('Prêt');lockOn();tick();
+  play('start');if(cfg.snd.start!=='voice')speak('Prêt');lockOn();tick();
   if(window.innerWidth<=760)$('#tmScreen').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function pause(){if(!run||run.paused)return;run.left=Math.max(0,run.end-performance.now());run.paused=true;paint()}
@@ -1510,6 +1567,10 @@ function fillForm(){
   $('#tmRounds').value=cfg.rounds;setTime('tmWork',cfg.work);setTime('tmRest',cfg.rest);
   $('#tmWarmOn').checked=cfg.warmOn;setTime('tmWarm',cfg.warm);$('#tmWarmT').hidden=!cfg.warmOn;
   $('#tmCoolOn').checked=cfg.coolOn;setTime('tmCool',cfg.cool);$('#tmCoolT').hidden=!cfg.coolOn;
+  const sel=$('#tmSnds');if(sel&&!sel.dataset.built){sel.dataset.built='1';
+    sel.innerHTML=MOMENTS.map(m=>`<div class="tm-snd"><label class="lb" for="tmSnd-${m.k}">${m.n}<small>${m.d}</small></label><select id="tmSnd-${m.k}" data-snd="${m.k}">${Object.entries(SOUNDS).filter(([id])=>id!=='voice'||canSpeak).map(([id,x])=>`<option value="${id}">${x.n}</option>`).join('')}</select><button class="btn ghost small" type="button" data-tm="test" data-s="${m.k}" aria-label="Écouter : ${m.n}">▶</button></div>`).join('');
+    sel.addEventListener('change',e=>{const t=e.target.closest('select[data-snd]');if(!t)return;cfg.snd[t.dataset.snd]=t.value;saveCfg();audio();play(t.dataset.snd,t.dataset.snd==='interval'?90:t.dataset.snd==='count'?3:undefined)});}
+  MOMENTS.forEach(m=>{const e=$('#tmSnd-'+m.k);if(e&&e.value!==cfg.snd[m.k])e.value=cfg.snd[m.k]});
   $('#tmVol').value=cfg.vol;$('#tmVoice').checked=cfg.voice&&canSpeak;$('#tmVoice').disabled=!canSpeak;$('#tmTestVoice').disabled=!canSpeak;
   $('#tmCoach').checked=cfg.coach;$('#tmCoachEvery').value=String(cfg.coachEvery);$('#tmVib').checked=cfg.vib;
   $('#tmTotal').textContent=fmtT(totalOf(plan()));
@@ -1562,7 +1623,7 @@ $('#tab-minuteur').addEventListener('click',e=>{
     case 'pause':pause();break;
     case 'skip':skip();break;
     case 'stop':stop();break;
-    case 'test':{const s=b.dataset.s;if(s==='voice')speak('Round 2. Repos. 10 secondes.',true);else{audio();SFX[s]()}break}
+    case 'test':{const s=b.dataset.s;audio();if(s==='voice')speak('Round 2. Repos. 10 secondes.',true);else play(s,s==='interval'?90:s==='count'?3:s==='restEnd'?2:undefined);break}
     case 'preset':{if(run)break;const p=(b.dataset.src==='b'?BUILTIN:mine)[Number(b.dataset.i)];if(!p)break;
       Object.assign(cfg,{rounds:p.rounds,work:p.work,rest:p.rest},b.dataset.src==='m'?{warmOn:p.warmOn,warm:p.warm,coolOn:p.coolOn,cool:p.cool}:{});
       cfg.preset=p.name;saveCfg();fillForm();renderPresets();paint();break}
