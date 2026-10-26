@@ -1686,9 +1686,15 @@ boot();
    et un clic dans le menu déclenche le bouton d'origine, donc la navigation de l'appli reste la même. */
 function TabsPerso(o){
   const btns=o.buttons,keyOf=o.key;
-  const read=()=>{try{const v=JSON.parse(localStorage.getItem(o.storage)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}};
-  const write=v=>{try{localStorage.setItem(o.storage,JSON.stringify(v))}catch(e){}};
-  let hidden=read().filter(k=>btns.some(b=>keyOf(b)===k));if(hidden.length>=btns.length)hidden=[];
+  /* Préférences propres à chaque profil : { "<profil>": [onglets masqués] } (« _ » = aucun profil choisi).
+     L'ancien réglage commun à l'appareil (simple liste) est repris une fois par le premier profil qui s'ouvre. */
+  const who=()=>{try{return (o.profile&&o.profile())||'_'}catch(e){return '_'}};
+  const all=()=>{try{const v=JSON.parse(localStorage.getItem(o.storage)||'{}');return v&&typeof v==='object'?v:{}}catch(e){return {}}};
+  const read=()=>{let a=all(),p=who();
+    if(Array.isArray(a)){a={[p]:a};try{localStorage.setItem(o.storage,JSON.stringify(a))}catch(e){}}
+    const v=a[p];let h=Array.isArray(v)?v.filter(k=>btns.some(b=>keyOf(b)===k)):[];return h.length>=btns.length?[]:h};
+  const write=v=>{const a=all(),b=Array.isArray(a)?{}:a;b[who()]=v;try{localStorage.setItem(o.storage,JSON.stringify(b))}catch(e){}};
+  let cur=who(),hidden=read();
   const label=b=>(o.label?o.label(b):b.textContent).trim();
   const isOn=b=>b.getAttribute(o.activeAttr)===(o.activeVal||'true');
   const more=document.createElement('button');more.type='button';more.className='tp-more tp-lp';
@@ -1750,6 +1756,7 @@ function TabsPerso(o){
     });
   }
   function render(){
+    if(who()!==cur){cur=who();hidden=read();closeAll()}
     const vis=btns.filter(b=>!hidden.includes(keyOf(b)));
     btns.forEach(b=>{b.hidden=hidden.includes(keyOf(b))});
     more.hidden=!hidden.length;
@@ -1766,10 +1773,10 @@ function TabsPerso(o){
   const follow=()=>{if(!menu.hidden)place(menu,more,false);if(!ctx.hidden&&ctx._a&&ctx._a.isConnected&&!ctx._a.hidden)place(ctx,ctx._a,true);else if(!ctx.hidden)closeCtx()};
   addEventListener('resize',follow);addEventListener('scroll',follow,{passive:true,capture:true});
   new MutationObserver(ms=>{if(ms.some(m=>m.target!==more))render()}).observe(o.container,{subtree:true,attributes:true,attributeFilter:[o.activeAttr,'disabled']});
-  render();
-  return {hide,show,hidden:()=>hidden.slice()};
+  render();setInterval(()=>{if(who()!==cur)render()},800);  /* changement de profil */
+  return {hide,show,refresh:render,hidden:()=>hidden.slice()};
 }
-TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',storage:'adb-onglets-masques',toast});
+TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',profile:()=>me,storage:'adb-onglets-masques',toast});
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
 </body>
