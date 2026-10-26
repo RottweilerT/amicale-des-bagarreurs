@@ -68,9 +68,11 @@ h3{font-size:1.25rem}
 .check input{width:auto}
 nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:0;overflow-x:auto;border-bottom:0;background:var(--bg);margin-bottom:18px;scrollbar-width:none;align-items:flex-end}
 nav.tabs button{flex:0 0 auto;border:0;background:none;color:var(--muted);font:700 1.05rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px 10px;cursor:pointer;border-bottom:4px solid transparent;margin-bottom:-2px}
-nav.tabs button:nth-of-type(3n+1){--tc:var(--blue)}
-nav.tabs button:nth-of-type(3n+2){--tc:var(--tab-white)}
-nav.tabs button:nth-of-type(3n){--tc:var(--red)}
+/* bleu / blanc / rouge selon la position parmi les onglets VISIBLES (attribut data-tc posé en JS) */
+nav.tabs button{--tc:var(--blue)}
+nav.tabs button[data-tc="b"]{--tc:var(--blue)}
+nav.tabs button[data-tc="w"]{--tc:var(--tab-white)}
+nav.tabs button[data-tc="r"]{--tc:var(--red)}
 nav.tabs button{color:color-mix(in srgb,var(--tc) 62%,var(--bg));border-bottom:4px solid var(--tc);margin-bottom:0;border-radius:8px 8px 0 0;transition:background-color .15s,color .15s}
 nav.tabs button[aria-selected="true"]{color:var(--tc);border-bottom-width:7px;padding-bottom:7px;background:color-mix(in srgb,var(--tc) 18%,transparent);text-shadow:0 0 1px var(--tc)}
 @media (prefers-reduced-motion:reduce){nav.tabs button{transition:none}}
@@ -1764,6 +1766,7 @@ function TabsPerso(o){
     const on=btns.some(b=>b.hidden&&isOn(b));
     const mv=on?(o.activeVal||'true'):(o.activeOff||'false');if(more.getAttribute(o.activeAttr)!==mv)more.setAttribute(o.activeAttr,mv);
     if(!hidden.length)closeMenu();else if(!menu.hidden)fillMenu();
+    if(o.onRender)o.onRender(vis,more);
   }
   btns.forEach(b=>onLongPress(b,()=>openCtx(b,keyOf(b),'hide')));
   more.addEventListener('click',e=>{e.stopPropagation();e.preventDefault();closeCtx();if(!menu.hidden){closeMenu();return}fillMenu();place(menu,more,false);more.setAttribute('aria-expanded','true')});
@@ -1776,7 +1779,8 @@ function TabsPerso(o){
   render();setInterval(()=>{if(who()!==cur)render()},800);  /* changement de profil */
   return {hide,show,refresh:render,hidden:()=>hidden.slice()};
 }
-TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',profile:()=>me,storage:'adb-onglets-masques',toast});
+TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',profile:()=>me,storage:'adb-onglets-masques',toast,
+  onRender:(vis,more)=>{const C=['b','w','r'];vis.forEach((b,i)=>{b.dataset.tc=C[i%3]});more.dataset.tc=C[vis.length%3]}});
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
 </body>
