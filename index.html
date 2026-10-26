@@ -416,6 +416,13 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         <div class="reg-actions"><button class="reg-btn" type="button" id="telOn" hidden>Activer les notifications</button><button class="reg-btn ghost" type="button" id="telOff" hidden>Couper les notifications</button></div>
         <p class="reg-note" id="telMsg" role="status" hidden></p>
       </div>
+      <!-- Déjà inscrit -->
+      <div class="reg-card" id="bxPickRow" hidden>
+        <p class="reg-kicker">Déjà inscrit ?</p>
+        <label class="reg-f" for="bxPick"><span>Choisis ton nom pour retrouver ta fiche sur ce téléphone</span><select id="bxPick"></select></label>
+        <form id="bxPinAsk" class="reg-inline" hidden><input type="password" id="bxPinInput" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="current-password" placeholder="Code d'accès" aria-label="Code d'accès"><button class="reg-btn" type="submit">Valider</button></form>
+        <p class="reg-note" id="bxPinMsg" hidden></p>
+      </div>
       <!-- Formulaire : inscription ou modification -->
       <form id="fMember" class="reg-card" autocomplete="off" novalidate>
         <p class="reg-kicker">Amicale des Bagarreurs</p>
@@ -445,13 +452,6 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         <p class="reg-err" id="mErr" role="alert" hidden></p>
         <div class="reg-actions"><button class="reg-btn" data-w type="submit" id="mSubmit">Je m'inscris</button><button class="reg-btn ghost" type="button" id="mCancel" hidden>Annuler</button></div>
       </form>
-      <!-- Déjà inscrit -->
-      <div class="reg-card" id="bxPickRow" hidden>
-        <p class="reg-kicker">Déjà inscrit ?</p>
-        <label class="reg-f" for="bxPick"><span>Choisis ton nom pour retrouver ta fiche sur ce téléphone</span><select id="bxPick"></select></label>
-        <form id="bxPinAsk" class="reg-inline" hidden><input type="password" id="bxPinInput" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="current-password" placeholder="Code d'accès" aria-label="Code d'accès"><button class="reg-btn" type="submit">Valider</button></form>
-        <p class="reg-note" id="bxPinMsg" hidden></p>
-      </div>
     </section>
     <div style="display:grid;gap:12px;min-width:0">
       <div class="cal-head"><h2>Le groupe</h2><span class="eyebrow" id="mCount"></span></div>
