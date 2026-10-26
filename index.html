@@ -343,6 +343,25 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
 .reg{--reg-accent:var(--ink);--reg-on-accent:var(--bg);--reg-soft:var(--sunk);--reg-surface:var(--surface);--reg-field:var(--bg);--reg-line:var(--line);--reg-ink:var(--ink);--reg-muted:var(--muted);--reg-kicker:var(--red);--reg-danger:var(--red);--reg-danger-soft:var(--red-soft);--reg-display:var(--f-display);--reg-body:var(--f-body);--reg-r:var(--r)}
 .reg-title,.reg-name{text-transform:uppercase;letter-spacing:.02em}
 .reg input.pin::placeholder{letter-spacing:0}
+/* Onglets personnalisables : appui long (ou clic droit) pour masquer / réafficher, menu « ⋯ » des onglets masqués */
+.tp-lp{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.tp-menu{position:fixed;z-index:60;min-width:190px;max-width:min(280px,calc(100vw - 16px));background:var(--tp-bg);color:var(--tp-ink);border:1px solid var(--tp-line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.22);padding:6px;display:flex;flex-direction:column;gap:2px;font-family:var(--tp-font)}
+.tp-menu[hidden]{display:none}
+.tp-menu:not([hidden]){animation:tp-pop .16s ease-out}
+.tp-menu p{margin:4px 10px 6px;font-size:.75rem;line-height:1.3;color:var(--tp-muted)}
+.tp-menu button{appearance:none;border:0;background:transparent;color:inherit;font:inherit;font-size:.95rem;text-align:left;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;min-height:40px}
+.tp-menu button:hover,.tp-menu button:focus-visible{background:var(--tp-hover);outline:none}
+.tp-menu button[aria-current="true"]{background:var(--tp-soft);color:var(--tp-accent);font-weight:700}
+.tp-menu button:disabled{opacity:.45;cursor:not-allowed}
+.tp-menu button svg{width:20px;height:20px;flex:none}
+.tp-in{animation:tp-in .22s ease-out}
+.tp-out{transition:opacity .16s ease,transform .16s ease;opacity:0!important;transform:scale(.92)}
+@keyframes tp-pop{from{opacity:0;transform:translateY(var(--tp-dy,-4px)) scale(.98)}to{opacity:1;transform:none}}
+@keyframes tp-in{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tp-menu:not([hidden]),.tp-in{animation:none}.tp-out{transition:none}}
+.tp-menu{--tp-bg:var(--surface);--tp-ink:var(--ink);--tp-line:var(--line);--tp-muted:var(--muted);--tp-hover:var(--sunk);--tp-soft:var(--sunk);--tp-accent:var(--ink);--tp-font:var(--f-body)}
+.tp-menu button{font:700 1rem var(--f-data);letter-spacing:.06em;text-transform:uppercase}
+nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 </style>
 </head>
 <body>
@@ -1658,6 +1677,99 @@ function renderAll(){
 }
 renderAll();
 boot();
+</script>
+<script>
+/* ===== Onglets personnalisables (même fonctionnement que le FC St Léon) =====
+   Appui long sur un onglet (clic droit sur ordinateur) : « Masquer l'onglet ». Les onglets masqués passent
+   dans le menu « ⋯ » en fin de barre, où ils restent utilisables ; appui long dans ce menu : « Réafficher l'onglet ».
+   Les préférences sont gardées sur l'appareil (localStorage). Rien n'est supprimé : les onglets sont seulement cachés,
+   et un clic dans le menu déclenche le bouton d'origine, donc la navigation de l'appli reste la même. */
+function TabsPerso(o){
+  const btns=o.buttons,keyOf=o.key;
+  const read=()=>{try{const v=JSON.parse(localStorage.getItem(o.storage)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}};
+  const write=v=>{try{localStorage.setItem(o.storage,JSON.stringify(v))}catch(e){}};
+  let hidden=read().filter(k=>btns.some(b=>keyOf(b)===k));if(hidden.length>=btns.length)hidden=[];
+  const label=b=>(o.label?o.label(b):b.textContent).trim();
+  const isOn=b=>b.getAttribute(o.activeAttr)===(o.activeVal||'true');
+  const more=document.createElement('button');more.type='button';more.className='tp-more tp-lp';
+  more.setAttribute('aria-label','Onglets masqués');more.setAttribute('aria-haspopup','menu');more.setAttribute('aria-expanded','false');
+  more.innerHTML=o.moreHTML||'⋯';more.hidden=true;o.container.appendChild(more);
+  const mk=c=>{const m=document.createElement('div');m.className='tp-menu '+c;m.setAttribute('role','menu');m.hidden=true;document.body.appendChild(m);return m};
+  const menu=mk('tp-list'),ctx=mk('tp-ctx');
+  if(o.up)[menu,ctx].forEach(m=>m.style.setProperty('--tp-dy','4px'));
+  function place(el,anchor,alignLeft){
+    el.hidden=false;const r=anchor.getBoundingClientRect(),w=el.offsetWidth,h=el.offsetHeight;
+    let left=alignLeft?r.left:r.right-w;left=Math.max(8,Math.min(left,innerWidth-w-8));
+    let top=o.up?r.top-h-6:r.bottom+6;if(top<8)top=r.bottom+6;if(top+h>innerHeight-8)top=Math.max(8,r.top-h-6);
+    el.style.left=left+'px';el.style.top=top+'px';
+  }
+  function closeMenu(){menu.hidden=true;more.setAttribute('aria-expanded','false')}
+  function closeCtx(){ctx.hidden=true;ctx.innerHTML=''}
+  function closeAll(){closeMenu();closeCtx()}
+  /* appui long sur mobile, clic droit sur ordinateur ; le « clic » qui suit un appui long est ignoré */
+  function onLongPress(el,fn){
+    let tm=null,sx=0,sy=0;const stop=()=>{clearTimeout(tm);tm=null};
+    el.classList.add('tp-lp');
+    el.addEventListener('pointerdown',e=>{delete el.dataset.lp;if(e.pointerType==='mouse')return;sx=e.clientX;sy=e.clientY;stop();
+      tm=setTimeout(()=>{tm=null;el.dataset.lp='1';try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}fn()},550)});
+    el.addEventListener('pointermove',e=>{if(tm&&Math.hypot(e.clientX-sx,e.clientY-sy)>10)stop()});
+    ['pointerup','pointercancel','pointerleave'].forEach(k=>el.addEventListener(k,stop));
+    el.addEventListener('contextmenu',e=>{e.preventDefault();e.stopPropagation();stop();if(el.dataset.lp&&!ctx.hidden)return;fn()});
+    el.addEventListener('click',e=>{if(el.dataset.lp){delete el.dataset.lp;e.preventDefault();e.stopImmediatePropagation()}},true);
+  }
+  function openCtx(anchor,k,mode){
+    closeCtx();
+    const b=document.createElement('button');b.type='button';b.setAttribute('role','menuitem');
+    b.textContent=mode==='hide'?'Masquer l’onglet':'Réafficher l’onglet';
+    b.onclick=e=>{e.stopPropagation();closeCtx();mode==='hide'?hide(k):show(k)};
+    ctx.appendChild(b);ctx._a=anchor;place(ctx,anchor,true);setTimeout(()=>b.focus(),0);
+  }
+  function hide(k){
+    const vis=btns.filter(b=>!hidden.includes(keyOf(b)));
+    if(!vis.some(b=>keyOf(b)===k))return;
+    if(vis.length<=1){o.toast&&o.toast('Garde au moins un onglet visible.');return}
+    const b=btns.find(x=>keyOf(x)===k),done=()=>{b.classList.remove('tp-out');hidden=btns.map(keyOf).filter(x=>x===k||hidden.includes(x));write(hidden);render();o.toast&&o.toast('« '+label(b)+' » rangé dans ⋯')};
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)done();else{b.classList.add('tp-out');setTimeout(done,160)}
+  }
+  function show(k){
+    hidden=hidden.filter(x=>x!==k);write(hidden);closeMenu();render();
+    const b=btns.find(x=>keyOf(x)===k);if(!b)return;
+    b.classList.remove('tp-in');void b.offsetWidth;b.classList.add('tp-in');b.addEventListener('animationend',()=>b.classList.remove('tp-in'),{once:true});
+    o.toast&&o.toast('« '+label(b)+' » est de retour dans la barre');
+  }
+  function fillMenu(){
+    menu.innerHTML='<p>Onglets masqués · appui long pour réafficher</p>';
+    btns.filter(b=>hidden.includes(keyOf(b))).forEach(b=>{
+      const it=document.createElement('button');it.type='button';it.setAttribute('role','menuitem');
+      const svg=b.querySelector('svg');if(svg)it.appendChild(svg.cloneNode(true));
+      it.appendChild(document.createTextNode(label(b)));
+      if(isOn(b))it.setAttribute('aria-current','true');if(b.disabled)it.disabled=true;
+      it.onclick=e=>{e.stopPropagation();closeMenu();b.click()};
+      onLongPress(it,()=>openCtx(it,keyOf(b),'show'));
+      menu.appendChild(it);
+    });
+  }
+  function render(){
+    const vis=btns.filter(b=>!hidden.includes(keyOf(b)));
+    btns.forEach(b=>{b.hidden=hidden.includes(keyOf(b))});
+    more.hidden=!hidden.length;
+    if(o.grid)o.grid.style.gridTemplateColumns=`repeat(${vis.length+(hidden.length?1:0)},1fr)`;
+    const on=btns.some(b=>b.hidden&&isOn(b));
+    const mv=on?(o.activeVal||'true'):(o.activeOff||'false');if(more.getAttribute(o.activeAttr)!==mv)more.setAttribute(o.activeAttr,mv);
+    if(!hidden.length)closeMenu();else if(!menu.hidden)fillMenu();
+  }
+  btns.forEach(b=>onLongPress(b,()=>openCtx(b,keyOf(b),'hide')));
+  more.addEventListener('click',e=>{e.stopPropagation();e.preventDefault();closeCtx();if(!menu.hidden){closeMenu();return}fillMenu();place(menu,more,false);more.setAttribute('aria-expanded','true')});
+  document.addEventListener('click',e=>{if(!ctx.hidden&&!ctx.contains(e.target))closeCtx();if(!menu.hidden&&!menu.contains(e.target)&&e.target!==more)closeMenu()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+  /* le menu suit l'onglet si la page ou la barre défile */
+  const follow=()=>{if(!menu.hidden)place(menu,more,false);if(!ctx.hidden&&ctx._a&&ctx._a.isConnected&&!ctx._a.hidden)place(ctx,ctx._a,true);else if(!ctx.hidden)closeCtx()};
+  addEventListener('resize',follow);addEventListener('scroll',follow,{passive:true,capture:true});
+  new MutationObserver(ms=>{if(ms.some(m=>m.target!==more))render()}).observe(o.container,{subtree:true,attributes:true,attributeFilter:[o.activeAttr,'disabled']});
+  render();
+  return {hide,show,hidden:()=>hidden.slice()};
+}
+TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',storage:'adb-onglets-masques',toast});
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
 </body>
