@@ -623,7 +623,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         </form>
         <div class="panel">
           <h3>Sons et options</h3>
-          <label for="tmVol">Volume<input id="tmVol" type="range" min="0" max="100" step="5"></label>
+          <p class="hint" style="margin:0">Les sons sont toujours joués au volume maximum que l’appli peut produire. Le niveau final dépend encore du volume « Multimédia » du téléphone : monte-le au maximum avant la séance.</p>
           <div class="tm-tl">Un son pour chaque moment</div>
           <div class="tm-snds" id="tmSnds"></div>
           <button class="btn ghost small" type="button" data-tm="test" data-s="voice" id="tmTestVoice" style="justify-self:start">Tester la voix</button>
@@ -1387,9 +1387,19 @@ const fmtS=sec=>sec<60?sec+' s':sec%60?fmtT(sec):sec/60+' min';
 let ac=null,master=null;
 function audio(){
   try{
-    if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;ac=new C();master=ac.createGain();master.connect(ac.destination)}
+    if(!ac){
+      /* iPhone : jouer même quand l'interrupteur silencieux est activé (Safari 16.4+) */
+      try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+      const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;ac=new C({latencyHint:'interactive'});
+      /* chaîne « volume maximum » : compresseur qui remonte les sons faibles, gain, puis limiteur pour ne pas saturer */
+      master=ac.createGain();master.gain.value=1;
+      const comp=ac.createDynamicsCompressor();comp.threshold.value=-26;comp.knee.value=6;comp.ratio.value=10;comp.attack.value=.002;comp.release.value=.12;
+      const boost=ac.createGain();boost.gain.value=2.6;
+      const lim=ac.createDynamicsCompressor();lim.threshold.value=-1;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.001;lim.release.value=.05;
+      master.connect(comp);comp.connect(boost);boost.connect(lim);lim.connect(ac.destination);
+    }
     if(ac.state==='suspended')ac.resume().catch(()=>{});
-    master.gain.value=cfg.vol/100;return ac;
+    return ac;
   }catch(e){return null}
 }
 function tone(f,dur,at,type,g){
@@ -1471,7 +1481,7 @@ function play(k,arg){
 const canSpeak='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
 function speak(t,force){
   if(!canSpeak||!(force||cfg.voice))return;
-  try{const u=new SpeechSynthesisUtterance(t);u.lang='fr-FR';u.volume=clamp(cfg.vol/100+.2,0,1);u.rate=1.1;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}
+  try{const u=new SpeechSynthesisUtterance(t);u.lang='fr-FR';u.volume=1;u.rate=1.1;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}
 }
 function vib(p){if(cfg.vib&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}}
 
@@ -1601,7 +1611,7 @@ function fillForm(){
     sel.innerHTML=MOMENTS.map(m=>`<div class="tm-snd"><label class="lb" for="tmSnd-${m.k}">${m.n}<small>${m.d}</small></label><select id="tmSnd-${m.k}" data-snd="${m.k}">${Object.entries(SOUNDS).filter(([id])=>id!=='voice'||canSpeak).map(([id,x])=>`<option value="${id}">${x.n}</option>`).join('')}</select><button class="btn ghost small" type="button" data-tm="test" data-s="${m.k}" aria-label="Écouter : ${m.n}">▶</button></div>`).join('');
     sel.addEventListener('change',e=>{const t=e.target.closest('select[data-snd]');if(!t)return;cfg.snd[t.dataset.snd]=t.value;saveCfg();audio();play(t.dataset.snd,t.dataset.snd==='interval'?90:t.dataset.snd==='count'?3:undefined)});}
   MOMENTS.forEach(m=>{const e=$('#tmSnd-'+m.k);if(e&&e.value!==cfg.snd[m.k])e.value=cfg.snd[m.k]});
-  $('#tmVol').value=cfg.vol;$('#tmVoice').checked=cfg.voice&&canSpeak;$('#tmVoice').disabled=!canSpeak;$('#tmTestVoice').disabled=!canSpeak;
+$('#tmVoice').checked=cfg.voice&&canSpeak;$('#tmVoice').disabled=!canSpeak;$('#tmTestVoice').disabled=!canSpeak;
   $('#tmCoach').checked=cfg.coach;$('#tmCoachEvery').value=String(cfg.coachEvery);$('#tmVib').checked=cfg.vib;
   $('#tmTotal').textContent=fmtT(totalOf(plan()));
 }
@@ -1641,7 +1651,6 @@ $('#tmForm').addEventListener('submit',e=>{
   lsSet('adb-tm-presets',JSON.stringify(mine));cfg.preset=name;saveCfg();$('#tmName').value='';
   toast(i>=0?'Préréglage mis à jour':'Préréglage enregistré');renderPresets();paint();
 });
-$('#tmVol').addEventListener('input',e=>{cfg.vol=clamp(Number(e.target.value)||0,0,100);if(master)master.gain.value=cfg.vol/100;saveCfg()});
 $('#tmVoice').addEventListener('change',e=>{cfg.voice=e.target.checked;saveCfg()});
 $('#tmCoach').addEventListener('change',e=>{cfg.coach=e.target.checked;saveCfg()});
 $('#tmCoachEvery').addEventListener('change',e=>{cfg.coachEvery=clamp(Number(e.target.value)||6,3,15);saveCfg()});
