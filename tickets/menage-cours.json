@@ -1,43 +1,11 @@
 {
   "jour": "samedi",
-  "depuis": null,
-  "supprime": false,
-  "nb_cours": 13,
-  "nb_presences": 3,
-  "fait_le": "2026-10-31T15:00:37+00:00",
+  "depuis": "2026-10-31",
+  "supprime": true,
+  "nb_cours": 9,
+  "nb_presences": 0,
+  "fait_le": "2026-10-31T15:03:45+00:00",
   "cours": [
-    {
-      "id": "M8WIMxbiRijkMb3xJzZi",
-      "date": "2026-10-03",
-      "heure": "18:30",
-      "type": "BT",
-      "lieu": "St Roch",
-      "serie": "ieeibEpOcBncQQSq6Ays"
-    },
-    {
-      "id": "BLCtP1EZ4p7jhzb6pQgG",
-      "date": "2026-10-10",
-      "heure": "18:30",
-      "type": "BT",
-      "lieu": "St Roch",
-      "serie": "ieeibEpOcBncQQSq6Ays"
-    },
-    {
-      "id": "s3S5Y7uxIRaY7uTzOaiG",
-      "date": "2026-10-17",
-      "heure": "18:30",
-      "type": "BT",
-      "lieu": "St Roch",
-      "serie": "ieeibEpOcBncQQSq6Ays"
-    },
-    {
-      "id": "GFtMrI6iiLwt55WjwMdp",
-      "date": "2026-10-24",
-      "heure": "18:30",
-      "type": "BT",
-      "lieu": "St Roch",
-      "serie": "ieeibEpOcBncQQSq6Ays"
-    },
     {
       "id": "3WyoFkTVYxTQoKW5u9I8",
       "date": "2026-10-31",
