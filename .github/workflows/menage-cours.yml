@@ -1,0 +1,80 @@
+name: Ménage des cours
+
+# Liste (et, si demandé, supprime) les cours du calendrier qui tombent un jour de la semaine donné.
+# Les présences liées aux cours supprimés sont supprimées aussi. Le rapport est écrit dans tickets/menage-cours.json.
+on:
+  workflow_dispatch:
+    inputs:
+      jour:
+        description: "Jour de la semaine (lundi … dimanche)"
+        required: true
+        default: "samedi"
+      depuis:
+        description: "Date minimale AAAA-MM-JJ (vide = tous les cours, passés compris)"
+        required: false
+        default: ""
+      supprimer:
+        description: "« oui » pour supprimer, sinon simple liste"
+        required: true
+        default: "non"
+
+permissions:
+  contents: write
+
+jobs:
+  menage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lister / supprimer
+        env:
+          JOUR: ${{ github.event.inputs.jour }}
+          DEPUIS: ${{ github.event.inputs.depuis }}
+          SUPPRIMER: ${{ github.event.inputs.supprimer }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, datetime
+          KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
+          root = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/"
+          JOURS = ["lundi","mardi","mercredi","jeudi","vendredi","samedi","dimanche"]
+          jour = JOURS.index(os.environ["JOUR"].strip().lower())
+          depuis = os.environ.get("DEPUIS","").strip()
+          go = os.environ.get("SUPPRIMER","").strip().lower() == "oui"
+          def val(v):
+              for k in ("stringValue","integerValue","doubleValue","booleanValue"):
+                  if k in v: return v[k]
+              return None
+          def lister(col):
+              out, tok = [], ""
+              while True:
+                  d = json.load(urllib.request.urlopen(f"{root}{col}?pageSize=300&key={KEY}" + (f"&pageToken={tok}" if tok else "")))
+                  out += d.get("documents", []); tok = d.get("nextPageToken")
+                  if not tok: return out
+          cours = []
+          for d in lister("courses"):
+              f = {k: val(v) for k, v in d.get("fields", {}).items()}
+              if f.get("kind") == "note" or not f.get("date"): continue
+              try: dt = datetime.date.fromisoformat(f["date"])
+              except Exception: continue
+              if dt.weekday() != jour or (depuis and f["date"] < depuis): continue
+              cours.append({"id": d["name"].split("/")[-1], "date": f["date"], "heure": f.get("time",""), "type": f.get("type",""), "lieu": f.get("place",""), "serie": f.get("serie")})
+          ids = {c["id"] for c in cours}
+          pres = [d["name"].split("/")[-1] for d in lister("attendance") if val(d.get("fields",{}).get("courseId",{})) in ids]
+          if go:
+              for c in cours:
+                  urllib.request.urlopen(urllib.request.Request(f"{root}courses/{c['id']}?key={KEY}", method="DELETE")).read()
+              for p in pres:
+                  urllib.request.urlopen(urllib.request.Request(f"{root}attendance/{p}?key={KEY}", method="DELETE")).read()
+          cours.sort(key=lambda c: (c["date"], c["heure"]))
+          rapport = {"jour": JOURS[jour], "depuis": depuis or None, "supprime": go, "nb_cours": len(cours), "nb_presences": len(pres),
+                     "fait_le": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), "cours": cours}
+          os.makedirs("tickets", exist_ok=True)
+          json.dump(rapport, open("tickets/menage-cours.json","w",encoding="utf-8"), ensure_ascii=False, indent=2)
+          print(("Supprimés" if go else "Trouvés"), len(cours), "cours et", len(pres), "présences")
+          PY
+      - name: Enregistrer le rapport
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tickets/menage-cours.json
+          git diff --cached --quiet || (git commit -m "Ménage des cours : rapport" && git push)
