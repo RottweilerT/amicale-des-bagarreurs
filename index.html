@@ -392,6 +392,11 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 .wkstate.open{color:var(--ok)}
 .wkstate.closed{color:var(--muted)}
 @media (prefers-reduced-motion:no-preference){#wkDays{transition:opacity .15s}#wkDays.wkfade{opacity:.35}}
+/* Calendrier sur une colonne : semaine, mois (et détail du jour), ajout d'un cours */
+.calcol{display:grid;gap:14px;max-width:760px;margin:0 auto;min-width:0}
+.calcol>*{min-width:0}
+.caldaybox{display:grid;gap:12px}
+.calcol .cal{max-width:480px;width:100%;margin:0 auto}
 </style>
 </head>
 <body>
@@ -545,7 +550,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
   </section>
 
   <!-- CALENDRIER -->
-  <section id="tab-calendrier" class="grid2" hidden>
+  <section id="tab-calendrier" class="calcol" hidden>
     <!-- Vue semaine : du dimanche au samedi, qui est inscrit et si l'on peut encore s'inscrire -->
     <div class="panel wk" id="wk">
       <div class="cal-head wkhead">
@@ -556,7 +561,6 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
       <button class="btn ghost small wktoday" id="wkToday" hidden>Revenir à cette semaine</button>
       <div id="wkDays"></div>
     </div>
-    <div style="display:grid;gap:14px;min-width:0">
       <div class="panel">
         <div class="cal-head">
           <button class="btn ghost small" id="calPrev" aria-label="Mois précédent">‹</button>
@@ -565,6 +569,10 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         </div>
         <div class="cal" id="cal"></div>
         <div class="chips hint"><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic ba"></i>Anglaise</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic bf"></i>Française</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic bt"></i>Thaï</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic sp"></i>Combat</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic pp"></i>Prépa physique</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="ic o"></i>Mixte</span></div>
+      </div>
+      <div class="caldaybox">
+        <div class="cal-head"><h2 id="dayTitle">Cours</h2></div>
+        <div id="dayList" class="courses"></div>
       </div>
       <form id="fCourse" class="panel" autocomplete="off">
         <h3>Ajouter un cours</h3>
@@ -588,13 +596,6 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         <label for="cUntil">Répéter chaque semaine jusqu'au (facultatif)<input id="cUntil" type="date"></label>
         <button class="btn" data-w type="submit" id="cSubmit">Ajouter au calendrier</button>
       </form>
-    </div>
-    <div style="display:grid;gap:12px;min-width:0">
-      <div class="cal-head"><h2 id="dayTitle">Cours</h2></div>
-      <div id="dayList" class="courses"></div>
-      <div class="cal-head" style="margin-top:8px"><h3>Prochains cours</h3></div>
-      <div id="nextList" class="courses"></div>
-    </div>
   </section>
 
   <!-- NOTES (tickets) -->
@@ -1322,8 +1323,6 @@ function renderCalendar(){
   const day=coursesOn(ui.day);
   $('#dayList').innerHTML=day.length?day.map(([id,c])=>courseHtml(id,c,false)).join(''):`<div class="empty">Pas de cours ce jour-là. Ajoute-le avec le formulaire${ui.day>=today?' : la date est déjà remplie.':'.'}</div>`;
   if(!$('#cDate').value||$('#cDate').dataset.auto==='1'){$('#cDate').value=ui.day;$('#cDate').dataset.auto='1'}
-  const next=[...S.courses.entries()].filter(([,c])=>c.date>=today&&c.date!==ui.day).sort((a,b)=>(a[1].date+a[1].time).localeCompare(b[1].date+b[1].time)).slice(0,5);
-  $('#nextList').innerHTML=next.length?next.map(([id,c])=>courseHtml(id,c,true)).join(''):'<div class="empty"><strong>Saison à remplir</strong>Les cours à venir de toute l’année s’afficheront ici. Astuce : utilise « Répéter chaque semaine » pour poser un créneau régulier jusqu’en juin.</div>';
   applyRO();
 }
 $('#cDate').addEventListener('input',e=>e.target.dataset.auto='0');
