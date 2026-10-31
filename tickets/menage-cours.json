@@ -5,13 +5,10 @@
   ],
   "depuis": "2026-10-31",
   "supprime": false,
-  "modifie": {
-    "heure": "19:15",
-    "duree": "90"
-  },
+  "modifie": null,
   "nb_cours": 18,
   "nb_presences": 10,
-  "fait_le": "2026-10-31T15:06:35+00:00",
+  "fait_le": "2026-10-31T15:06:54+00:00",
   "cours": [
     {
       "id": "L3tfz9OEJZYWe83L5sFG",
@@ -25,7 +22,7 @@
     {
       "id": "N1vkVXaI9OhQIczu0O2V",
       "date": "2026-11-04",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -43,7 +40,7 @@
     {
       "id": "4yRfLCX6euYqWAZmCCze",
       "date": "2026-11-11",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -61,7 +58,7 @@
     {
       "id": "aqOTuSCb3ojI2MbJgM0A",
       "date": "2026-11-18",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -79,7 +76,7 @@
     {
       "id": "Em7Z3Zho8ov4nkAnHhbb",
       "date": "2026-11-25",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -97,7 +94,7 @@
     {
       "id": "kCynPCPW88hB6h7K3FaE",
       "date": "2026-12-02",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -115,7 +112,7 @@
     {
       "id": "4TmLsrbLBogZPXYgk6ib",
       "date": "2026-12-09",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -133,7 +130,7 @@
     {
       "id": "UlBvZWQ8fdkocyOLFqlT",
       "date": "2026-12-16",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -151,7 +148,7 @@
     {
       "id": "pHLzUDf2qO1kmj5KF7XU",
       "date": "2026-12-23",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
@@ -169,7 +166,7 @@
     {
       "id": "aQ3PmhyhHXdpLJrodirk",
       "date": "2026-12-30",
-      "heure": "19:00",
+      "heure": "19:15",
       "type": "MX",
       "duree": "90",
       "lieu": "St Roch",
