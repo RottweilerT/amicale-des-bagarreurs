@@ -1703,7 +1703,7 @@ function TabsPerso(o){
   const all=()=>{try{const v=JSON.parse(localStorage.getItem(o.storage)||'{}');return v&&typeof v==='object'?v:{}}catch(e){return {}}};
   const read=()=>{let a=all(),p=who();
     if(Array.isArray(a)){a={[p]:a};try{localStorage.setItem(o.storage,JSON.stringify(a))}catch(e){}}
-    const v=a[p];let h=Array.isArray(v)?v.filter(k=>btns.some(b=>keyOf(b)===k)):[];return h.length>=btns.length?[]:h};
+    const v=a[p]===undefined&&p!=='_'&&o.defaut?o.defaut:a[p];let h=Array.isArray(v)?v.filter(k=>btns.some(b=>keyOf(b)===k)):[];return h.length>=btns.length?[]:h};
   const write=v=>{const a=all(),b=Array.isArray(a)?{}:a;b[who()]=v;try{localStorage.setItem(o.storage,JSON.stringify(b))}catch(e){}};
   let cur=who(),hidden=read();
   const label=b=>(o.label?o.label(b):b.textContent).trim();
@@ -1767,7 +1767,7 @@ function TabsPerso(o){
     });
   }
   function render(){
-    if(who()!==cur){cur=who();hidden=read();closeAll()}
+    let chg=false;if(who()!==cur){cur=who();hidden=read();closeAll();chg=true}
     const vis=btns.filter(b=>!hidden.includes(keyOf(b)));
     btns.forEach(b=>{b.hidden=hidden.includes(keyOf(b))});
     more.hidden=!hidden.length;
@@ -1776,6 +1776,7 @@ function TabsPerso(o){
     const mv=on?(o.activeVal||'true'):(o.activeOff||'false');if(more.getAttribute(o.activeAttr)!==mv)more.setAttribute(o.activeAttr,mv);
     if(!hidden.length)closeMenu();else if(!menu.hidden)fillMenu();
     if(o.onRender)o.onRender(vis,more);
+    if(chg&&o.onProfile)o.onProfile(vis);
   }
   btns.forEach(b=>onLongPress(b,()=>openCtx(b,keyOf(b),'hide')));
   more.addEventListener('click',e=>{e.stopPropagation();e.preventDefault();closeCtx();if(!menu.hidden){closeMenu();return}fillMenu();place(menu,more,false);more.setAttribute('aria-expanded','true')});
@@ -1788,8 +1789,14 @@ function TabsPerso(o){
   render();setInterval(()=>{if(who()!==cur)render()},800);  /* changement de profil */
   return {hide,show,refresh:render,hidden:()=>hidden.slice()};
 }
-TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',profile:()=>me,storage:'adb-onglets-masques',toast,
-  onRender:(vis,more)=>{const C=['b','w','r'];vis.forEach((b,i)=>{b.dataset.tc=C[i%3]});more.dataset.tc=C[vis.length%3]}});
+/* Par défaut (et une fois pour tous les profils existants, d'où la nouvelle clé) : seuls Calendrier et Minuteur restent visibles,
+   le reste est rangé dans ⋯. Sans profil choisi, tout reste visible pour pouvoir s'inscrire. */
+const ongletVisible=vis=>{const a=vis.find(b=>b.dataset.tab===ui.tab);if(!a&&vis[0])showTab(vis[0].dataset.tab)};
+TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',profile:()=>me,storage:'adb-onglets-masques-2',toast,
+  defaut:['membres','combats','elo','regles','notes'],
+  onRender:(vis,more)=>{const C=['b','w','r'];vis.forEach((b,i)=>{b.dataset.tc=C[i%3]});more.dataset.tc=C[vis.length%3]},
+  onProfile:ongletVisible});
+if(!location.hash)ongletVisible([...document.querySelectorAll('nav.tabs button[data-tab]')].filter(b=>!b.hidden));
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
 </body>
