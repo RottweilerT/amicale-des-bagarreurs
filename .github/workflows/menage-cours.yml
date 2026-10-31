@@ -1,12 +1,12 @@
 name: Ménage des cours
 
-# Liste (et, si demandé, supprime) les cours du calendrier qui tombent un jour de la semaine donné.
+# Liste les cours du calendrier qui tombent certains jours de la semaine ; peut les supprimer ou changer leur heure / durée.
 # Les présences liées aux cours supprimés sont supprimées aussi. Le rapport est écrit dans tickets/menage-cours.json.
 on:
   workflow_dispatch:
     inputs:
       jour:
-        description: "Jour de la semaine (lundi … dimanche)"
+        description: "Jour(s) de la semaine, séparés par des virgules (lundi … dimanche)"
         required: true
         default: "samedi"
       depuis:
@@ -17,6 +17,14 @@ on:
         description: "« oui » pour supprimer, sinon simple liste"
         required: true
         default: "non"
+      heure:
+        description: "Nouvelle heure de début HH:MM (vide = ne pas changer)"
+        required: false
+        default: ""
+      duree:
+        description: "Nouvelle durée en minutes (vide = ne pas changer)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -31,13 +39,18 @@ jobs:
           JOUR: ${{ github.event.inputs.jour }}
           DEPUIS: ${{ github.event.inputs.depuis }}
           SUPPRIMER: ${{ github.event.inputs.supprimer }}
+          HEURE: ${{ github.event.inputs.heure }}
+          DUREE: ${{ github.event.inputs.duree }}
         run: |
           python3 - <<'PY'
           import json, os, re, urllib.request, datetime
           KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
           root = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/"
           JOURS = ["lundi","mardi","mercredi","jeudi","vendredi","samedi","dimanche"]
-          jour = JOURS.index(os.environ["JOUR"].strip().lower())
+          jours = [JOURS.index(j.strip().lower()) for j in os.environ["JOUR"].split(",") if j.strip()]
+          heure = os.environ.get("HEURE","").strip(); duree = os.environ.get("DUREE","").strip()
+          if heure and not re.fullmatch(r"\d{2}:\d{2}", heure): raise SystemExit("heure invalide")
+          if duree and not duree.isdigit(): raise SystemExit("durée invalide")
           depuis = os.environ.get("DEPUIS","").strip()
           go = os.environ.get("SUPPRIMER","").strip().lower() == "oui"
           def val(v):
@@ -56,8 +69,8 @@ jobs:
               if f.get("kind") == "note" or not f.get("date"): continue
               try: dt = datetime.date.fromisoformat(f["date"])
               except Exception: continue
-              if dt.weekday() != jour or (depuis and f["date"] < depuis): continue
-              cours.append({"id": d["name"].split("/")[-1], "date": f["date"], "heure": f.get("time",""), "type": f.get("type",""), "lieu": f.get("place",""), "serie": f.get("serie")})
+              if dt.weekday() not in jours or (depuis and f["date"] < depuis): continue
+              cours.append({"id": d["name"].split("/")[-1], "date": f["date"], "heure": f.get("time",""), "type": f.get("type",""), "duree": f.get("dur"), "lieu": f.get("place",""), "serie": f.get("serie")})
           ids = {c["id"] for c in cours}
           pres = [d["name"].split("/")[-1] for d in lister("attendance") if val(d.get("fields",{}).get("courseId",{})) in ids]
           if go:
@@ -65,12 +78,21 @@ jobs:
                   urllib.request.urlopen(urllib.request.Request(f"{root}courses/{c['id']}?key={KEY}", method="DELETE")).read()
               for p in pres:
                   urllib.request.urlopen(urllib.request.Request(f"{root}attendance/{p}?key={KEY}", method="DELETE")).read()
+          modif = bool(heure or duree) and not go
+          if modif:
+              champs, masque = {}, []
+              if heure: champs["time"] = {"stringValue": heure}; masque.append("time")
+              if duree: champs["dur"] = {"integerValue": duree}; masque.append("dur")
+              q = "&".join(f"updateMask.fieldPaths={m}" for m in masque)
+              for c in cours:
+                  urllib.request.urlopen(urllib.request.Request(f"{root}courses/{c['id']}?{q}&key={KEY}", data=json.dumps({"fields": champs}).encode(),
+                                         method="PATCH", headers={"Content-Type": "application/json"})).read()
           cours.sort(key=lambda c: (c["date"], c["heure"]))
-          rapport = {"jour": JOURS[jour], "depuis": depuis or None, "supprime": go, "nb_cours": len(cours), "nb_presences": len(pres),
+          rapport = {"jours": [JOURS[j] for j in jours], "depuis": depuis or None, "supprime": go, "modifie": ({"heure": heure or None, "duree": duree or None} if modif else None), "nb_cours": len(cours), "nb_presences": len(pres),
                      "fait_le": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), "cours": cours}
           os.makedirs("tickets", exist_ok=True)
           json.dump(rapport, open("tickets/menage-cours.json","w",encoding="utf-8"), ensure_ascii=False, indent=2)
-          print(("Supprimés" if go else "Trouvés"), len(cours), "cours et", len(pres), "présences")
+          print(("Supprimés" if go else "Modifiés" if modif else "Trouvés"), len(cours), "cours ;", len(pres), "présences liées")
           PY
       - name: Enregistrer le rapport
         run: |
