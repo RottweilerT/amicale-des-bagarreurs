@@ -364,7 +364,7 @@ input[type="range"]{padding:0;border:0;background:none;accent-color:var(--red)}
 .tp-menu{--tp-bg:var(--surface);--tp-ink:var(--ink);--tp-line:var(--line);--tp-muted:var(--muted);--tp-hover:var(--sunk);--tp-soft:var(--sunk);--tp-accent:var(--ink);--tp-font:var(--f-body)}
 .tp-menu button{font:700 1rem var(--f-data);letter-spacing:.06em;text-transform:uppercase}
 nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
-/* Vue semaine (samedi → vendredi) */
+/* Vue semaine (dimanche → samedi) */
 .wk{grid-column:1/-1}
 .wkt{flex:1;text-align:center;min-width:0}
 .wkt h3{font-size:1.35rem}
@@ -546,7 +546,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 
   <!-- CALENDRIER -->
   <section id="tab-calendrier" class="grid2" hidden>
-    <!-- Vue semaine : du samedi au vendredi, qui est inscrit et si l'on peut encore s'inscrire -->
+    <!-- Vue semaine : du dimanche au samedi, qui est inscrit et si l'on peut encore s'inscrire -->
     <div class="panel wk" id="wk">
       <div class="cal-head wkhead">
         <button class="btn ghost small" id="wkPrev" aria-label="Semaine précédente">‹</button>
@@ -1269,15 +1269,15 @@ function courseHtml(id,c,showDate){
       ${conf?`<button class="btn danger small" data-w data-act="cDelYes" data-id="${id}" style="flex:0 0 auto">Supprimer ce cours</button>${c.serie?`<button class="btn danger small" data-w data-act="cDelSerie" data-id="${id}" style="flex:0 0 auto">Toute la série à venir</button>`:''}<button class="btn ghost small" data-act="noConfirm" style="flex:0 0 auto">Garder</button>`:`<button class="btn ghost small" data-w data-act="cDel" data-id="${id}" style="flex:0 0 auto">Supprimer</button>`}
     </div></div>`;
 }
-/* ---------- Vue semaine : du samedi au vendredi ----------
+/* ---------- Vue semaine : du dimanche au samedi ----------
    Pour chaque jour : les cours, qui est inscrit, et si l'on peut encore indiquer sa présence. */
-const wkSat=s=>{const d=parseYmd(s);d.setDate(d.getDate()-((d.getDay()+1)%7));return ymd(d)};
+const wkSun=s=>{const d=parseYmd(s);d.setDate(d.getDate()-d.getDay());return ymd(d)};
 const wkAdd=(s,n)=>{const d=parseYmd(s);d.setDate(d.getDate()+n);return ymd(d)};
 function renderSemaine(){
-  if(!ui.wk)ui.wk=wkSat(today);
+  if(!ui.wk)ui.wk=wkSun(today);
   const a=parseYmd(ui.wk),b=parseYmd(wkAdd(ui.wk,6)),M=m=>new Date(2000,m,1).toLocaleDateString('fr-FR',{month:'short'});
   $('#wkTitle').textContent=a.getMonth()===b.getMonth()?`Du ${a.getDate()} au ${b.getDate()} ${MONTHS[b.getMonth()]}`:`Du ${a.getDate()} ${M(a.getMonth())} au ${b.getDate()} ${M(b.getMonth())}`;
-  $('#wkToday').hidden=ui.wk===wkSat(today);
+  $('#wkToday').hidden=ui.wk===wkSun(today);
   const mine=me&&S.members.has(me);let h='';
   for(let i=0;i<7;i++){
     const s=wkAdd(ui.wk,i),d=parseYmd(s),cs=coursesOn(s);
@@ -1300,9 +1300,9 @@ function renderSemaine(){
   $('#wkDays').innerHTML=h;
 }
 function wkGo(s){const el=$('#wkDays');ui.wk=s;el.classList.add('wkfade');setTimeout(()=>{renderSemaine();applyRO();el.classList.remove('wkfade')},120)}
-$('#wkPrev').addEventListener('click',()=>wkGo(wkAdd(ui.wk||wkSat(today),-7)));
-$('#wkNext').addEventListener('click',()=>wkGo(wkAdd(ui.wk||wkSat(today),7)));
-$('#wkToday').addEventListener('click',()=>wkGo(wkSat(today)));
+$('#wkPrev').addEventListener('click',()=>wkGo(wkAdd(ui.wk||wkSun(today),-7)));
+$('#wkNext').addEventListener('click',()=>wkGo(wkAdd(ui.wk||wkSun(today),7)));
+$('#wkToday').addEventListener('click',()=>wkGo(wkSun(today)));
 function renderCalendar(){
   renderSemaine();
   fillMemberSelect($('#me'),'Choisis ton nom',me);
