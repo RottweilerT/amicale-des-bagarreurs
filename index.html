@@ -397,6 +397,22 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 .calcol>*{min-width:0}
 .caldaybox{display:grid;gap:12px}
 .calcol .cal{max-width:480px;width:100%;margin:0 auto}
+/* Profil activé / désactivé : un profil désactivé n'est plus attendu pour les présences */
+.reg-toggle{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--reg-line);border-radius:10px;background:var(--reg-field)}
+.reg-switch{position:relative;flex:none;width:44px;height:26px;margin:2px 0 0;display:block}
+.reg-switch input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer;z-index:1}
+.reg-switch span{position:absolute;inset:0;border-radius:999px;background:var(--reg-line);transition:background-color .2s}
+.reg-switch span::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--reg-surface);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
+.reg-switch input:checked+span{background:var(--reg-accent)}
+.reg-switch input:checked+span::after{transform:translateX(18px)}
+.reg-switch input:focus-visible+span{outline:2px solid var(--reg-accent);outline-offset:2px}
+.reg-switch input:disabled{cursor:wait}
+.reg-toggle b{display:block;font-size:.95rem;color:var(--reg-ink)}
+.reg-toggle .reg-line{margin-top:2px}
+@media (prefers-reduced-motion:reduce){.reg-switch span,.reg-switch span::after{transition:none}}
+.member.off .name,.member.off .stats{opacity:.5}
+.pill.offp{background:var(--sunk);color:var(--muted)}
+.chip.offc{opacity:.55}
 </style>
 </head>
 <body>
@@ -439,6 +455,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         <div class="reg-who"><span class="reg-avatar" id="bxAvatar" aria-hidden="true"></span>
           <div style="min-width:0"><div class="reg-name" id="bxName"></div><div class="reg-line" id="bxProf"></div><div class="reg-line" id="bxStats"></div><span class="reg-badge" id="bxLock"></span></div></div>
         <div class="reg-actions"><button class="reg-btn ghost" type="button" id="bxEdit">Modifier</button><button class="reg-btn ghost" type="button" id="bxForget">Ce n'est pas moi</button><button class="reg-btn danger" data-w type="button" id="bxDel">Me désinscrire</button></div>
+        <div class="reg-toggle"><label class="reg-switch" for="bxActive"><input type="checkbox" id="bxActive" role="switch"><span></span></label><div><b id="bxActiveT">Profil activé</b><span class="reg-line" id="bxActiveH"></span></div></div>
         <p class="reg-note" id="bxDelNote" hidden>Ta fiche sera effacée du groupe. Touche encore pour confirmer.</p>
         <button class="reg-link" type="button" id="bxOther">Inscrire quelqu'un d'autre</button>
       </div>
@@ -959,20 +976,27 @@ function memberStats(id){
   for(const a of S.attendance.values())if(a.memberId===id&&a.status==='present'&&S.courses.has(a.courseId)&&S.courses.get(a.courseId).date<=today)p++;
   return {w,l,n,p};
 }
+/* Profil activé / désactivé (champ « off » de la fiche) : un profil désactivé n'est pas attendu pour les présences
+   (il ne compte pas dans « sans réponse » et ne reçoit pas le rappel du samedi), mais il peut toujours répondre. */
+const isOff=m=>!!(m&&m.off);
+async function setOff(id,off){const m=member(id);if(!m||!db)return;m.off=off;renderAll();
+  try{await db.doc('members/'+id).set({off},{merge:true});toast(m.first+' '+m.last+(off?' : profil désactivé':' : profil activé'))}
+  catch(e){m.off=!off;renderAll();toast('Enregistrement impossible, réessaie.')}}
+$('#bxActive').addEventListener('change',e=>{if(me)setOff(me,!e.target.checked)});
 function renderMembers(){
   renderReg();
   const list=sortedMembers();
-  $('#mCount').textContent=list.length?list.length+' inscrit'+(list.length>1?'s':''):'';
+  {const off=list.filter(([,m])=>isOff(m)).length;$('#mCount').textContent=list.length?list.length+' inscrit'+(list.length>1?'s':'')+(off?' · '+off+' désactivé'+(off>1?'s':''):''):'';}
   const el=$('#membersList');
   if(!loaded.members&&connected){el.innerHTML='<div class="empty">Chargement du groupe…</div>';return}
   if(!list.length){el.innerHTML='<div class="empty"><strong>Personne sur le ring</strong>Les inscrits apparaîtront ici avec leur poids, leur taille, leur bilan de combats et leurs présences. Remplis le formulaire pour être le premier.</div>';return}
   el.innerHTML='<div class="members">'+list.map(([id,m])=>{
     const s=memberStats(id);
     const conf=ui.confirm==='m:'+id;
-    return `<div class="member"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}</div>${m.pin?'<div class="lock">Protégé par un code</div>':''}
+    return `<div class="member${isOff(m)?' off':''}"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}${isOff(m)?' <span class="pill offp">désactivé</span>':''}</div>${m.pin?'<div class="lock">Protégé par un code</div>':''}
       <div class="hint num">${esc(m.weight)} kg · ${esc(m.height)} cm</div>
       <div class="stats"><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
-      <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
+      <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mOff" data-id="${id}">${isOff(m)?'Activer':'Désactiver'}</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
 }
 /* ----- Inscription : même écran que FC St Léon et Apnée ----- */
 let pickId=null,pinFails=0,pinLockUntil=0;
@@ -1015,6 +1039,8 @@ function renderReg(){
     $('#bxProf').textContent=m.weight+' kg · '+m.height+' cm';
     $('#bxStats').textContent=`${s.w} victoire${s.w>1?'s':''} · ${s.l} défaite${s.l>1?'s':''} · ${s.n-s.w-s.l} nul${s.n-s.w-s.l>1?'s':''} · ${s.p} cours`;
     $('#bxLock').textContent=m.pin?'Protégé par un code':'Sans code d’accès';
+    $('#bxActive').checked=!isOff(m);$('#bxActiveT').textContent=isOff(m)?'Profil désactivé':'Profil activé';
+    $('#bxActiveH').textContent=isOff(m)?'On n\u2019attend pas ta présence aux cours et tu ne reçois plus le rappel du samedi. Tu peux quand même t\u2019inscrire.':'On compte sur ta réponse pour chaque cours. Désactive ton profil si tu fais une pause (blessure, vacances…).';
     const armed=ui.confirm==='me';$('#bxDel').textContent=armed?'Confirmer la désinscription':'Me désinscrire';$('#bxDel').classList.toggle('armed',armed);$('#bxDelNote').hidden=!armed;}
   if(showForm){
     const self=editId&&editId===me;
@@ -1111,6 +1137,7 @@ $('#fMember').addEventListener('submit',async e=>{
   const id=$('#mId').value||newId('members');
   const prev=S.members.get(id);data.createdAt=prev?.createdAt||Date.now();
   if(prev&&Array.isArray(prev.push))data.push=prev.push;
+  if(prev&&prev.off)data.off=true;
   data.pin=pin?await hashPin(id,pin):($('#mPinOff').checked?null:(prev?.pin||null));
   setDoc('members/'+id,data);S.members.set(id,data);
   if(!prev&&!me){me=id;lsSet('adb-me',id)}
@@ -1263,7 +1290,7 @@ function courseHtml(id,c,showDate){
     <div class="hint">${[c.place,c.coach?'coach '+c.coach:''].filter(Boolean).map(esc).join(' · ')||'&nbsp;'}</div>
     <div class="pres">${me&&S.members.has(me)?`<button class="btn small ghost yes" data-w data-act="att" data-id="${id}" data-v="present" aria-pressed="${mine==='present'}">${past?'J’étais là':'Je serai là'}</button><button class="btn small ghost no" data-w data-act="att" data-id="${id}" data-v="absent" aria-pressed="${mine==='absent'}">Absent</button>`:'<span class="hint">Choisis ton nom en haut de la page pour indiquer ta présence.</span>'}
       <span class="hint num" style="margin-left:auto">${pres.length} présent${pres.length>1?'s':''}${abs.length?' · '+abs.length+' absent'+(abs.length>1?'s':''):''}</span></div>
-    ${appel?`<div class="chips">${sortedMembers().map(([mid])=>{const s=att.get(mid);return `<button class="chip ${s==='present'?'p':s==='absent'?'a':''}" data-w data-act="appel" data-id="${id}" data-m="${mid}">${esc(mName(mid,true))}</button>`}).join('')||'<span class="hint">Aucun membre inscrit.</span>'}</div><div class="hint">Touche un nom : présent, puis absent, puis sans réponse.</div>`
+    ${appel?`<div class="chips">${sortedMembers().map(([mid])=>{const s=att.get(mid);return `<button class="chip ${s==='present'?'p':s==='absent'?'a':''}${isOff(member(mid))?' offc':''}" data-w data-act="appel" data-id="${id}" data-m="${mid}">${esc(mName(mid,true))}${isOff(member(mid))?' (désactivé)':''}</button>`}).join('')||'<span class="hint">Aucun membre inscrit.</span>'}</div><div class="hint">Touche un nom : présent, puis absent, puis sans réponse.</div>`
       :(pres.length||abs.length?`<div class="chips">${pres.map(([m])=>`<span class="chip p">${esc(mName(m,true))}</span>`).join('')}${abs.map(([m])=>`<span class="chip a">${esc(mName(m,true))}</span>`).join('')}</div>`:'')}
     <div class="row">
       <button class="btn ghost small" data-act="appelToggle" data-id="${id}" style="flex:0 0 auto">${appel?'Fermer l’appel':'Faire l’appel'}</button>
@@ -1286,7 +1313,7 @@ function renderSemaine(){
     if(!cs.length)h+=`<span class="wknone">Pas de cours</span>`;
     for(const [id,c] of cs){
       const att=attOf(id),pres=sortedMembers().filter(([m])=>att.get(m)==='present'),abs=[...att.values()].filter(v=>v==='absent').length;
-      const nr=S.members.size-pres.length-abs,past=c.date<today,my=mine&&att.get(me);
+      const nr=sortedMembers().filter(([m2,mm])=>!att.get(m2)&&!isOff(mm)).length,past=c.date<today,my=mine&&att.get(me);
       const endMin=Number(c.time.slice(0,2))*60+Number(c.time.slice(3))+(c.dur||90),end=pad(Math.floor(endMin/60)%24)+':'+pad(endMin%60);
       h+=`<div class="wkev ${courseCls(c.type)}"><div class="top"><span class="pill ${courseCls(c.type)}"><i class="ic ${courseCls(c.type)}"></i>${esc(COURSE[c.type]||c.type)}</span><span class="when num">${esc(c.time)}–${end}</span>${c.place?`<span class="wkplace">${esc(c.place)}</span>`:''}</div>`;
       h+=`<div class="wkwho"><span class="wklbl">${past?'Présents':'Inscrits'} ${pres.length}</span>${pres.length?pres.map(([m])=>`<span class="chip p${m===me?' me':''}">${esc(mName(m,true))}</span>`).join(''):'<span class="wkempty">Personne pour l’instant</span>'}</div>`;
@@ -1411,6 +1438,7 @@ document.addEventListener('click',async e=>{
   const a=b.dataset.act,id=b.dataset.id;
   switch(a){
     case 'noConfirm':ui.confirm=null;renderAll();break;
+    case 'mOff':{const m=member(id);if(!m)break;if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour l\u2019activer ou le désactiver')))break;setOff(id,!isOff(m));break}
     case 'mEdit':{const m=member(id);if(!m)break;if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour le modifier')))break;openMemberForm(id);break}
     case 'mDel':if(id!==me&&!(await askPin(id,'Entre le code de ce profil pour le supprimer')))break;ui.confirm='m:'+id;renderMembers();break;
     case 'mDelYes':delDoc('members/'+id);if(me===id){me='';lsSet('adb-me','')}ui.confirm=null;toast('Membre supprimé');break;

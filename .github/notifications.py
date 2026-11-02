@@ -4,7 +4,7 @@ Modes (variable MODE) :
   changements : compare le calendrier avec l'état précédent (fichier ETAT) et prévient tout le monde
                 si une séance à venir est modifiée ou annulée. Au premier passage, enregistre seulement l'état.
   rappel      : le samedi à 16 h (heure de Paris), rappelle à chacun d'indiquer sa présence pour les
-                séances des 7 prochains jours auxquelles il n'a pas encore répondu.
+                séances des 7 prochains jours auxquelles il n'a pas encore répondu (sauf profils désactivés).
   test        : envoie une notification de test à tous les téléphones inscrits.
 
 Les jetons des téléphones sont dans la fiche de chaque membre (champ « push »).
@@ -199,6 +199,7 @@ elif MODE == "rappel":
         print("::notice::Aucune séance dans les 7 prochains jours : pas de rappel."); sys.exit(0)
     rep, n = reponses(), 0
     for mid, m in membres().items():
+        if m.get("off"): continue  # profil désactivé : on n'attend pas sa présence
         manque = [s for i, s in semaine if i not in rep.get(mid, set())]
         if not manque: continue
         liste = ", ".join(f"{jour(s['date'], True)} ({s['nom']}{' ' + s['heure'] if s['heure'] else ''})" for s in manque[:5])
