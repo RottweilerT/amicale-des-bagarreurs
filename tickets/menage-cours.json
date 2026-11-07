@@ -1,33 +1,20 @@
 {
   "jours": [
     "lundi",
-    "mercredi"
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "samedi",
+    "dimanche"
   ],
-  "depuis": "2026-10-31",
+  "depuis": "2026-11-07",
   "supprime": false,
   "modifie": null,
-  "nb_cours": 18,
-  "nb_presences": 10,
-  "fait_le": "2026-10-31T15:06:54+00:00",
+  "nb_cours": 24,
+  "nb_presences": 8,
+  "fait_le": "2026-11-07T18:14:29+00:00",
   "cours": [
-    {
-      "id": "L3tfz9OEJZYWe83L5sFG",
-      "date": "2026-11-02",
-      "heure": "19:15",
-      "type": "BA",
-      "duree": "90",
-      "lieu": "St Roch",
-      "serie": "SHAi0JKfFbfYfwmiOV39"
-    },
-    {
-      "id": "N1vkVXaI9OhQIczu0O2V",
-      "date": "2026-11-04",
-      "heure": "19:15",
-      "type": "MX",
-      "duree": "90",
-      "lieu": "St Roch",
-      "serie": "R2zEvjfmbfiNZGO6dWGM"
-    },
     {
       "id": "97lPk3qHs39yMBWF5oYD",
       "date": "2026-11-09",
@@ -45,6 +32,15 @@
       "duree": "90",
       "lieu": "St Roch",
       "serie": "R2zEvjfmbfiNZGO6dWGM"
+    },
+    {
+      "id": "gLZhEgco1F5y22wXsPfe",
+      "date": "2026-11-12",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
     },
     {
       "id": "GWQgfg1u4kMePHao5XkA",
@@ -65,6 +61,15 @@
       "serie": "R2zEvjfmbfiNZGO6dWGM"
     },
     {
+      "id": "YbhXLN6bam028k9Zu0QA",
+      "date": "2026-11-19",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
+    },
+    {
       "id": "q8HGNDLKNi6aS7qxsrPl",
       "date": "2026-11-23",
       "heure": "19:15",
@@ -81,6 +86,15 @@
       "duree": "90",
       "lieu": "St Roch",
       "serie": "R2zEvjfmbfiNZGO6dWGM"
+    },
+    {
+      "id": "IJDHMk7Xm9iLyHm5VYA9",
+      "date": "2026-11-26",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
     },
     {
       "id": "pbNQkQPenOGtpBfD0LUB",
@@ -101,6 +115,15 @@
       "serie": "R2zEvjfmbfiNZGO6dWGM"
     },
     {
+      "id": "jTqBsR3W89zH39spHyPl",
+      "date": "2026-12-03",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
+    },
+    {
       "id": "XzKhmwdMwfGGYpBVIiyE",
       "date": "2026-12-07",
       "heure": "19:15",
@@ -117,6 +140,15 @@
       "duree": "90",
       "lieu": "St Roch",
       "serie": "R2zEvjfmbfiNZGO6dWGM"
+    },
+    {
+      "id": "8No9PceMIAroLPqRvQrl",
+      "date": "2026-12-10",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
     },
     {
       "id": "jTvkLBqxrHGGIPIlL0Dk",
@@ -137,6 +169,15 @@
       "serie": "R2zEvjfmbfiNZGO6dWGM"
     },
     {
+      "id": "us0Fcw9csVVAOGwfueWd",
+      "date": "2026-12-17",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
+    },
+    {
       "id": "FYkMwZmPdfPCFwa6MFvo",
       "date": "2026-12-21",
       "heure": "19:15",
@@ -155,6 +196,15 @@
       "serie": "R2zEvjfmbfiNZGO6dWGM"
     },
     {
+      "id": "2zTWHn8TT5zrX1FTHifZ",
+      "date": "2026-12-24",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
+    },
+    {
       "id": "xncXwGcXNguZf15Vz65v",
       "date": "2026-12-28",
       "heure": "19:15",
@@ -171,6 +221,15 @@
       "duree": "90",
       "lieu": "St Roch",
       "serie": "R2zEvjfmbfiNZGO6dWGM"
+    },
+    {
+      "id": "mLx3WovmY2bEL2ueswCC",
+      "date": "2026-12-31",
+      "heure": "19:00",
+      "type": "BA",
+      "duree": "90",
+      "lieu": "St Roch",
+      "serie": "489qBTmofd8AIeNa6MKs"
     }
   ]
 }
