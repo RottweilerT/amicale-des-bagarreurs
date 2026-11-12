@@ -128,6 +128,29 @@ h3{font-size:1.25rem}
 .sl-add form,.sl-fin{display:grid;gap:10px}
 .sl-add form{margin-top:6px}
 .sl-neg{color:var(--red)}.sl-pos{color:var(--ok)}
+.sl-bar{height:8px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.sl-bar i{display:block;height:100%;background:var(--gold);border-radius:99px}
+.sl-item.st-ok .sl-bar i{background:var(--ok)}
+.sl-item.st-ok{border-left-color:var(--ok)}.sl-item.st-wait{border-left-color:var(--gold)}
+.sl-faces{display:flex;flex-wrap:wrap;gap:4px}
+.sl-face{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 .7rem var(--f-data);background:var(--blue-soft);color:var(--blue);border:1px solid var(--line)}
+.sl-face.me{background:var(--blue);color:var(--on-accent)}
+.sl-share{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sl-share div{background:var(--sunk);border-radius:10px;padding:10px 12px;display:grid;gap:2px;min-width:0}
+.sl-share span{font:600 .7rem var(--f-data);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sl-share b{font:700 1.25rem var(--f-data)}
+.sl-share .big{background:var(--blue);color:var(--on-accent)}.sl-share .big span{color:inherit;opacity:.85}
+@media (max-width:520px){.sl-share{grid-template-columns:repeat(2,minmax(0,1fr))}.sl-share .big{grid-column:1/-1;order:-1}}
+.sl-people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.sl-person{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:6px 8px;background:var(--bg);min-width:0}
+.sl-person .nm{flex:1 1 auto;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl-person.out{opacity:.5}.sl-person.out .nm{text-decoration:line-through}
+.sl-person.paid{border-color:var(--ok);background:var(--ok-soft)}
+.sl-person label{display:flex;align-items:center;gap:4px;font-size:.75rem;flex:0 0 auto}
+.sl-person input{width:18px;height:18px;margin:0;accent-color:var(--blue)}
+.sl-pay{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:5px 10px;font:700 .72rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;min-height:32px}
+.sl-person.paid .sl-pay{background:var(--ok);border-color:var(--ok);color:#fff}
+
 .gate{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:30;padding:16px}
 .gate .panel{width:min(360px,100%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .pin{letter-spacing:.35em;font-family:var(--f-data);font-size:1.2rem}
@@ -646,24 +669,24 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
     </div>
   </section>
 
-  <!-- LA SALLE : fonctionnement, financement, achats -->
+  <!-- LA SALLE : idées financées par le groupe, participation de chacun, achats -->
   <section id="tab-salle" hidden>
     <div class="sl">
       <div class="sl-top">
-        <div><h2>Fonctionnement de la salle</h2><p class="hint" style="margin:0">Matériel et budget, saison par saison (de septembre à août).</p></div>
+        <div><h2>Fonctionnement de la salle</h2><p class="hint" style="margin:0">Le matériel de la salle, payé ensemble, saison par saison (de septembre à août).</p></div>
         <div class="sl-season"><label for="slSaison">Saison<select id="slSaison"></select></label><button class="btn ghost small" data-w type="button" id="slNext">+ Saison suivante</button></div>
       </div>
       <div class="sl-kpis" id="slKpis"></div>
 
       <section class="panel sl-sec s1" aria-labelledby="slH1">
-        <div class="sl-sh"><span class="sl-num">1</span><div><h3 id="slH1">Besoins de financement</h3><p class="hint">Chacun peut proposer une idée (matériel, aménagement, entretien…). On la soutient, puis on retient celles qui forment la demande de financement de la saison.</p></div></div>
+        <div class="sl-sh"><span class="sl-num">1</span><div><h3 id="slH1">Idées et projets</h3><p class="hint" id="slRule">Chacun peut proposer une idée avec son prix, et valider celles qu'il soutient.</p></div></div>
         <div class="sl-sum" id="slSum1"></div>
-        <div class="seg" id="slF1"><button type="button" data-f="all" aria-selected="true">Toutes</button><button type="button" data-f="retenu" aria-selected="false">Retenues</button><button type="button" data-f="propose" aria-selected="false">Proposées</button><button type="button" data-f="ecarte" aria-selected="false">Écartées</button></div>
+        <div class="seg" id="slF1"><button type="button" data-f="all" aria-selected="true">Toutes</button><button type="button" data-f="ok" aria-selected="false">Validées</button><button type="button" data-f="wait" aria-selected="false">À valider</button></div>
         <div class="sl-list" id="slList1"></div>
-        <details class="sl-add" id="slAdd1"><summary>+ Proposer un besoin</summary>
+        <details class="sl-add" id="slAdd1"><summary>+ Proposer une idée</summary>
           <form id="slFbesoin" data-sec="besoin" autocomplete="off" novalidate>
-            <label>Quoi ?<input name="titre" maxlength="80" placeholder="Ex. Sac de frappe lourd" required></label>
-            <div class="row"><label>Quantité<input name="qte" type="number" min="1" max="999" inputmode="numeric" value="1"></label><label>Coût estimé total (€)<input name="montant" inputmode="decimal" placeholder="Facultatif"></label></div>
+            <label>Quoi ?<input name="titre" maxlength="80" placeholder="Ex. Gants de sparring 14 oz" required></label>
+            <div class="row"><label>Quantité<input name="qte" type="number" min="1" max="999" inputmode="numeric" value="1"></label><label>Prix total (€)<input name="montant" inputmode="decimal" placeholder="Ex. 120"></label></div>
             <label>Pourquoi ? Précisions<textarea name="desc" maxlength="1000" placeholder="Facultatif : à quoi ça servira, lien vers un modèle…"></textarea></label>
             <p class="hint sl-sign"></p>
             <div class="row"><button class="btn" data-w type="submit">Proposer</button><button class="btn ghost" type="button" data-cancel hidden>Annuler</button></div>
@@ -672,27 +695,14 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
       </section>
 
       <section class="panel sl-sec s2" aria-labelledby="slH2">
-        <div class="sl-sh"><span class="sl-num">2</span><div><h3 id="slH2">Financement accordé et utilisation prévue</h3><p class="hint">Le montant obtenu pour la saison, puis ce qu'on prévoit d'en faire.</p></div></div>
-        <form id="slFin" class="sl-fin" autocomplete="off" novalidate>
-          <div class="row"><label>Montant accordé (€)<input id="slAcc" inputmode="decimal" placeholder="Pas encore connu"></label><label>Financeur<input id="slFinanceur" maxlength="80" placeholder="Ex. mairie, association…"></label></div>
-          <label>Remarque<input id="slFinNote" maxlength="200" placeholder="Facultatif : date de versement, conditions…"></label>
-          <div class="row"><button class="btn ghost" data-w type="submit" style="flex:0 0 auto">Enregistrer le financement</button></div>
-        </form>
-        <div class="sl-sum" id="slSum2"></div>
-        <div class="sl-list" id="slList2"></div>
-        <div class="row"><button class="btn ghost small" data-w type="button" id="slFromNeeds" style="flex:0 0 auto">Reprendre les besoins retenus</button></div>
-        <details class="sl-add" id="slAdd2"><summary>+ Ajouter une utilisation prévue</summary>
-          <form id="slFplan" data-sec="plan" autocomplete="off" novalidate>
-            <label>Utilisation<input name="titre" maxlength="80" placeholder="Ex. 2 paires de gants de sparring" required></label>
-            <label>Montant prévu (€)<input name="montant" inputmode="decimal" placeholder="Facultatif"></label>
-            <label>Précisions<textarea name="desc" maxlength="1000" placeholder="Facultatif"></textarea></label>
-            <div class="row"><button class="btn" data-w type="submit">Ajouter</button><button class="btn ghost" type="button" data-cancel hidden>Annuler</button></div>
-          </form>
-        </details>
+        <div class="sl-sh"><span class="sl-num">2</span><div><h3 id="slH2">Participation de chacun</h3><p class="hint">Le total des projets validés est partagé à parts égales entre les participants de la saison.</p></div></div>
+        <div class="sl-share" id="slShare"></div>
+        <div class="sl-people" id="slPeople"></div>
+        <p class="hint" style="margin:0">Touche « À payer » quand quelqu'un a donné sa part. Décoche « Participe » pour quelqu'un qui ne participe pas cette saison (les profils désactivés ne comptent pas).</p>
       </section>
 
       <section class="panel sl-sec s3" aria-labelledby="slH3">
-        <div class="sl-sh"><span class="sl-num">3</span><div><h3 id="slH3">Achats réalisés</h3><p class="hint">Ce qui a vraiment été acheté ou payé, avec le prix réel. Un prix pas encore connu peut être ajouté plus tard.</p></div></div>
+        <div class="sl-sh"><span class="sl-num">3</span><div><h3 id="slH3">Achats réalisés</h3><p class="hint">Ce qui a vraiment été acheté avec l'argent, au prix réel.</p></div></div>
         <div class="sl-sum" id="slSum3"></div>
         <div class="sl-list" id="slList3"></div>
         <details class="sl-add" id="slAdd3"><summary>+ Inscrire un achat</summary>
@@ -1699,26 +1709,31 @@ function renderNotes(){
   applyRO();
 }
 
-/* ---------- la salle : besoins, financement, achats (documents « courses » de kind « salle » / « salle-saison ») ---------- */
+/* ---------- la salle : idées validées par le groupe, part de chacun, achats (documents « courses » de kind « salle » / « salle-saison ») ---------- */
 let SALLE=new Map();
 const SL={saison:'',f1:'all',edit:null,armed:null};
-const SL_ST={propose:'Proposé',retenu:'Retenu',ecarte:'Écarté'};
 const saisonDe=d=>{const y=d.getFullYear();return d.getMonth()>=8?y+'-'+(y+1):(y-1)+'-'+y};
 const saisonSuivante=s=>{const y=+s.slice(0,4)+1;return y+'-'+(y+1)};
-const euros=n=>n==null||isNaN(n)?'—':new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:n%1?2:0,maximumFractionDigits:2}).format(n);
+const euros=n=>n==null||isNaN(n)?'—':new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:Math.round(n*100)%100?2:0,maximumFractionDigits:2}).format(n);
 const slNum=v=>{v=String(v??'').replace(/\s|€/g,'').replace(',','.');if(!v)return null;const n=Number(v);return isFinite(n)&&n>=0?Math.round(n*100)/100:NaN};
 const slItems=sec=>[...SALLE.entries()].filter(([,x])=>x.kind==='salle'&&x.saison===SL.saison&&x.sec===sec).map(([id,x])=>({id,...x}));
 const slSaisonDoc=s=>SALLE.get('s-saison-'+s)||{};
 const slQte=x=>x.qte>1?' ×'+x.qte:'';
 const slMe=()=>{const m=me&&member(me);return m?{auteur:m.first+' '+m.last,auteurId:me}:{auteur:'',auteurId:''}};
+const initiales=m=>((m.first||'?')[0]+((m.last||'')[0]||'')).toUpperCase();
+/* Participants de la saison : profils actifs, sauf ceux décochés pour cette saison. */
+function slParticipants(){const ex=new Set(slSaisonDoc(SL.saison).exclus||[]);return sortedMembers().filter(([id,m])=>!isOff(m)&&!ex.has(id)).map(([id])=>id)}
+/* Une idée est validée quand au moins la moitié des participants l'ont validée ; « réalisée » = déjà achetée. */
+const slSeuil=()=>Math.max(1,Math.ceil(slParticipants().length/2));
+function slEtat(x){if(x.statut==='realise')return 'done';const p=new Set(slParticipants());return (x.soutiens||[]).filter(i=>p.has(i)).length>=slSeuil()?'ok':'wait'}
 function slSaisons(){
   const s=new Set([saisonDe(new Date())]);
   for(const x of SALLE.values())if(/^\d{4}-\d{4}$/.test(x.saison||''))s.add(x.saison);
   return [...s].sort().reverse();
 }
 const slForm=sec=>document.getElementById('slF'+sec);
-const SL_ADD={besoin:'slAdd1',plan:'slAdd2',achat:'slAdd3'};
-const SL_BTN={besoin:'Proposer',plan:'Ajouter',achat:'Inscrire l’achat'};
+const SL_ADD={besoin:'slAdd1',achat:'slAdd3'};
+const SL_BTN={besoin:'Proposer',achat:'Inscrire l’achat'};
 function slResetForm(sec){const f=slForm(sec);f.reset();f.querySelector('[type=submit]').textContent=SL_BTN[sec];f.querySelector('[data-cancel]').hidden=true;if(SL.edit&&SL.edit.sec===sec)SL.edit=null;delete f.dataset.besoin}
 function slFill(sec,x,editId){
   const f=slForm(sec);slResetForm(sec);
@@ -1732,7 +1747,7 @@ async function slSubmit(e){
   e.preventDefault();if(!db)return;
   const f=e.target,sec=f.dataset.sec,v=n=>f.elements[n]?f.elements[n].value.trim():'';
   const titre=v('titre');if(!titre){toast('Indique de quoi il s’agit.');f.elements.titre.focus();return}
-  const montant=slNum(v('montant'));if(Number.isNaN(montant)){toast('Montant invalide : écris juste un nombre, par ex. 49,90.');f.elements.montant.focus();return}
+  const montant=slNum(v('montant'));if(Number.isNaN(montant)){toast('Prix invalide : écris juste un nombre, par ex. 49,90.');f.elements.montant.focus();return}
   const data={titre,montant,desc:v('desc'),updated:new Date().toISOString()};
   if(f.elements.qte)data.qte=Math.min(999,Math.max(1,parseInt(v('qte'))||1));
   if(f.elements.jour)data.jour=v('jour');
@@ -1743,44 +1758,34 @@ async function slSubmit(e){
     const base={kind:'salle',saison:SL.saison,sec,at:new Date().toISOString(),...slMe()};
     if(sec==='besoin'){base.statut='propose';base.soutiens=me&&member(me)?[me]:[]}
     await setDoc('courses/s-'+rid(),Object.assign(base,data));
-    toast(sec==='besoin'?'Besoin proposé, merci !':sec==='plan'?'Utilisation ajoutée':'Achat inscrit');
+    toast(sec==='besoin'?'Idée proposée, merci !':'Achat inscrit');
   }
   slResetForm(sec);document.getElementById(SL_ADD[sec]).open=false;renderSalle();
 }
-['besoin','plan','achat'].forEach(sec=>{const f=slForm(sec);f.addEventListener('submit',slSubmit);f.querySelector('[data-cancel]').addEventListener('click',()=>{slResetForm(sec);document.getElementById(SL_ADD[sec]).open=false})});
-$('#slSaison').addEventListener('change',e=>{SL.saison=e.target.value;['besoin','plan','achat'].forEach(slResetForm);renderSalle()});
+['besoin','achat'].forEach(sec=>{const f=slForm(sec);f.addEventListener('submit',slSubmit);f.querySelector('[data-cancel]').addEventListener('click',()=>{slResetForm(sec);document.getElementById(SL_ADD[sec]).open=false})});
+$('#slSaison').addEventListener('change',e=>{SL.saison=e.target.value;['besoin','achat'].forEach(slResetForm);renderSalle()});
 $('#slNext').addEventListener('click',async()=>{
   const s=saisonSuivante(slSaisons()[0]);
   if(+s.slice(0,4)>new Date().getFullYear()+1){toast('La saison '+slSaisons()[0]+' est déjà la prochaine.');return}
-  await setDoc('courses/s-saison-'+s,{kind:'salle-saison',saison:s,accorde:null,financeur:'',note:'',updated:new Date().toISOString()});
+  await setDoc('courses/s-saison-'+s,{kind:'salle-saison',saison:s,exclus:[],payes:[],updated:new Date().toISOString()});
   SL.saison=s;toast('Saison '+s+' créée');renderSalle();
 });
 $('#slF1').addEventListener('click',e=>{const b=e.target.closest('button[data-f]');if(!b)return;SL.f1=b.dataset.f;[...$('#slF1').children].forEach(x=>x.setAttribute('aria-selected',x===b));renderSalle()});
-$('#slFin').addEventListener('submit',async e=>{
-  e.preventDefault();if(!db)return;
-  const acc=slNum($('#slAcc').value);if(Number.isNaN(acc)){toast('Montant invalide : écris juste un nombre, par ex. 800.');return}
-  const old=slSaisonDoc(SL.saison);
-  await setDoc('courses/s-saison-'+SL.saison,Object.assign({},old,{kind:'salle-saison',saison:SL.saison,accorde:acc,financeur:$('#slFinanceur').value.trim(),note:$('#slFinNote').value.trim(),updated:new Date().toISOString()}));
-  toast('Financement enregistré');
-});
-$('#slFromNeeds').addEventListener('click',async()=>{
-  if(!db)return;
-  const deja=new Set(slItems('plan').map(p=>p.besoinId).filter(Boolean));
-  const ret=slItems('besoin').filter(b=>b.statut==='retenu'&&!deja.has(b.id));
-  if(!ret.length){toast(slItems('besoin').some(b=>b.statut==='retenu')?'Tous les besoins retenus sont déjà repris.':'Aucun besoin retenu pour l’instant (section 1).');return}
-  for(const b of ret)await setDoc('courses/s-'+rid(),{kind:'salle',saison:SL.saison,sec:'plan',titre:b.titre,qte:b.qte||1,montant:b.montant??null,desc:'',besoinId:b.id,at:new Date().toISOString(),updated:new Date().toISOString(),...slMe()});
-  toast(ret.length+' utilisation'+(ret.length>1?'s':'')+' ajoutée'+(ret.length>1?'s':''));
-});
+async function slSaisonArray(champ,id,on){
+  const FV=firebase.firestore.FieldValue;
+  try{await db.doc('courses/s-saison-'+SL.saison).set({kind:'salle-saison',saison:SL.saison,[champ]:on?FV.arrayUnion(id):FV.arrayRemove(id),updated:new Date().toISOString()},{merge:true})}catch(err){handleErr(err)}
+}
+$('#slPeople').addEventListener('click',e=>{const b=e.target.closest('button[data-pay]');if(!b||b.disabled||!db)return;slSaisonArray('payes',b.dataset.pay,!b.closest('.sl-person').classList.contains('paid'))});
+$('#slPeople').addEventListener('change',e=>{const i=e.target.closest('input[data-part]');if(!i||!db)return;slSaisonArray('exclus',i.dataset.part,!i.checked)});
 $('#tab-salle').addEventListener('click',async e=>{
   const b=e.target.closest('button[data-sl]');if(!b||b.disabled)return;
   const id=b.dataset.id,x=SALLE.get(id);if(!x)return;const a=b.dataset.sl;
   if(a==='edit')return slFill(x.sec,x,id);
-  if(a==='buy')return slFill('achat',{titre:x.titre,montant:x.montant,qte:x.qte||1,jour:today,desc:''});
+  if(a==='buy')return slFill('achat',{titre:x.titre,montant:x.montant,qte:x.qte||1,jour:today,desc:'',besoinId:id});
   if(a==='del'){if(SL.armed!==id){SL.armed=id;renderSalle();setTimeout(()=>{if(SL.armed===id){SL.armed=null;renderSalle()}},3000);return}
     SL.armed=null;await delDoc('courses/'+id);toast('Supprimé');return}
-  if(a==='st'){await setDoc('courses/'+id,Object.assign({},x,{statut:b.dataset.v,updated:new Date().toISOString()}));return}
   if(a==='vote'){
-    if(!me||!member(me)){toast('Choisis ton nom en haut de la page pour soutenir une idée.');return}
+    if(!me||!member(me)){toast('Choisis ton nom en haut de la page pour valider une idée.');return}
     const on=(x.soutiens||[]).includes(me),FV=firebase.firestore.FieldValue;
     try{await db.doc('courses/'+id).set({soutiens:on?FV.arrayRemove(me):FV.arrayUnion(me)},{merge:true})}catch(err){handleErr(err)}
   }
@@ -1788,44 +1793,50 @@ $('#tab-salle').addEventListener('click',async e=>{
 function slKpi(cls,label,val,sub){return `<div class="sl-kpi ${cls}"><span>${label}</span><b>${val}</b><small>${sub}</small></div>`}
 function renderSalle(){
   const all=slSaisons();if(!SL.saison||!all.includes(SL.saison))SL.saison=all.includes(saisonDe(new Date()))?saisonDe(new Date()):all[0];
-  const sel=$('#slSaison');sel.innerHTML=all.map(s=>`<option value="${s}"${s===SL.saison?' selected':''}>Saison ${s}${s===saisonDe(new Date())?' (en cours)':''}</option>`).join('');
-  document.querySelectorAll('.sl-sign').forEach(p=>{const m=me&&member(me);p.textContent=m?'Proposé par '+m.first+' '+m.last:'Choisis ton nom en haut de la page pour signer ta proposition (sinon : anonyme).'});
-  const sum=l=>l.reduce((t,x)=>t+(x.montant||0),0),sansPrix=l=>l.filter(x=>x.montant==null).length;
-  const B=slItems('besoin'),P=slItems('plan'),A=slItems('achat'),S0=slSaisonDoc(SL.saison);
-  const ret=B.filter(b=>b.statut==='retenu'),att=B.filter(b=>(b.statut||'propose')==='propose');
-  const acc=S0.accorde??null,dep=sum(A),prev=sum(P);
+  $('#slSaison').innerHTML=all.map(s=>`<option value="${s}"${s===SL.saison?' selected':''}>Saison ${s}${s===saisonDe(new Date())?' (en cours)':''}</option>`).join('');
+  document.querySelectorAll('.sl-sign').forEach(p=>{const m=me&&member(me);p.textContent=m?'Proposé par '+m.first+' '+m.last+' (ta validation est comptée d’office)':'Choisis ton nom en haut de la page pour signer ta proposition (sinon : anonyme).'});
+  const sum=l=>Math.round(l.reduce((t,x)=>t+(Number(x.montant)||0),0)*100)/100,sansPrix=l=>l.filter(x=>x.montant==null).length;
+  const B=slItems('besoin'),A=slItems('achat'),S0=slSaisonDoc(SL.saison);
+  const parts=slParticipants(),np=parts.length,seuil=slSeuil(),pset=new Set(parts);
+  const val=B.filter(b=>slEtat(b)!=='wait'),att=B.filter(b=>slEtat(b)==='wait');
+  const total=sum(val),part=np?Math.round(total/np*100)/100:0;
+  const payes=new Set((S0.payes||[]).filter(i=>pset.has(i))),collecte=Math.round(payes.size*part*100)/100,dep=sum(A);
   const off=!connected?'<div class="empty">Données indisponibles pour le moment.</div>':null;
-  // indicateurs
-  const np=n=>n?` · ${n} sans montant`:'';
-  $('#slKpis').innerHTML=slKpi('k1','Besoin de financement',euros(sum(ret)),`${ret.length} besoin${ret.length>1?'s':''} retenu${ret.length>1?'s':''}${np(sansPrix(ret))}${att.length?` · ${att.length} idée${att.length>1?'s':''} en attente`:''}`)
-    +slKpi('k2','Financement accordé',acc==null?'À renseigner':euros(acc),S0.financeur?esc(S0.financeur):'Section 2')
-    +slKpi('k3','Dépensé',euros(dep),`${A.length} achat${A.length>1?'s':''}${sansPrix(A)?` · ${sansPrix(A)} prix à venir`:''}${acc!=null?` · reste ${euros(Math.round((acc-dep)*100)/100)}`:''}`);
-  // 1. besoins
-  const ord={retenu:0,propose:1,ecarte:2};
-  const lb=B.filter(b=>SL.f1==='all'||(b.statut||'propose')===SL.f1).sort((a,b)=>(ord[a.statut||'propose']-ord[b.statut||'propose'])||((b.soutiens||[]).length-(a.soutiens||[]).length)||(a.at||'').localeCompare(b.at||''));
-  $('#slSum1').innerHTML=`<span>Besoin retenu : <b>${euros(sum(ret))}</b>${sansPrix(ret)?` <span class="hint">(+ ${sansPrix(ret)} sans montant)</span>`:''}</span><span>Idées en attente : <b>${euros(sum(att))}</b> <span class="hint">(${att.length})</span></span>`;
+  $('#slRule').textContent=`Chacun peut proposer une idée avec son prix, et valider celles qu’il soutient. Une idée est validée quand la moitié des participants l’ont validée (${seuil} sur ${np}).`;
+  $('#slKpis').innerHTML=slKpi('k1','Projets validés',euros(total),`${val.length} projet${val.length>1?'s':''}${sansPrix(val)?` · ${sansPrix(val)} sans prix`:''}${att.length?` · ${att.length} idée${att.length>1?'s':''} à valider`:''}`)
+    +slKpi('k2','Part par personne',euros(part),`${np} participant${np>1?'s':''} · ${payes.size} ${payes.size>1?'ont':'a'} payé`)
+    +slKpi('k3','Dépensé',euros(dep),`${A.length} achat${A.length>1?'s':''}${sansPrix(A)?` · ${sansPrix(A)} prix à venir`:''}`);
+  // 1. idées et projets
+  const ord={ok:0,done:1,wait:2};
+  const lb=B.filter(b=>SL.f1==='all'||(SL.f1==='ok'?slEtat(b)!=='wait':slEtat(b)==='wait'))
+    .sort((a,b)=>(ord[slEtat(a)]-ord[slEtat(b)])||((b.soutiens||[]).length-(a.soutiens||[]).length)||(a.at||'').localeCompare(b.at||''));
+  $('#slSum1').innerHTML=`<span>Validé : <b>${euros(total)}</b>${sansPrix(val)?` <span class="hint">(+ ${sansPrix(val)} sans prix)</span>`:''}</span><span>À valider : <b>${euros(sum(att))}</b> <span class="hint">(${att.length})</span></span>`;
+  const achatsDe=new Set(A.map(a=>a.besoinId).filter(Boolean));
   $('#slList1').innerHTML=off||(lb.length?lb.map(b=>{
-    const st=b.statut||'propose',sp=(b.soutiens||[]).map(i=>member(i)).filter(Boolean),mine=me&&(b.soutiens||[]).includes(me),d=b.at?new Date(b.at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
-    const stBtns=Object.keys(SL_ST).filter(k=>k!==st).map(k=>`<button class="btn ghost small" data-w data-sl="st" data-v="${k}" data-id="${esc(b.id)}">${k==='retenu'?'Retenir':k==='ecarte'?'Écarter':'Remettre en idée'}</button>`).join('');
-    return `<div class="sl-item st-${st}"><div class="sl-it-top"><span class="pill ${st==='retenu'?'done':st==='propose'?'idee':''}">${SL_ST[st]}</span><span class="sl-amt">${b.montant==null?'<span class="hint">montant ?</span>':euros(b.montant)}</span></div>
+    const st=slEtat(b),vs=(b.soutiens||[]).filter(i=>pset.has(i)),mine=me&&(b.soutiens||[]).includes(me),d=b.at?new Date(b.at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
+    const pill=st==='done'?'<span class="pill done">Réalisée</span>':st==='ok'?'<span class="pill done">Validée</span>':`<span class="pill idee">${vs.length} / ${seuil} validations</span>`;
+    const faces=vs.map(i=>{const m=member(i);return `<span class="sl-face${i===me?' me':''}" title="${esc(m.first+' '+m.last)}">${esc(initiales(m))}</span>`}).join('');
+    return `<div class="sl-item st-${st}"><div class="sl-it-top">${pill}<span class="sl-amt">${b.montant==null?'<span class="hint">prix ?</span>':euros(b.montant)}</span></div>
       <div class="tk-title">${esc(b.titre)}${slQte(b)}</div>${b.desc?`<p class="tk-body">${esc(b.desc)}</p>`:''}
-      <p class="hint">${esc(b.auteur||'Anonyme')}${d?' · '+esc(d):''} · ${sp.length?`👍 ${sp.length} soutien${sp.length>1?'s':''} (${esc(sp.map(m=>m.first).join(', '))})`:'pas encore de soutien'}</p>
-      <div class="row"><button class="btn ${mine?'':'ghost'} small" data-w data-sl="vote" data-id="${esc(b.id)}" aria-pressed="${mine?'true':'false'}">${mine?'👍 Je soutiens':'Je soutiens'}</button>${stBtns}<button class="btn ghost small" data-w data-sl="edit" data-id="${esc(b.id)}">Modifier</button><button class="btn ${SL.armed===b.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(b.id)}">${SL.armed===b.id?'Confirmer ?':'Supprimer'}</button></div></div>`}).join('')
-    :`<div class="empty">${B.length?'Rien dans ce filtre.':'<strong>Aucune idée pour l’instant</strong>Propose le premier besoin de la saison ci-dessous.'}</div>`);
-  // 2. financement
-  if(document.activeElement?.closest?.('#slFin')==null){$('#slAcc').value=acc==null?'':String(acc).replace('.',',');$('#slFinanceur').value=S0.financeur||'';$('#slFinNote').value=S0.note||''}
-  const reste=acc==null?null:Math.round((acc-prev)*100)/100;
-  $('#slSum2').innerHTML=`<span>Accordé : <b>${acc==null?'à renseigner':euros(acc)}</b></span><span>Prévu : <b>${euros(prev)}</b>${sansPrix(P)?` <span class="hint">(+ ${sansPrix(P)} sans montant)</span>`:''}</span>${reste==null?'':`<span>${reste>=0?'Reste à affecter':'Dépassement'} : <b class="${reste>=0?'sl-pos':'sl-neg'}">${euros(Math.abs(reste))}</b></span>`}${S0.note?`<span class="hint">${esc(S0.note)}</span>`:''}`;
-  const achatsDe=new Set(A.map(a=>(a.titre||'').toLowerCase()));
-  $('#slList2').innerHTML=off||(P.length?P.sort((a,b)=>(a.at||'').localeCompare(b.at||'')).map(p=>`<div class="sl-item"><div class="sl-it-top">${p.besoinId?'<span class="pill">Besoin retenu</span>':'<span class="pill">Ajout</span>'}<span class="sl-amt">${p.montant==null?'<span class="hint">montant ?</span>':euros(p.montant)}</span></div>
-      <div class="tk-title">${esc(p.titre)}${slQte(p)}</div>${p.desc?`<p class="tk-body">${esc(p.desc)}</p>`:''}
-      <div class="row"><button class="btn ghost small" data-w data-sl="buy" data-id="${esc(p.id)}">${achatsDe.has((p.titre||'').toLowerCase())?'✓ Acheté · inscrire un autre achat':'Inscrire l’achat'}</button><button class="btn ghost small" data-w data-sl="edit" data-id="${esc(p.id)}">Modifier</button><button class="btn ${SL.armed===p.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(p.id)}">${SL.armed===p.id?'Confirmer ?':'Supprimer'}</button></div></div>`).join('')
-    :'<div class="empty">Aucune utilisation prévue. Reprends les besoins retenus ou ajoute une ligne.</div>');
+      ${b.montant!=null&&np?`<p class="hint">soit ${euros(Math.round(b.montant/np*100)/100)} par personne</p>`:''}
+      ${st==='done'?'':`<div class="sl-bar" role="img" aria-label="${vs.length} validations sur ${seuil} nécessaires"><i style="width:${Math.min(100,Math.round(vs.length/seuil*100))}%"></i></div>`}
+      ${vs.length?`<div class="sl-faces" aria-label="Ont validé : ${esc(vs.map(i=>member(i).first).join(', '))}">${faces}</div><p class="hint">Validée par ${esc(vs.map(i=>member(i).first).join(', '))}</p>`:st==='done'?'':'<p class="hint">Personne n’a encore validé.</p>'}
+      <p class="hint">${b.auteur?'Proposée par '+esc(b.auteur):st==='done'?'Achat de la saison':'Proposée anonymement'}${d&&st!=='done'?' · '+esc(d):''}</p>
+      <div class="row">${st==='done'?'':`<button class="btn ${mine?'':'ghost'} small" data-w data-sl="vote" data-id="${esc(b.id)}" aria-pressed="${mine?'true':'false'}">${mine?'✓ Je valide':'Je valide'}</button>`}${st==='ok'?`<button class="btn ghost small" data-w data-sl="buy" data-id="${esc(b.id)}">${achatsDe.has(b.id)?'✓ Acheté · autre achat':'Inscrire l’achat'}</button>`:''}<button class="btn ghost small" data-w data-sl="edit" data-id="${esc(b.id)}">Modifier</button><button class="btn ${SL.armed===b.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(b.id)}">${SL.armed===b.id?'Confirmer ?':'Supprimer'}</button></div></div>`}).join('')
+    :`<div class="empty">${B.length?'Rien dans ce filtre.':'<strong>Aucune idée pour l’instant</strong>Propose la première idée de la saison ci-dessous.'}</div>`);
+  // 2. participation
+  $('#slShare').innerHTML=`<div><span>Projets validés</span><b>${euros(total)}</b></div><div><span>Participants</span><b>${np}</b></div><div class="big"><span>À payer par personne</span><b>${euros(part)}</b></div>`
+    +`<div><span>Déjà payé</span><b>${payes.size} / ${np}</b></div><div><span>Collecté</span><b>${euros(collecte)}</b></div><div><span>Reste à collecter</span><b>${euros(Math.max(0,Math.round((total-collecte)*100)/100))}</b></div>`;
+  const ex=new Set(S0.exclus||[]);
+  $('#slPeople').innerHTML=off||sortedMembers().filter(([,m])=>!isOff(m)).map(([id,m])=>{const inn=!ex.has(id),paid=inn&&payes.has(id);
+    return `<div class="sl-person${inn?'':' out'}${paid?' paid':''}"><span class="sl-face${id===me?' me':''}" aria-hidden="true">${esc(initiales(m))}</span><span class="nm">${esc(m.first+' '+m.last)}</span>`
+      +`<label title="Participe cette saison"><input type="checkbox" data-w data-part="${id}"${inn?' checked':''}>Participe</label>`
+      +(inn?`<button class="sl-pay" type="button" data-w data-pay="${id}" aria-pressed="${paid}">${paid?'✓ Payé':'À payer'}</button>`:'')+'</div>'}).join('');
   // 3. achats
-  const restA=acc==null?null:Math.round((acc-dep)*100)/100;
-  $('#slSum3').innerHTML=`<span>Dépensé : <b>${euros(dep)}</b>${sansPrix(A)?` <span class="hint">(+ ${sansPrix(A)} prix à venir)</span>`:''}</span>${restA==null?'':`<span>${restA>=0?'Reste sur le financement':'Dépassement du financement'} : <b class="${restA>=0?'sl-pos':'sl-neg'}">${euros(Math.abs(restA))}</b></span>`}`;
+  const reste=Math.round((collecte-dep)*100)/100;
+  $('#slSum3').innerHTML=`<span>Dépensé : <b>${euros(dep)}</b>${sansPrix(A)?` <span class="hint">(+ ${sansPrix(A)} prix à venir)</span>`:''}</span><span>Collecté : <b>${euros(collecte)}</b></span><span>${reste>=0?'En caisse':'Avancé (à rembourser)'} : <b class="${reste>=0?'sl-pos':'sl-neg'}">${euros(Math.abs(reste))}</b></span>`;
   $('#slList3').innerHTML=off||(A.length?A.sort((a,b)=>(b.jour||'').localeCompare(a.jour||'')||(a.at||'').localeCompare(b.at||'')).map(x=>{const d=x.jour?parseYmd(x.jour).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}):'';
-    return `<div class="sl-item"><div class="sl-it-top">${x.montant==null?'<span class="pill idee">Prix à venir</span>':''}<span class="sl-amt">${x.montant==null?'':euros(x.montant)}</span></div>
+    return `<div class="sl-item"><div class="sl-it-top">${x.montant==null?'<span class="pill idee">Prix à venir</span>':''}<span class="sl-amt">${x.montant==null?'':euros(Number(x.montant))}</span></div>
       <div class="tk-title">${esc(x.titre)}${slQte(x)}</div>${x.desc||d?`<p class="hint">${[d,esc(x.desc||'')].filter(Boolean).join(' · ')}</p>`:''}
       <div class="row"><button class="btn ghost small" data-w data-sl="edit" data-id="${esc(x.id)}">${x.montant==null?'Indiquer le prix':'Modifier'}</button><button class="btn ${SL.armed===x.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(x.id)}">${SL.armed===x.id?'Confirmer ?':'Supprimer'}</button></div></div>`}).join('')
     :'<div class="empty">Aucun achat inscrit pour cette saison.</div>');

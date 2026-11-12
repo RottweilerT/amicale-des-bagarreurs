@@ -1,33 +1,37 @@
-name: Lire la salle (temporaire)
+name: Salle — reprendre les achats 2025-2026 en idées réalisées (une fois)
 on: workflow_dispatch
 permissions:
   contents: read
 jobs:
-  lire:
+  migrer:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
           python3 - <<'PY'
-          import json, re, urllib.request
+          import json, re, urllib.request, urllib.error
           KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
-          B = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/"
-          H = {"Referer": "https://rottweilert.github.io/amicale-des-bagarreurs/"}
-          def val(v):
-              for k in ("stringValue","integerValue","doubleValue","booleanValue"):
-                  if k in v: return v[k]
-              if "arrayValue" in v: return [val(x) for x in v["arrayValue"].get("values", [])]
-              return None
-          def lister(c):
-              out, t = [], ""
-              while True:
-                  d = json.load(urllib.request.urlopen(urllib.request.Request(f"{B}{c}?pageSize=300&key={KEY}" + (f"&pageToken={t}" if t else ""), headers=H)))
-                  out += d.get("documents", []); t = d.get("nextPageToken")
-                  if not t: return out
-          for d in lister("courses"):
-              f = {k: val(v) for k, v in d.get("fields", {}).items()}
-              if str(f.get("kind","")).startswith("salle"): print("SALLE", d["name"].split("/")[-1], json.dumps(f, ensure_ascii=False))
-          for d in lister("members"):
-              f = d.get("fields", {})
-              print("MEMBRE", d["name"].split("/")[-1], val(f.get("first",{})), "off" if val(f.get("off",{})) else "actif")
+          B = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/courses"
+          H = {"Referer": "https://rottweilert.github.io/amicale-des-bagarreurs/", "Content-Type": "application/json"}
+          docs, t = [], ""
+          while True:
+              d = json.load(urllib.request.urlopen(urllib.request.Request(f"{B}?pageSize=300&key={KEY}" + (f"&pageToken={t}" if t else ""), headers=H)))
+              docs += d.get("documents", []); t = d.get("nextPageToken")
+              if not t: break
+          for d in docs:
+              f = d.get("fields", {}); i = d["name"].split("/")[-1]
+              g = lambda k: list(f.get(k, {}).values())[0] if f.get(k) else None
+              if g("kind") != "salle" or g("sec") != "achat" or g("saison") != "2025-2026": continue
+              nid = i.replace("s-a2526-", "s-i2526-") if i.startswith("s-a2526-") else "s-i2526-" + i
+              champs = {"kind": f["kind"], "saison": f["saison"], "sec": {"stringValue": "besoin"}, "statut": {"stringValue": "realise"},
+                        "titre": f["titre"], "qte": f.get("qte", {"integerValue": "1"}), "montant": f.get("montant", {"nullValue": None}),
+                        "desc": {"stringValue": ""}, "soutiens": {"arrayValue": {}}, "auteur": {"stringValue": ""}, "auteurId": {"stringValue": ""},
+                        "at": f.get("at", {"stringValue": ""}), "updated": {"stringValue": "2026-11-13T00:30:00.000Z"}}
+              try:
+                  urllib.request.urlopen(urllib.request.Request(f"{B}?documentId={nid}&key={KEY}", data=json.dumps({"fields": champs}).encode(), headers=H, method="POST")).read()
+                  print("idée créée", nid, g("titre"), g("montant"))
+              except urllib.error.HTTPError as e:
+                  print("déjà là", nid, e.code)
+              # l'achat pointe vers son idée
+              urllib.request.urlopen(urllib.request.Request(f"{B}/{i}?updateMask.fieldPaths=besoinId&key={KEY}", data=json.dumps({"fields": {"besoinId": {"stringValue": nid}}}).encode(), headers=H, method="PATCH")).read()
           PY
