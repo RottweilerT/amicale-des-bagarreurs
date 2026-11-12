@@ -1,9 +1,11 @@
 name: Notifications
 
-# Envoie les notifications de l'appli aux téléphones qui les ont activées (Firebase Cloud Messaging) :
-#  - toutes les 15 minutes : une séance à venir modifiée ou annulée ;
+# Envoie les notifications de l'appli aux appareils abonnés (Firebase Cloud Messaging) — voir NOTIFICATIONS.md :
+#  - toutes les 15 minutes : cours modifiés, annulés ou ajoutés, combats programmés ou terminés,
+#    annonces écrites dans l'espace admin de l'appli (vérifiées avec le secret ADMIN_CODE) ;
 #  - le samedi à 16 h (heure de Paris) : rappel d'indiquer ses présences pour la semaine.
 # Le programme est dans .github/notifications.py. Le secret FCM_COMPTE contient le compte de service Firebase.
+# Chaque envoi est ajouté à notifications/historique.json (affiché dans l'espace admin).
 on:
   schedule:
     - cron: "*/15 * * * *"
@@ -19,7 +21,7 @@ on:
         options: [test, rappel, changements]
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency: notifications
 
@@ -52,12 +54,12 @@ jobs:
         id: envoi
         if: steps.secret.outputs.ok == '1'
         env:
-          APP: boxe
           PROJET: amicale-des-bagarreurs
           SITE: https://rottweilert.github.io/amicale-des-bagarreurs/
           MODE: ${{ steps.mode.outputs.mode }}
           FORCER: ${{ steps.mode.outputs.forcer }}
           FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
+          ADMIN_CODE: ${{ secrets.ADMIN_CODE }}
         run: |
           pip install -q google-auth requests
           python3 .github/notifications.py
@@ -67,3 +69,12 @@ jobs:
         with:
           path: /tmp/etat-notifs
           key: etat-notifs-${{ github.run_id }}
+      - name: Enregistrer l'historique des envois
+        if: steps.envoi.outputs.historique == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add notifications/historique.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Notifications : historique des envois"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done; exit 1

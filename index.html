@@ -59,6 +59,40 @@ h3{font-size:1.25rem}
 .brand h1 span{color:var(--red)} .brand h1 .b{color:var(--blue)}
 .who{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
 .who select{max-width:190px}
+.brand-side{display:flex;align-items:center;gap:10px}
+.bell{position:relative;flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.bell svg{width:22px;height:22px}
+.bell:hover{border-color:var(--blue)}
+.bell .bell-dot{position:absolute;top:7px;right:8px;width:10px;height:10px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 2px var(--surface);display:none}
+.bell[data-state="on"] .bell-dot{display:block}
+.bell[data-state="denied"] .bell-dot{display:block;background:var(--red)}
+.np{width:min(500px,100%)!important;max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain}
+.np-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.np-head h3{margin:0;display:flex;align-items:center;gap:8px}
+.np-x{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--ink);font-size:1.4rem;line-height:1;cursor:pointer}
+.np-state{margin:0;display:flex;align-items:center;gap:8px;font-weight:700}
+.np-state i{width:12px;height:12px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+.np-state[data-state="on"] i{background:#1F9D55}.np-state[data-state="denied"] i{background:var(--red)}.np-state[data-state="off"] i{background:var(--line)}
+.np fieldset{border:1px solid var(--line);border-radius:10px;padding:8px 12px 10px;margin:0;display:grid;gap:2px;min-width:0}
+.np fieldset[disabled]{opacity:.55}
+.np legend{font-weight:700;font-size:.9rem;padding:0 4px}
+.np-cat{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;align-items:start;padding:7px 0;cursor:pointer}
+.np-cat input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--blue)}
+.np-cat span{font-weight:600}.np-cat small{grid-column:2;color:var(--muted);font-size:.82rem;line-height:1.35}
+.np-msg{margin:0;font-size:.9rem;padding:8px 10px;border-radius:8px;background:var(--sunk)}
+.np details{border-top:1px solid var(--line);padding-top:10px}
+.np summary{cursor:pointer;font-weight:700;padding:4px 0}
+.np details p{font-size:.88rem;color:var(--muted);line-height:1.45}
+.np-form{display:grid;gap:10px;margin-top:8px}
+.np-form label{display:grid;gap:4px;font-size:.88rem;font-weight:600;min-width:0}
+.np-form .row>label{flex:1 1 140px}
+.np-prev{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:start;background:var(--sunk);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.np-prev img{width:40px;height:40px;border-radius:10px}
+.np-prev b,.np-prev span,.np-prev small{display:block;overflow-wrap:anywhere}
+.np-prev span{font-size:.9rem}.np-prev small{color:var(--muted);font-size:.75rem;margin-top:2px}
+.np-hist{display:grid;gap:6px}
+.np-hist div{font-size:.85rem;border-left:3px solid var(--blue);padding:2px 8px;overflow-wrap:anywhere}
+.np-hist small{color:var(--muted);display:block}
 .gate{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:30;padding:16px}
 .gate .panel{width:min(360px,100%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .pin{letter-spacing:.35em;font-family:var(--f-data);font-size:1.2rem}
@@ -435,9 +469,12 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         <h1><span class="b">Amicale</span> des <span>Bagarreurs</span></h1>
         </div>
       </div>
+      <div class="brand-side">
       <label class="who" for="me">Tu es
         <select id="me"><option value="">Choisis ton nom</option></select>
       </label>
+      <button class="bell" id="notifBtn" type="button" aria-haspopup="dialog" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><i class="bell-dot" aria-hidden="true"></i></button>
+      </div>
     </div>
   </header>
 
@@ -472,7 +509,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
         <p class="reg-line" id="telInstallTxt"></p>
         <div class="reg-actions" id="telInstallRow" hidden><button class="reg-btn ghost" type="button" id="telInstall">Installer l'appli</button></div>
         <p class="reg-line" id="telPushTxt"></p>
-        <div class="reg-actions"><button class="reg-btn" type="button" id="telOn" hidden>Activer les notifications</button><button class="reg-btn ghost" type="button" id="telOff" hidden>Couper les notifications</button></div>
+        <div class="reg-actions"><button class="reg-btn" type="button" id="telOn">Régler les notifications</button></div>
         <p class="reg-note" id="telMsg" role="status" hidden></p>
       </div>
       <!-- Déjà inscrit -->
@@ -801,6 +838,30 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
   <div class="row"><button class="btn" type="submit">Valider</button><button class="btn ghost" type="button" id="gateCancel">Annuler</button></div>
 </form></div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="np" class="gate" hidden><section class="panel np" role="dialog" aria-modal="true" aria-labelledby="npTitle">
+  <div class="np-head"><h3 id="npTitle">Notifications</h3><button class="np-x" type="button" id="npClose" aria-label="Fermer">×</button></div>
+  <p class="np-state" id="npState" data-state="off"><i aria-hidden="true"></i><span id="npStateT"></span></p>
+  <p class="hint" id="npHelp" style="margin:0"></p>
+  <div class="row" id="npBtns"><button class="btn" type="button" id="npOn">Activer les notifications</button><button class="btn ghost" type="button" id="npOff">Se désabonner</button></div>
+  <p class="np-msg" id="npMsg" role="status" hidden></p>
+  <fieldset id="npCats"><legend>Me prévenir pour</legend></fieldset>
+  <details><summary>Données et confidentialité</summary>
+    <p>Rien n'est demandé sans ton accord : les notifications ne s'activent qu'avec le bouton ci-dessus. On enregistre seulement l'identifiant technique de cet appareil fourni par le navigateur, tes catégories, ton profil s'il est choisi (pour le rappel des présences) et les dates d'abonnement. Ces données ne sont visibles par aucun membre, seulement par le programme d'envoi. « Se désabonner » les efface tout de suite. Un appareil qui ne reçoit plus rien est retiré automatiquement.</p>
+  </details>
+  <details id="npAdmin"><summary>Espace admin : envoyer une notification</summary>
+    <form class="np-form" id="naForm" novalidate>
+      <p style="margin:0">Réservé aux organisateurs : le serveur vérifie le code admin avant tout envoi. La notification part au prochain passage du serveur (en général dans le quart d'heure, parfois un peu plus).</p>
+      <label>Titre<input id="naTitle" maxlength="60" autocomplete="off" placeholder="Ex. Cours de lundi déplacé"></label>
+      <label>Message<textarea id="naBody" maxlength="200" placeholder="Ex. Rendez-vous à 19h30 exceptionnellement."></textarea></label>
+      <div class="row"><label>Catégorie<select id="naCat"></select></label><label>À l'ouverture<select id="naLink"></select></label></div>
+      <div class="np-prev" aria-label="Aperçu de la notification"><img src="icon-192.png" alt=""><div><b id="naPT"></b><span id="naPB"></span><small>Amicale des Bagarreurs · maintenant</small></div></div>
+      <label>Code admin<input id="naCode" type="password" maxlength="64" autocomplete="off"></label>
+      <button class="btn" type="submit" id="naSend">Envoyer aux abonnés</button>
+      <p class="np-msg" id="naMsg" role="status" hidden></p>
+      <b>Derniers envois</b><div class="np-hist" id="naHist"><p class="hint">…</p></div>
+    </form>
+  </details>
+</section></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -895,6 +956,8 @@ function showTab(t){
 }
 document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(b)showTab(b.dataset.tab)});
 {const h=(location.hash||'').slice(1);if(['membres','combats','elo','calendrier','regles','minuteur','notes'].includes(h))showTab(h)}
+/* ouverture depuis une notification alors que l'appli est déjà ouverte : seul le #onglet change */
+addEventListener('hashchange',()=>{const h=(location.hash||'').slice(1);if(['membres','combats','elo','calendrier','regles','minuteur','notes'].includes(h)&&h!==ui.tab)showTab(h)});
 
 /* ---------- identity ---------- */
 function fillMemberSelect(sel,placeholder,keep){
@@ -1060,76 +1123,176 @@ function renderReg(){
   }
   $('#telCard').hidden=!(mine&&!showForm);Tel.render();Tel.sync();
 }
-const PUSH={vapid:'BJB53XBL72om9F12Ifu5uy46_DFg7Cbl9k71iqviMunQtKZEixFqh1y2O9Ozbj-eQULoHoJj3TFzWCYP9kAwyVo',path:id=>'members/'+id,me:()=>me&&member(me)?me:'',mot:'un cours',fem:false};
-/* ----- Sur ton téléphone : installation de l'appli et notifications (même code dans le foot et la boxe) -----
-   Le jeton de notification de chaque téléphone est rangé dans la fiche du membre (champ « push »).
-   Les envois sont faits par la GitHub Action « Notifications » (séance modifiée ou annulée, rappel du samedi 16 h). */
-const Tel=(()=>{
-  const K='push-token',KW='push-who';
+const PUSH={vapid:'BJB53XBL72om9F12Ifu5uy46_DFg7Cbl9k71iqviMunQtKZEixFqh1y2O9Ozbj-eQULoHoJj3TFzWCYP9kAwyVo',me:()=>me&&member(me)?me:''};
+/* ----- Notifications push (Firebase Cloud Messaging) — voir NOTIFICATIONS.md -----
+   Chaque appareil abonné a une fiche privée push_subs/<identifiant aléatoire> : jeton FCM, catégories, profil (facultatif),
+   dates. Les règles Firestore interdisent toute lecture depuis l'appli ; seule la GitHub Action « Notifications » les lit.
+   Tant que ces règles ne sont pas en place, on garde l'ancien rangement (jeton dans la fiche du membre) pour ne rien casser. */
+const NCATS=[
+  {k:'annonces',t:'Annonces du groupe',h:'Messages envoyés par les organisateurs'},
+  {k:'changements',t:'Cours modifiés ou annulés',h:'Horaire, lieu ou date qui change, cours annulé'},
+  {k:'nouveaux',t:'Nouveaux cours',h:'Cours ajoutés au calendrier'},
+  {k:'rappel',t:'Rappel des présences',h:'Le samedi à 16 h, s’il te manque des réponses pour la semaine (profil choisi)'},
+  {k:'combats',t:'Combats',h:'Combat programmé et résultat'}];
+const NLINKS={calendrier:'Calendrier',minuteur:'Minuteur',combats:'Combats',elo:'Classement',membres:'Membres',regles:'Règles',notes:'Notes'};
+const Notif=(()=>{
+  const LS={id:'adb-push-id',tok:'push-token',who:'push-who',cats:'adb-push-cats',since:'adb-push-since',sync:'adb-push-sync',key:'adb-push-key',mode:'adb-push-mode'};
   const get=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}};
   const put=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
+  const el=id=>document.getElementById(id);
   const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   const ios=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   const supported=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window&&!!(window.firebase&&firebase.messaging);
-  let installEvt=null,busy=false,synced='',msgT;
-  addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;render()});
-  addEventListener('appinstalled',()=>{installEvt=null;render()});
-  const el=id=>document.getElementById(id);
-  function msg(t){const m=el('telMsg');m.textContent=t||'';m.hidden=!t;clearTimeout(msgT);if(t)msgT=setTimeout(()=>{m.hidden=true},6000)}
   const messaging=()=>{try{return firebase.messaging()}catch(e){return null}};
-  async function token(){const reg=await navigator.serviceWorker.ready;return messaging().getToken({vapidKey:PUSH.vapid,serviceWorkerRegistration:reg})}
   const FV=()=>firebase.firestore.FieldValue;
-  const add=(id,t)=>db.doc(PUSH.path(id)).set({push:FV().arrayUnion(t)},{merge:true});
-  const remove=(id,t)=>db.doc(PUSH.path(id)).set({push:FV().arrayRemove(t)},{merge:true});
-  const active=()=>!!(get(K)&&get(KW)&&'Notification' in window&&Notification.permission==='granted');
+  const memberId=()=>PUSH.me()||null;
+  const timeout=(pr,ms=15000)=>Promise.race([pr,new Promise((_,j)=>setTimeout(()=>j(Object.assign(new Error('délai dépassé'),{code:'timeout'})),ms))]);
+  let busy=false,syncing=false,msgT,catT;
+  function cats(){try{const v=JSON.parse(get(LS.cats));if(Array.isArray(v))return v.filter(k=>NCATS.some(c=>c.k===k))}catch(e){}return NCATS.map(c=>c.k)}
+  function subId(){let id=get(LS.id);if(!/^[a-f0-9]{32}$/.test(id)){const a=new Uint8Array(16);crypto.getRandomValues(a);id=[...a].map(x=>x.toString(16).padStart(2,'0')).join('');put(LS.id,id)}return id}
+  const active=()=>!!(get(LS.tok)&&'Notification' in window&&Notification.permission==='granted');
+  function state(){
+    if(!PUSH.vapid)return 'noconfig';
+    if(ios()&&!standalone())return 'ios';
+    if(!supported())return 'unsupported';
+    if(Notification.permission==='denied')return 'denied';
+    return active()?'on':'off';
+  }
+  async function token(){const reg=await navigator.serviceWorker.ready;return messaging().getToken({vapidKey:PUSH.vapid,serviceWorkerRegistration:reg})}
+  async function legacyRemove(t){for(const w of new Set([get(LS.who),memberId()].filter(Boolean)))await timeout(db.doc('members/'+w).set({push:FV().arrayRemove(t)},{merge:true})).catch(()=>{})}
+  async function save(t){
+    if(!db)throw Object.assign(new Error('pas de base'),{code:'unavailable'});
+    let since=Number(get(LS.since));if(!since){since=Date.now();put(LS.since,String(since))}
+    const old=get(LS.tok);
+    try{
+      await timeout(db.doc('push_subs/'+subId()).set({token:t,cats:cats(),active:true,member:memberId(),createdAt:since,updatedAt:FV().serverTimestamp()}));
+      await legacyRemove(t);if(old&&old!==t)await legacyRemove(old);
+      put(LS.mode,'prive');put(LS.who,null);
+    }catch(e){
+      if(!e||e.code!=='permission-denied')throw e;
+      const id=memberId();if(!id)throw Object.assign(new Error('profil requis'),{code:'need-profile'});
+      if(old&&old!==t)await legacyRemove(old);
+      await timeout(db.doc('members/'+id).set({push:FV().arrayUnion(t)},{merge:true}));put(LS.who,id);put(LS.mode,'ancien');
+    }
+    put(LS.tok,t);put(LS.sync,String(Date.now()));put(LS.key,(memberId()||'')+'|'+get(LS.mode)+'|'+cats().join(','));
+  }
+  function msg(t,id='npMsg'){const m=el(id);if(!m)return;m.textContent=t||'';m.hidden=!t;clearTimeout(msgT);if(t&&id==='npMsg')msgT=setTimeout(()=>{m.hidden=true},9000)}
+  function errText(e){
+    if(e&&e.code==='need-profile')return 'Choisis d’abord ton nom en haut de la page, puis réessaie.';
+    if(e&&e.code==='timeout'||!navigator.onLine)return 'Pas de connexion pour l’instant : réessaie quand tu as du réseau.';
+    if(e&&/permission|blocked/i.test(String(e.code||e.message)))return 'Le navigateur a bloqué les notifications : autorise-les dans ses réglages pour ce site.';
+    return 'Impossible d’activer les notifications pour l’instant. Réessaie dans un moment.';
+  }
   async function on(){
-    const id=PUSH.me();if(!id||busy)return;busy=true;render();msg('');
+    if(busy)return;busy=true;render();msg('');
     try{
       const p=await Notification.requestPermission();
-      if(p!=='granted'){msg(p==='denied'?'Notifications refusées. Pour changer d’avis, autorise-les dans les réglages du navigateur pour ce site.':'Notifications non activées.');return}
+      if(p!=='granted'){msg(p==='denied'?'Tu as refusé les notifications. Pour changer d’avis : réglages du navigateur (ou du téléphone) → Notifications → autoriser ce site, puis reviens ici.':'Notifications pas activées : il faut accepter la demande du navigateur.');return}
       const t=await token();if(!t)throw new Error('jeton vide');
-      await add(id,t);put(K,t);put(KW,id);synced=id+'|'+t;msg('C’est activé sur ce téléphone.');
-    }catch(e){console.error(e);msg('Impossible d’activer les notifications pour l’instant. Vérifie ta connexion et réessaie.')}
+      await save(t);
+      msg(get(LS.mode)==='ancien'?'C’est activé sur cet appareil. Le choix des catégories sera pris en compte dès que le serveur sera à jour.':'C’est activé sur cet appareil 👊');
+    }catch(e){console.error('notifications',e);msg(errText(e))}
     finally{busy=false;render()}
   }
   async function off(){
     if(busy)return;busy=true;render();
-    const t=get(K),who=get(KW);
-    try{if(t&&who)await remove(who,t).catch(()=>{});await messaging().deleteToken().catch(()=>{})}
-    finally{put(K,null);put(KW,null);synced='';busy=false;msg('Notifications coupées sur ce téléphone.');render()}
-  }
-  /* Garde le jeton rattaché à la bonne personne (changement de profil, jeton renouvelé). */
-  async function sync(){
-    if(!active()||!supported()||busy)return;
-    const id=PUSH.me()||'',who=get(KW),t=get(K);
-    if(synced===id+'|'+t)return;synced=id+'|'+t;
+    const t=get(LS.tok);
     try{
-      if(who&&who!==id){await remove(who,t).catch(()=>{});put(KW,id||null)}
-      if(!id)return;
-      const nt=await token();
-      if(nt&&nt!==t){await remove(id,t).catch(()=>{});put(K,nt)}
-      await add(id,nt||t);put(KW,id);synced=id+'|'+(nt||t);
-    }catch(e){console.warn('notifications',e)}
+      if(db){await timeout(db.doc('push_subs/'+subId()).delete()).catch(()=>{});if(t)await legacyRemove(t)}
+      const m=supported()&&messaging();if(m)await timeout(m.deleteToken(),8000).catch(()=>{});
+    }finally{[LS.tok,LS.who,LS.sync,LS.key,LS.mode,LS.id,LS.since].forEach(k=>put(k,null));busy=false;msg('Tu es désabonné : plus aucune notification sur cet appareil.');render()}
   }
+  function setCat(k,v){
+    const c=new Set(cats());v?c.add(k):c.delete(k);put(LS.cats,JSON.stringify(NCATS.map(x=>x.k).filter(x=>c.has(x))));
+    render();if(!active())return;
+    clearTimeout(catT);catT=setTimeout(async()=>{try{await save(get(LS.tok));msg('Choix enregistrés.')}catch(e){msg(errText(e))}},600);
+  }
+  /* À chaque ouverture : jeton à jour, profil à jour, passage à la fiche privée (au plus une fois par semaine si rien n'a changé). */
+  async function sync(){
+    if(syncing||busy||!db||!active()||!supported())return;
+    const key=(memberId()||'')+'|prive|'+cats().join(',');
+    if(get(LS.mode)==='prive'&&get(LS.key)===key&&Date.now()-Number(get(LS.sync)||0)<7*864e5)return;
+    if(get(LS.mode)==='ancien'&&Date.now()-Number(get(LS.sync)||0)<36e5&&get(LS.key).startsWith((memberId()||'')+'|'))return;
+    syncing=true;
+    try{const t=await token();if(t)await save(t)}catch(e){console.warn('notifications',e)}finally{syncing=false;render()}
+  }
+  const TXT={
+    on:['Activées sur cet appareil','Tu peux choisir ci-dessous ce qui te concerne, ou te désabonner à tout moment.'],
+    off:['Désactivées','Active-les pour être prévenu, même quand l’appli est fermée. Tu choisis ensuite ce qui t’intéresse.'],
+    denied:['Refusées','Les notifications sont bloquées pour ce site. Pour les autoriser : réglages du navigateur (ou du téléphone) → Notifications → ce site, puis reviens ici.'],
+    ios:['À installer d’abord','Sur iPhone et iPad (iOS 16.4 ou plus récent), les notifications ne marchent que dans l’appli installée : dans Safari, touche Partager (le carré avec une flèche), puis « Sur l’écran d’accueil ». Ouvre ensuite l’appli depuis son icône et reviens ici.'],
+    unsupported:['Pas compatible ici','Ce navigateur ne gère pas les notifications web. Elles marchent avec Chrome, Edge ou Firefox (Android, Windows, Mac), Safari sur Mac, et l’appli installée sur iPhone.'],
+    noconfig:['Bientôt disponibles','Les notifications ne sont pas encore configurées.']};
+  function render(){
+    const st=state(),[t,h]=TXT[st];
+    const bell=el('notifBtn');if(bell){bell.dataset.state=st;bell.title='Notifications : '+t.toLowerCase();bell.setAttribute('aria-label','Notifications ('+t.toLowerCase()+')')}
+    const pt=el('telPushTxt');if(pt)pt.textContent=st==='on'?'🔔 Notifications activées sur ce téléphone.':st==='off'?'Reçois une notification quand un cours change, est ajouté ou annulé, et un rappel pour tes présences.':'Notifications : '+t.toLowerCase()+'.';
+    if(el('np').hidden)return;
+    el('npState').dataset.state=st;el('npStateT').textContent=t;el('npHelp').textContent=h;
+    el('npOn').hidden=st!=='off';el('npOff').hidden=!(st==='on'||get(LS.tok));el('npOn').disabled=el('npOff').disabled=busy;
+    el('npBtns').hidden=el('npOn').hidden&&el('npOff').hidden;
+    const c=cats(),fs=el('npCats');fs.disabled=busy||!(st==='on'||st==='off');
+    fs.querySelectorAll('input').forEach(i=>{i.checked=c.includes(i.value)});
+  }
+  function open(){el('np').hidden=false;render();loadHist();setTimeout(()=>el('npClose').focus(),30)}
+  function close(){el('np').hidden=true;el('notifBtn').focus()}
+  /* ----- espace admin ----- */
+  function preview(){el('naPT').textContent=el('naTitle').value.trim()||'Titre de la notification';el('naPB').textContent=el('naBody').value.trim()||'Message…'}
+  async function loadHist(){
+    const box=el('naHist');if(!el('npAdmin').open)return;
+    try{
+      const r=await fetch('notifications/historique.json',{cache:'no-store'});if(!r.ok)throw 0;
+      const h=(await r.json()).slice(-15).reverse();
+      box.innerHTML=h.length?h.map(x=>{const d=new Date(x.date);return `<div><b>${esc(x.titre)}</b> — ${esc(x.message)}<small>${esc(d.toLocaleString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · ${esc((NCATS.find(c=>c.k===x.categorie)||{t:x.categorie}).t)} · ${x.envoyes} appareil${x.envoyes>1?'s':''}${x.echecs?` · ${x.echecs} échec${x.echecs>1?'s':''}`:''}</small></div>`}).join(''):'<p class="hint">Aucun envoi pour l’instant.</p>';
+    }catch(e){box.innerHTML='<p class="hint">Historique indisponible pour l’instant.</p>'}
+  }
+  async function adminSend(e){
+    e.preventDefault();msg('','naMsg');
+    const d={title:el('naTitle').value.trim(),body:el('naBody').value.trim(),cat:el('naCat').value,link:el('naLink').value,code:el('naCode').value.trim()};
+    if(!d.title||!d.body)return msg('Indique un titre et un message.','naMsg');
+    if(!d.code)return msg('Indique le code admin.','naMsg');
+    if(!db)return msg('Pas de connexion à la base pour l’instant.','naMsg');
+    el('naSend').disabled=true;
+    try{
+      await timeout(db.collection('push_requests').add(Object.assign(d,{at:FV().serverTimestamp()})));
+      el('naTitle').value=el('naBody').value=el('naCode').value='';preview();
+      msg('Demande enregistrée. Si le code admin est bon, la notification partira au prochain passage du serveur, puis apparaîtra dans « Derniers envois ».','naMsg');
+    }catch(err){msg(err&&err.code==='permission-denied'?'Le serveur n’accepte pas encore les envois depuis l’appli (règles Firestore à mettre à jour, voir NOTIFICATIONS.md).':errText(err),'naMsg')}
+    finally{el('naSend').disabled=false}
+  }
+  // construction du panneau
+  el('npCats').insertAdjacentHTML('beforeend',NCATS.map(c=>`<label class="np-cat"><input type="checkbox" value="${c.k}"><span>${c.t}</span><small>${c.h}</small></label>`).join(''));
+  el('npCats').addEventListener('change',e=>{if(e.target.matches('input'))setCat(e.target.value,e.target.checked)});
+  el('naCat').innerHTML=NCATS.map(c=>`<option value="${c.k}">${c.t}</option>`).join('');
+  el('naLink').innerHTML=Object.entries(NLINKS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  el('naTitle').addEventListener('input',preview);el('naBody').addEventListener('input',preview);preview();
+  el('naForm').addEventListener('submit',adminSend);el('npAdmin').addEventListener('toggle',loadHist);
+  el('npOn').addEventListener('click',on);el('npOff').addEventListener('click',off);
+  el('notifBtn').addEventListener('click',open);el('telOn').addEventListener('click',open);el('npClose').addEventListener('click',close);
+  el('np').addEventListener('click',e=>{if(e.target.id==='np')close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!el('np').hidden)close()});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
+  return {render,sync,open,state};
+})();
+/* ----- Sur ton téléphone : installation de l'appli (les notifications passent par Notif) ----- */
+const Tel=(()=>{
+  const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const ios=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  let installEvt=null;
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;render()});
+  addEventListener('appinstalled',()=>{installEvt=null;render()});
+  const el=id=>document.getElementById(id);
   function render(){
     const card=el('telCard');if(!card||card.hidden)return;
     const it=el('telInstallTxt'),ir=el('telInstallRow');ir.hidden=true;
     if(standalone())it.textContent='✓ L’appli est installée sur ce téléphone.';
     else if(installEvt){it.textContent='Ajoute l’appli à ton écran d’accueil pour l’ouvrir en un geste, comme une vraie appli.';ir.hidden=false}
-    else if(ios())it.textContent='Sur iPhone : dans Safari, touche Partager (le carré avec une flèche), puis «\u00A0Sur l’écran d’accueil\u00A0». Ouvre ensuite l’appli depuis son icône.';
-    else it.textContent='Pour l’installer : menu ⋮ du navigateur, puis «\u00A0Installer l’appli\u00A0» ou «\u00A0Ajouter à l’écran d’accueil\u00A0».';
-    const pt=el('telPushTxt'),bOn=el('telOn'),bOff=el('telOff');bOn.hidden=bOff.hidden=true;bOn.disabled=bOff.disabled=busy;
-    const what=`une alerte si ${PUSH.mot} est modifié${PUSH.fem?'e':''} ou annulé${PUSH.fem?'e':''}, et un rappel le samedi à 16 h pour indiquer tes présences`;
-    if(!PUSH.vapid)pt.textContent='Les notifications arrivent bientôt.';
-    else if(ios()&&!standalone())pt.textContent='Notifications : installe d’abord l’appli (voir ci-dessus), puis ouvre-la depuis son icône pour les activer.';
-    else if(!supported())pt.textContent='Ce navigateur ne gère pas les notifications. Essaie avec Chrome (Android) ou l’appli installée (iPhone).';
-    else if(Notification.permission==='denied')pt.textContent='Les notifications sont bloquées pour ce site : autorise-les dans les réglages du navigateur, puis reviens ici.';
-    else if(active()&&get(KW)===PUSH.me()){pt.textContent='🔔 Notifications activées : '+what+'.';bOff.hidden=false}
-    else{pt.textContent='Reçois '+what+'.';bOn.hidden=false}
+    else if(ios())it.textContent='Sur iPhone : dans Safari, touche Partager (le carré avec une flèche), puis « Sur l’écran d’accueil ». Ouvre ensuite l’appli depuis son icône.';
+    else it.textContent='Pour l’installer : menu ⋮ du navigateur, puis « Installer l’appli » ou « Ajouter à l’écran d’accueil ».';
+    Notif.render();
   }
   el('telInstall').addEventListener('click',async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice}catch(e){}installEvt=null;render()});
-  el('telOn').addEventListener('click',on);el('telOff').addEventListener('click',off);
-  return {render,sync};
+  return {render,sync:()=>Notif.sync()};
 })();
 $('#fMember').addEventListener('submit',async e=>{
   e.preventDefault();if(!db)return;
@@ -1792,6 +1955,7 @@ fillForm();renderPresets();renderHist();paint();
 function renderAll(){
   if(me&&loaded.members&&!S.members.has(me)){me='';lsSet('adb-me','')}
   renderMembers();renderElo();renderFights();renderCalendar();renderNotes();applyRO();
+  Notif.render();Notif.sync();
 }
 renderAll();
 boot();

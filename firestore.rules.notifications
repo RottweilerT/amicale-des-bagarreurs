@@ -1,0 +1,38 @@
+    // ---- Notifications push (voir NOTIFICATIONS.md) ----
+    // À coller dans Firebase Console → Firestore Database → Règles, juste avant les deux dernières accolades « } } ».
+    // Les règles déjà en place pour members, fights, courses et attendance ne changent pas.
+
+    // Un abonnement par appareil : l'appli peut le créer, le modifier ou l'effacer (identifiant aléatoire
+    // connu du seul appareil), mais personne ne peut le lire depuis l'appli. Seul le programme d'envoi
+    // (GitHub Action, compte de service) le lit.
+    match /push_subs/{id} {
+      allow get, list: if false;
+      allow delete: if id.matches('^[a-f0-9]{32}$');
+      allow create, update: if id.matches('^[a-f0-9]{32}$')
+        && request.resource.data.keys().hasOnly(['token', 'cats', 'active', 'member', 'createdAt', 'updatedAt'])
+        && request.resource.data.token is string
+        && request.resource.data.token.size() > 20 && request.resource.data.token.size() < 4096
+        && request.resource.data.cats is list && request.resource.data.cats.size() <= 10
+        && request.resource.data.cats.hasOnly(['annonces', 'changements', 'nouveaux', 'rappel', 'combats'])
+        && request.resource.data.active is bool
+        && (request.resource.data.member == null
+            || (request.resource.data.member is string && request.resource.data.member.size() < 64))
+        && request.resource.data.createdAt is int
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    // Annonces de l'espace admin : l'appli peut seulement déposer une demande. Le programme d'envoi
+    // vérifie le code admin (secret GitHub ADMIN_CODE), envoie si c'est bon, puis efface la demande.
+    match /push_requests/{id} {
+      allow get, list, update, delete: if false;
+      allow create: if request.resource.data.keys().hasOnly(['title', 'body', 'cat', 'link', 'code', 'at'])
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 60
+        && request.resource.data.body is string
+        && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 200
+        && request.resource.data.cat in ['annonces', 'changements', 'nouveaux', 'rappel', 'combats']
+        && request.resource.data.link in ['calendrier', 'minuteur', 'combats', 'elo', 'membres', 'regles', 'notes']
+        && request.resource.data.code is string
+        && request.resource.data.code.size() > 0 && request.resource.data.code.size() <= 64
+        && request.resource.data.at == request.time;
+    }

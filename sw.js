@@ -1,7 +1,7 @@
 // Mode hors ligne : la page et ses ressources sont gardées sur l'appareil.
 // La page est toujours redemandée au réseau d'abord (pour avoir la dernière version),
 // et la copie locale ne sert que sans connexion. Les données Firebase ne passent pas par ici.
-const CACHE = 'adb-v4';
+const CACHE = 'adb-v5';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png'];
 const EXTERNAL = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
@@ -27,6 +27,8 @@ self.addEventListener('fetch', e => {
   const static_ = url.origin === location.origin || EXTERNAL.includes(url.hostname)
     || (url.hostname === 'www.gstatic.com' && url.pathname.startsWith('/firebasejs/'));
   if (!static_) return;
+  // Historique des notifications et rapports : toujours la version du serveur.
+  if (url.origin === location.origin && /\/(notifications|tickets)\//.test(url.pathname)) return;
   e.respondWith(caches.open(CACHE).then(async c => {
     const cached = await c.match(req);
     const fresh = fetch(req).then(res => {
