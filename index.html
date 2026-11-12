@@ -1711,6 +1711,8 @@ function renderNotes(){
 
 /* ---------- la salle : idées validées par le groupe, part de chacun, achats (documents « courses » de kind « salle » / « salle-saison ») ---------- */
 let SALLE=new Map();
+/* Saisons sans partage des frais (2025-2026 : saison de démarrage, achats faits avant l'onglet) */
+const SL_SANS_PART=['2025-2026'];
 const SL={saison:'',f1:'all',edit:null,armed:null};
 const saisonDe=d=>{const y=d.getFullYear();return d.getMonth()>=8?y+'-'+(y+1):(y-1)+'-'+y};
 const saisonSuivante=s=>{const y=+s.slice(0,4)+1;return y+'-'+(y+1)};
@@ -1802,9 +1804,10 @@ function renderSalle(){
   const total=sum(val),part=np?Math.round(total/np*100)/100:0;
   const payes=new Set((S0.payes||[]).filter(i=>pset.has(i))),collecte=Math.round(payes.size*part*100)/100,dep=sum(A);
   const off=!connected?'<div class="empty">Données indisponibles pour le moment.</div>':null;
+  const sansPart=SL_SANS_PART.includes(SL.saison);$('#slH2').closest('section').hidden=sansPart;
   $('#slRule').textContent=`Chacun peut proposer une idée avec son prix, et valider celles qu’il soutient. Une idée est validée quand la moitié des participants l’ont validée (${seuil} sur ${np}).`;
   $('#slKpis').innerHTML=slKpi('k1','Projets validés',euros(total),`${val.length} projet${val.length>1?'s':''}${sansPrix(val)?` · ${sansPrix(val)} sans prix`:''}${att.length?` · ${att.length} idée${att.length>1?'s':''} à valider`:''}`)
-    +slKpi('k2','Part par personne',euros(part),`${np} participant${np>1?'s':''} · ${payes.size} ${payes.size>1?'ont':'a'} payé`)
+    +(sansPart?slKpi('k2','Saison de démarrage','—','Pas de partage des frais cette saison'):slKpi('k2','Part par personne',euros(part),`${np} participant${np>1?'s':''} · ${payes.size} ${payes.size>1?'ont':'a'} payé`))
     +slKpi('k3','Dépensé',euros(dep),`${A.length} achat${A.length>1?'s':''}${sansPrix(A)?` · ${sansPrix(A)} prix à venir`:''}`);
   // 1. idées et projets
   const ord={ok:0,done:1,wait:2};
@@ -1818,7 +1821,7 @@ function renderSalle(){
     const faces=vs.map(i=>{const m=member(i);return `<span class="sl-face${i===me?' me':''}" title="${esc(m.first+' '+m.last)}">${esc(initiales(m))}</span>`}).join('');
     return `<div class="sl-item st-${st}"><div class="sl-it-top">${pill}<span class="sl-amt">${b.montant==null?'<span class="hint">prix ?</span>':euros(b.montant)}</span></div>
       <div class="tk-title">${esc(b.titre)}${slQte(b)}</div>${b.desc?`<p class="tk-body">${esc(b.desc)}</p>`:''}
-      ${b.montant!=null&&np?`<p class="hint">soit ${euros(Math.round(b.montant/np*100)/100)} par personne</p>`:''}
+      ${b.montant!=null&&np&&!sansPart?`<p class="hint">soit ${euros(Math.round(b.montant/np*100)/100)} par personne</p>`:''}
       ${st==='done'?'':`<div class="sl-bar" role="img" aria-label="${vs.length} validations sur ${seuil} nécessaires"><i style="width:${Math.min(100,Math.round(vs.length/seuil*100))}%"></i></div>`}
       ${vs.length?`<div class="sl-faces" aria-label="Ont validé : ${esc(vs.map(i=>member(i).first).join(', '))}">${faces}</div><p class="hint">Validée par ${esc(vs.map(i=>member(i).first).join(', '))}</p>`:st==='done'?'':'<p class="hint">Personne n’a encore validé.</p>'}
       <p class="hint">${b.auteur?'Proposée par '+esc(b.auteur):st==='done'?'Achat de la saison':'Proposée anonymement'}${d&&st!=='done'?' · '+esc(d):''}</p>
@@ -1834,7 +1837,7 @@ function renderSalle(){
       +(inn?`<button class="sl-pay" type="button" data-w data-pay="${id}" aria-pressed="${paid}">${paid?'✓ Payé':'À payer'}</button>`:'')+'</div>'}).join('');
   // 3. achats
   const reste=Math.round((collecte-dep)*100)/100;
-  $('#slSum3').innerHTML=`<span>Dépensé : <b>${euros(dep)}</b>${sansPrix(A)?` <span class="hint">(+ ${sansPrix(A)} prix à venir)</span>`:''}</span><span>Collecté : <b>${euros(collecte)}</b></span><span>${reste>=0?'En caisse':'Avancé (à rembourser)'} : <b class="${reste>=0?'sl-pos':'sl-neg'}">${euros(Math.abs(reste))}</b></span>`;
+  $('#slSum3').innerHTML=`<span>Dépensé : <b>${euros(dep)}</b>${sansPrix(A)?` <span class="hint">(+ ${sansPrix(A)} prix à venir)</span>`:''}</span>`+(sansPart?'':`<span>Collecté : <b>${euros(collecte)}</b></span><span>${reste>=0?'En caisse':'Avancé (à rembourser)'} : <b class="${reste>=0?'sl-pos':'sl-neg'}">${euros(Math.abs(reste))}</b></span>`);
   $('#slList3').innerHTML=off||(A.length?A.sort((a,b)=>(b.jour||'').localeCompare(a.jour||'')||(a.at||'').localeCompare(b.at||'')).map(x=>{const d=x.jour?parseYmd(x.jour).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}):'';
     return `<div class="sl-item"><div class="sl-it-top">${x.montant==null?'<span class="pill idee">Prix à venir</span>':''}<span class="sl-amt">${x.montant==null?'':euros(Number(x.montant))}</span></div>
       <div class="tk-title">${esc(x.titre)}${slQte(x)}</div>${x.desc||d?`<p class="hint">${[d,esc(x.desc||'')].filter(Boolean).join(' · ')}</p>`:''}
