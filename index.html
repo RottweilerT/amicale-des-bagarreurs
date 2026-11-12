@@ -93,6 +93,41 @@ h3{font-size:1.25rem}
 .np-hist{display:grid;gap:6px}
 .np-hist div{font-size:.85rem;border-left:3px solid var(--blue);padding:2px 8px;overflow-wrap:anywhere}
 .np-hist small{color:var(--muted);display:block}
+/* ----- La salle ----- */
+.sl{display:grid;gap:16px;max-width:920px;margin:0 auto;min-width:0}
+.sl-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sl-top h2{margin:0}
+.sl-season{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.sl-season label{min-width:150px}
+.sl-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.sl-kpis{grid-template-columns:minmax(0,1fr)}}
+.sl-kpi{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--blue);border-radius:var(--r);padding:10px 14px;display:grid;gap:2px;min-width:0}
+.sl-kpi.k2{border-top-color:var(--line)}.sl-kpi.k3{border-top-color:var(--red)}
+.sl-kpi span{font:600 .72rem var(--f-data);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sl-kpi b{font:700 1.45rem var(--f-data);color:var(--ink)}
+.sl-kpi small{color:var(--muted);font-size:.82rem}
+.sl-sec{grid-template-columns:minmax(0,1fr)}.sl-sec>*{min-width:0}
+#slF1{overflow-x:auto}#slF1 button{white-space:nowrap;padding-inline:6px;font-size:.74rem;letter-spacing:.02em}
+.sl-sec.s1{border-top:6px solid var(--blue)}.sl-sec.s2{border-top:6px solid var(--line)}.sl-sec.s3{border-top:6px solid var(--red)}
+.sl-sh{display:flex;gap:12px;align-items:flex-start}
+.sl-sh h3{margin:0}.sl-sh p{margin:4px 0 0}
+.sl-num{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 1rem var(--f-data);background:var(--blue);color:var(--on-accent)}
+.s2 .sl-num{background:var(--surface);color:var(--ink);border:2px solid var(--ink)}.s3 .sl-num{background:var(--red);color:#fff}
+.sl-sum{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.92rem;padding:10px 12px;background:var(--sunk);border-radius:10px}
+.sl-sum b{font-family:var(--f-data)}
+.sl-list{display:grid;gap:8px}
+.sl-item{border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:10px;padding:10px 12px;display:grid;gap:6px;background:var(--bg);min-width:0}
+.sl-item.st-propose{border-left-color:var(--gold)}.sl-item.st-ecarte{opacity:.62;border-left-color:var(--line)}.sl-item.st-ecarte .tk-title{text-decoration:line-through}
+.s2 .sl-item{border-left-color:var(--ink)}.s3 .sl-item{border-left-color:var(--red)}
+.sl-it-top{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sl-amt{margin-left:auto;font:700 1.05rem var(--f-data);white-space:nowrap}
+.sl-item .row .btn{flex:0 0 auto}
+.sl-item p{margin:0}
+.sl-add{border-top:1px dashed var(--line);padding-top:8px}
+.sl-add summary{cursor:pointer;font-weight:700;color:var(--blue);padding:6px 0}
+.sl-add form,.sl-fin{display:grid;gap:10px}
+.sl-add form{margin-top:6px}
+.sl-neg{color:var(--red)}.sl-pos{color:var(--ok)}
 .gate{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:30;padding:16px}
 .gate .panel{width:min(360px,100%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .pin{letter-spacing:.35em;font-family:var(--f-data);font-size:1.2rem}
@@ -484,6 +519,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
     <button role="tab" data-tab="minuteur" aria-selected="false">Minuteur boxe</button>
     <button role="tab" data-tab="combats" aria-selected="false">Combats</button>
     <button role="tab" data-tab="elo" aria-selected="false">Classement</button>
+    <button role="tab" data-tab="salle" aria-selected="false">La salle</button>
     <button role="tab" data-tab="regles" aria-selected="false">Règles</button>
     <button role="tab" data-tab="notes" aria-selected="false">Notes</button>
   </nav>
@@ -610,6 +646,67 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
     </div>
   </section>
 
+  <!-- LA SALLE : fonctionnement, financement, achats -->
+  <section id="tab-salle" hidden>
+    <div class="sl">
+      <div class="sl-top">
+        <div><h2>Fonctionnement de la salle</h2><p class="hint" style="margin:0">Matériel et budget, saison par saison (de septembre à août).</p></div>
+        <div class="sl-season"><label for="slSaison">Saison<select id="slSaison"></select></label><button class="btn ghost small" data-w type="button" id="slNext">+ Saison suivante</button></div>
+      </div>
+      <div class="sl-kpis" id="slKpis"></div>
+
+      <section class="panel sl-sec s1" aria-labelledby="slH1">
+        <div class="sl-sh"><span class="sl-num">1</span><div><h3 id="slH1">Besoins de financement</h3><p class="hint">Chacun peut proposer une idée (matériel, aménagement, entretien…). On la soutient, puis on retient celles qui forment la demande de financement de la saison.</p></div></div>
+        <div class="sl-sum" id="slSum1"></div>
+        <div class="seg" id="slF1"><button type="button" data-f="all" aria-selected="true">Toutes</button><button type="button" data-f="retenu" aria-selected="false">Retenues</button><button type="button" data-f="propose" aria-selected="false">Proposées</button><button type="button" data-f="ecarte" aria-selected="false">Écartées</button></div>
+        <div class="sl-list" id="slList1"></div>
+        <details class="sl-add" id="slAdd1"><summary>+ Proposer un besoin</summary>
+          <form id="slFbesoin" data-sec="besoin" autocomplete="off" novalidate>
+            <label>Quoi ?<input name="titre" maxlength="80" placeholder="Ex. Sac de frappe lourd" required></label>
+            <div class="row"><label>Quantité<input name="qte" type="number" min="1" max="999" inputmode="numeric" value="1"></label><label>Coût estimé total (€)<input name="montant" inputmode="decimal" placeholder="Facultatif"></label></div>
+            <label>Pourquoi ? Précisions<textarea name="desc" maxlength="1000" placeholder="Facultatif : à quoi ça servira, lien vers un modèle…"></textarea></label>
+            <p class="hint sl-sign"></p>
+            <div class="row"><button class="btn" data-w type="submit">Proposer</button><button class="btn ghost" type="button" data-cancel hidden>Annuler</button></div>
+          </form>
+        </details>
+      </section>
+
+      <section class="panel sl-sec s2" aria-labelledby="slH2">
+        <div class="sl-sh"><span class="sl-num">2</span><div><h3 id="slH2">Financement accordé et utilisation prévue</h3><p class="hint">Le montant obtenu pour la saison, puis ce qu'on prévoit d'en faire.</p></div></div>
+        <form id="slFin" class="sl-fin" autocomplete="off" novalidate>
+          <div class="row"><label>Montant accordé (€)<input id="slAcc" inputmode="decimal" placeholder="Pas encore connu"></label><label>Financeur<input id="slFinanceur" maxlength="80" placeholder="Ex. mairie, association…"></label></div>
+          <label>Remarque<input id="slFinNote" maxlength="200" placeholder="Facultatif : date de versement, conditions…"></label>
+          <div class="row"><button class="btn ghost" data-w type="submit" style="flex:0 0 auto">Enregistrer le financement</button></div>
+        </form>
+        <div class="sl-sum" id="slSum2"></div>
+        <div class="sl-list" id="slList2"></div>
+        <div class="row"><button class="btn ghost small" data-w type="button" id="slFromNeeds" style="flex:0 0 auto">Reprendre les besoins retenus</button></div>
+        <details class="sl-add" id="slAdd2"><summary>+ Ajouter une utilisation prévue</summary>
+          <form id="slFplan" data-sec="plan" autocomplete="off" novalidate>
+            <label>Utilisation<input name="titre" maxlength="80" placeholder="Ex. 2 paires de gants de sparring" required></label>
+            <label>Montant prévu (€)<input name="montant" inputmode="decimal" placeholder="Facultatif"></label>
+            <label>Précisions<textarea name="desc" maxlength="1000" placeholder="Facultatif"></textarea></label>
+            <div class="row"><button class="btn" data-w type="submit">Ajouter</button><button class="btn ghost" type="button" data-cancel hidden>Annuler</button></div>
+          </form>
+        </details>
+      </section>
+
+      <section class="panel sl-sec s3" aria-labelledby="slH3">
+        <div class="sl-sh"><span class="sl-num">3</span><div><h3 id="slH3">Achats réalisés</h3><p class="hint">Ce qui a vraiment été acheté ou payé, avec le prix réel. Un prix pas encore connu peut être ajouté plus tard.</p></div></div>
+        <div class="sl-sum" id="slSum3"></div>
+        <div class="sl-list" id="slList3"></div>
+        <details class="sl-add" id="slAdd3"><summary>+ Inscrire un achat</summary>
+          <form id="slFachat" data-sec="achat" autocomplete="off" novalidate>
+            <label>Article<input name="titre" maxlength="80" placeholder="Ex. Cordes à sauter" required></label>
+            <div class="row"><label>Quantité<input name="qte" type="number" min="1" max="999" inputmode="numeric" value="1"></label><label>Prix payé total (€)<input name="montant" inputmode="decimal" placeholder="Vide = à renseigner"></label></div>
+            <div class="row"><label>Date d'achat<input name="jour" type="date"></label><label>Magasin / remarque<input name="desc" maxlength="200" placeholder="Facultatif"></label></div>
+            <div class="row"><button class="btn" data-w type="submit">Inscrire l'achat</button><button class="btn ghost" type="button" data-cancel hidden>Annuler</button></div>
+          </form>
+        </details>
+      </section>
+    </div>
+  </section>
+
   <!-- CALENDRIER -->
   <section id="tab-calendrier" class="calcol" hidden>
     <!-- Vue semaine : du dimanche au samedi, qui est inscrit et si l'on peut encore s'inscrire -->
@@ -663,7 +760,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
   <section id="tab-notes" class="grid2" hidden>
     <form id="ntForm" class="panel" autocomplete="off">
       <h3 id="ntTitle">Nouveau ticket</h3>
-      <label for="ntSubject">Titre (onglet concerné)<select id="ntSubject" required><option value="" disabled selected>Choisis un onglet…</option><option>Membres</option><option>Combats</option><option>Classement</option><option>Calendrier</option><option>Règles</option><option>Minuteur boxe</option><option>Notes</option><option value="Tous">Tous (toute l'appli)</option></select></label>
+      <label for="ntSubject">Titre (onglet concerné)<select id="ntSubject" required><option value="" disabled selected>Choisis un onglet…</option><option>Membres</option><option>Combats</option><option>Classement</option><option>La salle</option><option>Calendrier</option><option>Règles</option><option>Minuteur boxe</option><option>Notes</option><option value="Tous">Tous (toute l'appli)</option></select></label>
       <label for="ntBody">Détails<textarea id="ntBody" maxlength="5000" placeholder="Facultatif"></textarea></label>
       <div class="row">
         <label for="ntCat">Catégorie<select id="ntCat"><option value="idee">Idée</option><option value="tache">À faire</option><option value="probleme">Problème</option><option value="info">Info</option></select></label>
@@ -940,7 +1037,7 @@ async function boot(){
     db.collection(col).onSnapshot(snap=>{
       const m=new Map();snap.docs.forEach(d=>m.set(d.id,d.data()));
       if(col==='fights'){for(const [id,l] of localF){const s=m.get(id);if(s&&s.rev===l.rev)localF.delete(id)}}
-      if(col==='courses'){const n=new Map();for(const [id,d] of m)if(d&&d.kind==='note'){n.set(id,d);m.delete(id)}NOTES=n}
+      if(col==='courses'){const n=new Map(),sl=new Map();for(const [id,d] of m){if(d&&d.kind==='note')n.set(id,d);else if(d&&(d.kind==='salle'||d.kind==='salle-saison'))sl.set(id,d);else continue;m.delete(id)}NOTES=n;SALLE=sl}
       S[col]=m;loaded[col]=true;renderAll();
     },handleErr);
   }
@@ -951,13 +1048,13 @@ async function boot(){
 function showTab(t){
   ui.tab=t;
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t))
-  for(const id of ['membres','combats','elo','calendrier','regles','minuteur','notes'])$('#tab-'+id).hidden=id!==t;
+  for(const id of ['membres','combats','elo','salle','calendrier','regles','minuteur','notes'])$('#tab-'+id).hidden=id!==t;
   try{history.replaceState(null,'','#'+t)}catch(e){}
 }
 document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(b)showTab(b.dataset.tab)});
-{const h=(location.hash||'').slice(1);if(['membres','combats','elo','calendrier','regles','minuteur','notes'].includes(h))showTab(h)}
+{const h=(location.hash||'').slice(1);if(['membres','combats','elo','salle','calendrier','regles','minuteur','notes'].includes(h))showTab(h)}
 /* ouverture depuis une notification alors que l'appli est déjà ouverte : seul le #onglet change */
-addEventListener('hashchange',()=>{const h=(location.hash||'').slice(1);if(['membres','combats','elo','calendrier','regles','minuteur','notes'].includes(h)&&h!==ui.tab)showTab(h)});
+addEventListener('hashchange',()=>{const h=(location.hash||'').slice(1);if(['membres','combats','elo','salle','calendrier','regles','minuteur','notes'].includes(h)&&h!==ui.tab)showTab(h)});
 
 /* ---------- identity ---------- */
 function fillMemberSelect(sel,placeholder,keep){
@@ -1134,7 +1231,7 @@ const NCATS=[
   {k:'nouveaux',t:'Nouveaux cours',h:'Cours ajoutés au calendrier'},
   {k:'rappel',t:'Rappel des présences',h:'Le samedi à 16 h, s’il te manque des réponses pour la semaine (profil choisi)'},
   {k:'combats',t:'Combats',h:'Combat programmé et résultat'}];
-const NLINKS={calendrier:'Calendrier',minuteur:'Minuteur',combats:'Combats',elo:'Classement',membres:'Membres',regles:'Règles',notes:'Notes'};
+const NLINKS={calendrier:'Calendrier',minuteur:'Minuteur',combats:'Combats',elo:'Classement',salle:'La salle',membres:'Membres',regles:'Règles',notes:'Notes'};
 const Notif=(()=>{
   const LS={id:'adb-push-id',tok:'push-token',who:'push-who',cats:'adb-push-cats',since:'adb-push-since',sync:'adb-push-sync',key:'adb-push-key',mode:'adb-push-mode'};
   const get=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}};
@@ -1602,6 +1699,139 @@ function renderNotes(){
   applyRO();
 }
 
+/* ---------- la salle : besoins, financement, achats (documents « courses » de kind « salle » / « salle-saison ») ---------- */
+let SALLE=new Map();
+const SL={saison:'',f1:'all',edit:null,armed:null};
+const SL_ST={propose:'Proposé',retenu:'Retenu',ecarte:'Écarté'};
+const saisonDe=d=>{const y=d.getFullYear();return d.getMonth()>=8?y+'-'+(y+1):(y-1)+'-'+y};
+const saisonSuivante=s=>{const y=+s.slice(0,4)+1;return y+'-'+(y+1)};
+const euros=n=>n==null||isNaN(n)?'—':new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:n%1?2:0,maximumFractionDigits:2}).format(n);
+const slNum=v=>{v=String(v??'').replace(/\s|€/g,'').replace(',','.');if(!v)return null;const n=Number(v);return isFinite(n)&&n>=0?Math.round(n*100)/100:NaN};
+const slItems=sec=>[...SALLE.entries()].filter(([,x])=>x.kind==='salle'&&x.saison===SL.saison&&x.sec===sec).map(([id,x])=>({id,...x}));
+const slSaisonDoc=s=>SALLE.get('s-saison-'+s)||{};
+const slQte=x=>x.qte>1?' ×'+x.qte:'';
+const slMe=()=>{const m=me&&member(me);return m?{auteur:m.first+' '+m.last,auteurId:me}:{auteur:'',auteurId:''}};
+function slSaisons(){
+  const s=new Set([saisonDe(new Date())]);
+  for(const x of SALLE.values())if(/^\d{4}-\d{4}$/.test(x.saison||''))s.add(x.saison);
+  return [...s].sort().reverse();
+}
+const slForm=sec=>document.getElementById('slF'+sec);
+const SL_ADD={besoin:'slAdd1',plan:'slAdd2',achat:'slAdd3'};
+const SL_BTN={besoin:'Proposer',plan:'Ajouter',achat:'Inscrire l’achat'};
+function slResetForm(sec){const f=slForm(sec);f.reset();f.querySelector('[type=submit]').textContent=SL_BTN[sec];f.querySelector('[data-cancel]').hidden=true;if(SL.edit&&SL.edit.sec===sec)SL.edit=null;delete f.dataset.besoin}
+function slFill(sec,x,editId){
+  const f=slForm(sec);slResetForm(sec);
+  for(const k of ['titre','qte','montant','desc','jour'])if(f.elements[k])f.elements[k].value=x[k]==null?(k==='qte'?1:''):String(k==='montant'?String(x[k]).replace('.',','):x[k]);
+  if(x.besoinId)f.dataset.besoin=x.besoinId;
+  if(editId){SL.edit={sec,id:editId};f.querySelector('[type=submit]').textContent='Enregistrer'}
+  f.querySelector('[data-cancel]').hidden=false;
+  const d=document.getElementById(SL_ADD[sec]);d.open=true;d.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>f.elements.titre.focus(),250);
+}
+async function slSubmit(e){
+  e.preventDefault();if(!db)return;
+  const f=e.target,sec=f.dataset.sec,v=n=>f.elements[n]?f.elements[n].value.trim():'';
+  const titre=v('titre');if(!titre){toast('Indique de quoi il s’agit.');f.elements.titre.focus();return}
+  const montant=slNum(v('montant'));if(Number.isNaN(montant)){toast('Montant invalide : écris juste un nombre, par ex. 49,90.');f.elements.montant.focus();return}
+  const data={titre,montant,desc:v('desc'),updated:new Date().toISOString()};
+  if(f.elements.qte)data.qte=Math.min(999,Math.max(1,parseInt(v('qte'))||1));
+  if(f.elements.jour)data.jour=v('jour');
+  if(f.dataset.besoin)data.besoinId=f.dataset.besoin;
+  const ed=SL.edit&&SL.edit.sec===sec?SL.edit.id:null;
+  if(ed){const old=SALLE.get(ed);if(!old){toast('Cette ligne a été supprimée entre-temps.');slResetForm(sec);return}await setDoc('courses/'+ed,Object.assign({},old,data));toast('Modifié')}
+  else{
+    const base={kind:'salle',saison:SL.saison,sec,at:new Date().toISOString(),...slMe()};
+    if(sec==='besoin'){base.statut='propose';base.soutiens=me&&member(me)?[me]:[]}
+    await setDoc('courses/s-'+rid(),Object.assign(base,data));
+    toast(sec==='besoin'?'Besoin proposé, merci !':sec==='plan'?'Utilisation ajoutée':'Achat inscrit');
+  }
+  slResetForm(sec);document.getElementById(SL_ADD[sec]).open=false;renderSalle();
+}
+['besoin','plan','achat'].forEach(sec=>{const f=slForm(sec);f.addEventListener('submit',slSubmit);f.querySelector('[data-cancel]').addEventListener('click',()=>{slResetForm(sec);document.getElementById(SL_ADD[sec]).open=false})});
+$('#slSaison').addEventListener('change',e=>{SL.saison=e.target.value;['besoin','plan','achat'].forEach(slResetForm);renderSalle()});
+$('#slNext').addEventListener('click',async()=>{
+  const s=saisonSuivante(slSaisons()[0]);
+  if(+s.slice(0,4)>new Date().getFullYear()+1){toast('La saison '+slSaisons()[0]+' est déjà la prochaine.');return}
+  await setDoc('courses/s-saison-'+s,{kind:'salle-saison',saison:s,accorde:null,financeur:'',note:'',updated:new Date().toISOString()});
+  SL.saison=s;toast('Saison '+s+' créée');renderSalle();
+});
+$('#slF1').addEventListener('click',e=>{const b=e.target.closest('button[data-f]');if(!b)return;SL.f1=b.dataset.f;[...$('#slF1').children].forEach(x=>x.setAttribute('aria-selected',x===b));renderSalle()});
+$('#slFin').addEventListener('submit',async e=>{
+  e.preventDefault();if(!db)return;
+  const acc=slNum($('#slAcc').value);if(Number.isNaN(acc)){toast('Montant invalide : écris juste un nombre, par ex. 800.');return}
+  const old=slSaisonDoc(SL.saison);
+  await setDoc('courses/s-saison-'+SL.saison,Object.assign({},old,{kind:'salle-saison',saison:SL.saison,accorde:acc,financeur:$('#slFinanceur').value.trim(),note:$('#slFinNote').value.trim(),updated:new Date().toISOString()}));
+  toast('Financement enregistré');
+});
+$('#slFromNeeds').addEventListener('click',async()=>{
+  if(!db)return;
+  const deja=new Set(slItems('plan').map(p=>p.besoinId).filter(Boolean));
+  const ret=slItems('besoin').filter(b=>b.statut==='retenu'&&!deja.has(b.id));
+  if(!ret.length){toast(slItems('besoin').some(b=>b.statut==='retenu')?'Tous les besoins retenus sont déjà repris.':'Aucun besoin retenu pour l’instant (section 1).');return}
+  for(const b of ret)await setDoc('courses/s-'+rid(),{kind:'salle',saison:SL.saison,sec:'plan',titre:b.titre,qte:b.qte||1,montant:b.montant??null,desc:'',besoinId:b.id,at:new Date().toISOString(),updated:new Date().toISOString(),...slMe()});
+  toast(ret.length+' utilisation'+(ret.length>1?'s':'')+' ajoutée'+(ret.length>1?'s':''));
+});
+$('#tab-salle').addEventListener('click',async e=>{
+  const b=e.target.closest('button[data-sl]');if(!b||b.disabled)return;
+  const id=b.dataset.id,x=SALLE.get(id);if(!x)return;const a=b.dataset.sl;
+  if(a==='edit')return slFill(x.sec,x,id);
+  if(a==='buy')return slFill('achat',{titre:x.titre,montant:x.montant,qte:x.qte||1,jour:today,desc:''});
+  if(a==='del'){if(SL.armed!==id){SL.armed=id;renderSalle();setTimeout(()=>{if(SL.armed===id){SL.armed=null;renderSalle()}},3000);return}
+    SL.armed=null;await delDoc('courses/'+id);toast('Supprimé');return}
+  if(a==='st'){await setDoc('courses/'+id,Object.assign({},x,{statut:b.dataset.v,updated:new Date().toISOString()}));return}
+  if(a==='vote'){
+    if(!me||!member(me)){toast('Choisis ton nom en haut de la page pour soutenir une idée.');return}
+    const on=(x.soutiens||[]).includes(me),FV=firebase.firestore.FieldValue;
+    try{await db.doc('courses/'+id).set({soutiens:on?FV.arrayRemove(me):FV.arrayUnion(me)},{merge:true})}catch(err){handleErr(err)}
+  }
+});
+function slKpi(cls,label,val,sub){return `<div class="sl-kpi ${cls}"><span>${label}</span><b>${val}</b><small>${sub}</small></div>`}
+function renderSalle(){
+  const all=slSaisons();if(!SL.saison||!all.includes(SL.saison))SL.saison=all.includes(saisonDe(new Date()))?saisonDe(new Date()):all[0];
+  const sel=$('#slSaison');sel.innerHTML=all.map(s=>`<option value="${s}"${s===SL.saison?' selected':''}>Saison ${s}${s===saisonDe(new Date())?' (en cours)':''}</option>`).join('');
+  document.querySelectorAll('.sl-sign').forEach(p=>{const m=me&&member(me);p.textContent=m?'Proposé par '+m.first+' '+m.last:'Choisis ton nom en haut de la page pour signer ta proposition (sinon : anonyme).'});
+  const sum=l=>l.reduce((t,x)=>t+(x.montant||0),0),sansPrix=l=>l.filter(x=>x.montant==null).length;
+  const B=slItems('besoin'),P=slItems('plan'),A=slItems('achat'),S0=slSaisonDoc(SL.saison);
+  const ret=B.filter(b=>b.statut==='retenu'),att=B.filter(b=>(b.statut||'propose')==='propose');
+  const acc=S0.accorde??null,dep=sum(A),prev=sum(P);
+  const off=!connected?'<div class="empty">Données indisponibles pour le moment.</div>':null;
+  // indicateurs
+  const np=n=>n?` · ${n} sans montant`:'';
+  $('#slKpis').innerHTML=slKpi('k1','Besoin de financement',euros(sum(ret)),`${ret.length} besoin${ret.length>1?'s':''} retenu${ret.length>1?'s':''}${np(sansPrix(ret))}${att.length?` · ${att.length} idée${att.length>1?'s':''} en attente`:''}`)
+    +slKpi('k2','Financement accordé',acc==null?'À renseigner':euros(acc),S0.financeur?esc(S0.financeur):'Section 2')
+    +slKpi('k3','Dépensé',euros(dep),`${A.length} achat${A.length>1?'s':''}${sansPrix(A)?` · ${sansPrix(A)} prix à venir`:''}${acc!=null?` · reste ${euros(Math.round((acc-dep)*100)/100)}`:''}`);
+  // 1. besoins
+  const ord={retenu:0,propose:1,ecarte:2};
+  const lb=B.filter(b=>SL.f1==='all'||(b.statut||'propose')===SL.f1).sort((a,b)=>(ord[a.statut||'propose']-ord[b.statut||'propose'])||((b.soutiens||[]).length-(a.soutiens||[]).length)||(a.at||'').localeCompare(b.at||''));
+  $('#slSum1').innerHTML=`<span>Besoin retenu : <b>${euros(sum(ret))}</b>${sansPrix(ret)?` <span class="hint">(+ ${sansPrix(ret)} sans montant)</span>`:''}</span><span>Idées en attente : <b>${euros(sum(att))}</b> <span class="hint">(${att.length})</span></span>`;
+  $('#slList1').innerHTML=off||(lb.length?lb.map(b=>{
+    const st=b.statut||'propose',sp=(b.soutiens||[]).map(i=>member(i)).filter(Boolean),mine=me&&(b.soutiens||[]).includes(me),d=b.at?new Date(b.at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
+    const stBtns=Object.keys(SL_ST).filter(k=>k!==st).map(k=>`<button class="btn ghost small" data-w data-sl="st" data-v="${k}" data-id="${esc(b.id)}">${k==='retenu'?'Retenir':k==='ecarte'?'Écarter':'Remettre en idée'}</button>`).join('');
+    return `<div class="sl-item st-${st}"><div class="sl-it-top"><span class="pill ${st==='retenu'?'done':st==='propose'?'idee':''}">${SL_ST[st]}</span><span class="sl-amt">${b.montant==null?'<span class="hint">montant ?</span>':euros(b.montant)}</span></div>
+      <div class="tk-title">${esc(b.titre)}${slQte(b)}</div>${b.desc?`<p class="tk-body">${esc(b.desc)}</p>`:''}
+      <p class="hint">${esc(b.auteur||'Anonyme')}${d?' · '+esc(d):''} · ${sp.length?`👍 ${sp.length} soutien${sp.length>1?'s':''} (${esc(sp.map(m=>m.first).join(', '))})`:'pas encore de soutien'}</p>
+      <div class="row"><button class="btn ${mine?'':'ghost'} small" data-w data-sl="vote" data-id="${esc(b.id)}" aria-pressed="${mine?'true':'false'}">${mine?'👍 Je soutiens':'Je soutiens'}</button>${stBtns}<button class="btn ghost small" data-w data-sl="edit" data-id="${esc(b.id)}">Modifier</button><button class="btn ${SL.armed===b.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(b.id)}">${SL.armed===b.id?'Confirmer ?':'Supprimer'}</button></div></div>`}).join('')
+    :`<div class="empty">${B.length?'Rien dans ce filtre.':'<strong>Aucune idée pour l’instant</strong>Propose le premier besoin de la saison ci-dessous.'}</div>`);
+  // 2. financement
+  if(document.activeElement?.closest?.('#slFin')==null){$('#slAcc').value=acc==null?'':String(acc).replace('.',',');$('#slFinanceur').value=S0.financeur||'';$('#slFinNote').value=S0.note||''}
+  const reste=acc==null?null:Math.round((acc-prev)*100)/100;
+  $('#slSum2').innerHTML=`<span>Accordé : <b>${acc==null?'à renseigner':euros(acc)}</b></span><span>Prévu : <b>${euros(prev)}</b>${sansPrix(P)?` <span class="hint">(+ ${sansPrix(P)} sans montant)</span>`:''}</span>${reste==null?'':`<span>${reste>=0?'Reste à affecter':'Dépassement'} : <b class="${reste>=0?'sl-pos':'sl-neg'}">${euros(Math.abs(reste))}</b></span>`}${S0.note?`<span class="hint">${esc(S0.note)}</span>`:''}`;
+  const achatsDe=new Set(A.map(a=>(a.titre||'').toLowerCase()));
+  $('#slList2').innerHTML=off||(P.length?P.sort((a,b)=>(a.at||'').localeCompare(b.at||'')).map(p=>`<div class="sl-item"><div class="sl-it-top">${p.besoinId?'<span class="pill">Besoin retenu</span>':'<span class="pill">Ajout</span>'}<span class="sl-amt">${p.montant==null?'<span class="hint">montant ?</span>':euros(p.montant)}</span></div>
+      <div class="tk-title">${esc(p.titre)}${slQte(p)}</div>${p.desc?`<p class="tk-body">${esc(p.desc)}</p>`:''}
+      <div class="row"><button class="btn ghost small" data-w data-sl="buy" data-id="${esc(p.id)}">${achatsDe.has((p.titre||'').toLowerCase())?'✓ Acheté · inscrire un autre achat':'Inscrire l’achat'}</button><button class="btn ghost small" data-w data-sl="edit" data-id="${esc(p.id)}">Modifier</button><button class="btn ${SL.armed===p.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(p.id)}">${SL.armed===p.id?'Confirmer ?':'Supprimer'}</button></div></div>`).join('')
+    :'<div class="empty">Aucune utilisation prévue. Reprends les besoins retenus ou ajoute une ligne.</div>');
+  // 3. achats
+  const restA=acc==null?null:Math.round((acc-dep)*100)/100;
+  $('#slSum3').innerHTML=`<span>Dépensé : <b>${euros(dep)}</b>${sansPrix(A)?` <span class="hint">(+ ${sansPrix(A)} prix à venir)</span>`:''}</span>${restA==null?'':`<span>${restA>=0?'Reste sur le financement':'Dépassement du financement'} : <b class="${restA>=0?'sl-pos':'sl-neg'}">${euros(Math.abs(restA))}</b></span>`}`;
+  $('#slList3').innerHTML=off||(A.length?A.sort((a,b)=>(b.jour||'').localeCompare(a.jour||'')||(a.at||'').localeCompare(b.at||'')).map(x=>{const d=x.jour?parseYmd(x.jour).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}):'';
+    return `<div class="sl-item"><div class="sl-it-top">${x.montant==null?'<span class="pill idee">Prix à venir</span>':''}<span class="sl-amt">${x.montant==null?'':euros(x.montant)}</span></div>
+      <div class="tk-title">${esc(x.titre)}${slQte(x)}</div>${x.desc||d?`<p class="hint">${[d,esc(x.desc||'')].filter(Boolean).join(' · ')}</p>`:''}
+      <div class="row"><button class="btn ghost small" data-w data-sl="edit" data-id="${esc(x.id)}">${x.montant==null?'Indiquer le prix':'Modifier'}</button><button class="btn ${SL.armed===x.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(x.id)}">${SL.armed===x.id?'Confirmer ?':'Supprimer'}</button></div></div>`}).join('')
+    :'<div class="empty">Aucun achat inscrit pour cette saison.</div>');
+  applyRO();
+}
+
 /* ---------- global clicks ---------- */
 document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
@@ -1954,7 +2184,7 @@ fillForm();renderPresets();renderHist();paint();
 
 function renderAll(){
   if(me&&loaded.members&&!S.members.has(me)){me='';lsSet('adb-me','')}
-  renderMembers();renderElo();renderFights();renderCalendar();renderNotes();applyRO();
+  renderMembers();renderElo();renderFights();renderCalendar();renderNotes();renderSalle();applyRO();
   Notif.render();Notif.sync();
 }
 renderAll();
@@ -1974,8 +2204,11 @@ function TabsPerso(o){
   const all=()=>{try{const v=JSON.parse(localStorage.getItem(o.storage)||'{}');return v&&typeof v==='object'?v:{}}catch(e){return {}}};
   const read=()=>{let a=all(),p=who();
     if(Array.isArray(a)){a={[p]:a};try{localStorage.setItem(o.storage,JSON.stringify(a))}catch(e){}}
-    const v=a[p]===undefined&&p!=='_'&&o.defaut?o.defaut:a[p];let h=Array.isArray(v)?v.filter(k=>btns.some(b=>keyOf(b)===k)):[];return h.length>=btns.length?[]:h};
-  const write=v=>{const a=all(),b=Array.isArray(a)?{}:a;b[who()]=v;try{localStorage.setItem(o.storage,JSON.stringify(b))}catch(e){}};
+    const v=a[p]===undefined&&p!=='_'&&o.defaut?o.defaut:a[p];let h=Array.isArray(v)?v.filter(k=>btns.some(b=>keyOf(b)===k)):[];
+    /* onglet apparu depuis le dernier réglage de ce profil : rangé dans ⋯ s'il l'est par défaut */
+    if(Array.isArray(a[p])&&p!=='_'&&o.defaut){const known=Array.isArray(a['~'+p])?a['~'+p]:(o.anciens||btns.map(keyOf));btns.forEach(b=>{const k=keyOf(b);if(!known.includes(k)&&o.defaut.includes(k)&&!h.includes(k))h.push(k)})}
+    return h.length>=btns.length?[]:h};
+  const write=v=>{const a=all(),b=Array.isArray(a)?{}:a;b[who()]=v;b['~'+who()]=btns.map(keyOf);try{localStorage.setItem(o.storage,JSON.stringify(b))}catch(e){}};
   let cur=who(),hidden=read();
   const label=b=>(o.label?o.label(b):b.textContent).trim();
   const isOn=b=>b.getAttribute(o.activeAttr)===(o.activeVal||'true');
@@ -2064,7 +2297,7 @@ function TabsPerso(o){
    le reste est rangé dans ⋯. Sans profil choisi, tout reste visible pour pouvoir s'inscrire. */
 const ongletVisible=vis=>{const a=vis.find(b=>b.dataset.tab===ui.tab);if(!a&&vis[0])showTab(vis[0].dataset.tab)};
 TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',profile:()=>me,storage:'adb-onglets-masques-2',toast,
-  defaut:['membres','combats','elo','regles','notes'],
+  defaut:['membres','combats','elo','salle','regles','notes'],anciens:['membres','calendrier','minuteur','combats','elo','regles','notes'],
   onRender:(vis,more)=>{const C=['b','w','r'];vis.forEach((b,i)=>{b.dataset.tc=C[i%3]});more.dataset.tc=C[vis.length%3]},
   onProfile:ongletVisible});
 if(!location.hash)ongletVisible([...document.querySelectorAll('nav.tabs button[data-tab]')].filter(b=>!b.hidden));

@@ -41,7 +41,7 @@ DISC = {"BA": "boxe anglaise", "BF": "boxe française", "BT": "boxe thaï"}
 METHODES = {"PTS": "aux points", "KO": "par KO", "ARB": "par arrêt de l'arbitre", "ABD": "par abandon", "DQ": "par disqualification"}
 CATS = ["annonces", "changements", "nouveaux", "rappel", "combats"]          # mêmes clés que NCATS dans index.html
 CATS_ANCIENS = ["annonces", "changements", "rappel"]                         # anciens abonnés (jeton dans la fiche membre)
-LIENS = {"calendrier", "minuteur", "combats", "elo", "membres", "regles", "notes"}  # mêmes clés que NLINKS
+LIENS = {"calendrier", "minuteur", "combats", "elo", "salle", "membres", "regles", "notes"}  # mêmes clés que NLINKS
 MAX_ANNONCES_PAR_PASSAGE = 3
 MAX_ECHECS_CODE = 5          # codes admin faux tolérés sur 24 h ; au-delà, annonces bloquées jusqu'à ce que ça retombe
 
@@ -120,7 +120,7 @@ def heure(h):
 def cours():
     return {i: {"date": c.get("date", ""), "heure": c.get("time") or "", "fin": str(c.get("dur") or ""), "lieu": c.get("place") or "",
                 "nom": TYPES.get(c.get("type"), "Cours"), "serie": c.get("serie") or ""}
-            for i, c in lire("courses").items() if c.get("kind") != "note" and c.get("date")}
+            for i, c in lire("courses").items() if not c.get("kind") and c.get("date")}  # sans les notes ni la salle
 
 
 _membres = None

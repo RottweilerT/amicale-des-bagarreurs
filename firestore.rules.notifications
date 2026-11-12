@@ -31,7 +31,7 @@
         && request.resource.data.body is string
         && request.resource.data.body.size() > 0 && request.resource.data.body.size() <= 200
         && request.resource.data.cat in ['annonces', 'changements', 'nouveaux', 'rappel', 'combats']
-        && request.resource.data.link in ['calendrier', 'minuteur', 'combats', 'elo', 'membres', 'regles', 'notes']
+        && request.resource.data.link in ['calendrier', 'minuteur', 'combats', 'elo', 'salle', 'membres', 'regles', 'notes']
         && request.resource.data.code is string
         && request.resource.data.code.size() > 0 && request.resource.data.code.size() <= 64
         && request.resource.data.at == request.time;
