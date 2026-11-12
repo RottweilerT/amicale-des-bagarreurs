@@ -1,0 +1,35 @@
+name: Initialiser la salle (une fois)
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          import json, re, urllib.request, urllib.error
+          KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
+          BASE = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/courses"
+          HDR = {"Referer": "https://rottweilert.github.io/amicale-des-bagarreurs/", "Content-Type": "application/json"}
+          def enc(v):
+              if v is None: return {"nullValue": None}
+              if isinstance(v, int): return {"integerValue": str(v)}
+              return {"stringValue": v}
+          AT = "2026-11-12T22:40:00.000Z"
+          docs = {
+            "s-saison-2025-2026": dict(kind="salle-saison", saison="2025-2026", accorde=None, financeur="", note="", updated=AT),
+            "s-saison-2026-2027": dict(kind="salle-saison", saison="2026-2027", accorde=None, financeur="", note="", updated=AT),
+          }
+          for i, (k, t, q) in enumerate([("sac", "Sac de frappe", 1), ("poids", "Paires de poids de 1 kg", 4), ("cordes", "Cordes à sauter", 3), ("etageres", "Étagères", 2)]):
+              docs[f"s-a2526-{k}"] = dict(kind="salle", saison="2025-2026", sec="achat", titre=t, qte=q, montant=None, jour="", desc="",
+                                         auteur="", auteurId="", at=AT.replace("00.000", f"0{i}.000"), updated=AT)
+          for i, d in docs.items():
+              url = f"{BASE}?documentId={i}&key={KEY}"   # création seulement : ne remplace rien d'existant
+              try:
+                  urllib.request.urlopen(urllib.request.Request(url, data=json.dumps({"fields": {k: enc(v) for k, v in d.items()}}).encode(), headers=HDR, method="POST")).read()
+                  print("créé", i)
+              except urllib.error.HTTPError as e:
+                  print("déjà là ou refusé", i, e.code, e.read().decode()[:150])
+          PY
