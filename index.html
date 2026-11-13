@@ -130,7 +130,11 @@ h3{font-size:1.25rem}
 .sl-neg{color:var(--red)}.sl-pos{color:var(--ok)}
 .sl-bar{height:8px;border-radius:99px;background:var(--sunk);overflow:hidden}
 .sl-bar i{display:block;height:100%;background:var(--gold);border-radius:99px}
-.sl-item.st-ok .sl-bar i{background:var(--ok)}
+.sl-item.st-top{border-left-color:var(--red)}
+.sl-like,.row>.sl-like{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:6px 14px;font:700 .95rem var(--f-data);cursor:pointer;min-height:36px}
+.sl-like span{font-size:1.15rem;line-height:1;color:var(--red)}
+.sl-like.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+@media (prefers-reduced-motion:no-preference){.sl-like:active span{transform:scale(1.3)}}
 .sl-item.st-ok{border-left-color:var(--ok)}.sl-item.st-wait{border-left-color:var(--gold)}
 .sl-faces{display:flex;flex-wrap:wrap;gap:4px}
 .sl-face{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 .7rem var(--f-data);background:var(--blue-soft);color:var(--blue);border:1px solid var(--line)}
@@ -689,9 +693,8 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
       <div class="sl-kpis" id="slKpis"></div>
 
       <section class="panel sl-sec s1" aria-labelledby="slH1">
-        <div class="sl-sh"><span class="sl-num">1</span><div><h3 id="slH1">Idées et projets</h3><p class="hint" id="slRule">Chacun peut proposer une idée avec son prix, et valider celles qu'il soutient.</p></div></div>
+        <div class="sl-sh"><span class="sl-num">1</span><div><h3 id="slH1">Idées et projets</h3><p class="hint" id="slRule">Chacun peut proposer une idée avec son prix et mettre un ♥ à celles qu'il aime. Les plus aimées sont en haut.</p></div></div>
         <div class="sl-sum" id="slSum1"></div>
-        <div class="seg" id="slF1"><button type="button" data-f="all" aria-selected="true">Toutes</button><button type="button" data-f="ok" aria-selected="false">Validées</button><button type="button" data-f="wait" aria-selected="false">À valider</button></div>
         <div class="sl-list" id="slList1"></div>
         <details class="sl-add" id="slAdd1"><summary>+ Proposer une idée</summary>
           <form id="slFbesoin" data-sec="besoin" autocomplete="off" novalidate>
@@ -705,7 +708,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
       </section>
 
       <section class="panel sl-sec s2" aria-labelledby="slH2">
-        <div class="sl-sh"><span class="sl-num">2</span><div><h3 id="slH2">Participation de chacun</h3><p class="hint">Le total des projets validés est partagé à parts égales entre les participants de la saison.</p></div></div>
+        <div class="sl-sh"><span class="sl-num">2</span><div><h3 id="slH2">Participation de chacun</h3><p class="hint">Le total des projets de la saison est partagé à parts égales entre les participants.</p></div></div>
         <div class="sl-share" id="slShare"></div>
         <div class="sl-people" id="slPeople"></div>
         <p class="hint" style="margin:0">Touche « À payer » quand quelqu'un a donné sa part. Décoche « Participe » pour quelqu'un qui ne participe pas cette saison (les profils désactivés ne comptent pas).</p>
@@ -1735,9 +1738,9 @@ const slMe=()=>{const m=me&&member(me);return m?{auteur:m.first+' '+m.last,auteu
 const initiales=m=>((m.first||'?')[0]+((m.last||'')[0]||'')).toUpperCase();
 /* Participants de la saison : profils actifs, sauf ceux décochés pour cette saison. */
 function slParticipants(){const ex=new Set(slSaisonDoc(SL.saison).exclus||[]);return sortedMembers().filter(([id,m])=>!isOff(m)&&!ex.has(id)).map(([id])=>id)}
-/* Une idée est validée quand au moins la moitié des participants l'ont validée ; « réalisée » = déjà achetée. */
-const slSeuil=()=>Math.max(1,Math.ceil(slParticipants().length/2));
-function slEtat(x){if(x.statut==='realise')return 'done';const p=new Set(slParticipants());return (x.soutiens||[]).filter(i=>p.has(i)).length>=slSeuil()?'ok':'wait'}
+/* Une idée est « réalisée » quand elle a déjà été achetée ; sinon c'est un projet, classé selon ses ♥. */
+function slEtat(x){return x.statut==='realise'?'done':'idea'}
+const slLikes=x=>(x.soutiens||[]).filter(i=>S.members.has(i));
 function slSaisons(){
   const s=new Set([saisonDe(new Date())]);
   for(const x of SALLE.values())if(/^\d{4}-\d{4}$/.test(x.saison||''))s.add(x.saison);
@@ -1782,7 +1785,6 @@ $('#slNext').addEventListener('click',async()=>{
   await setDoc('courses/s-saison-'+s,{kind:'salle-saison',saison:s,exclus:[],payes:[],updated:new Date().toISOString()});
   SL.saison=s;toast('Saison '+s+' créée');renderSalle();
 });
-$('#slF1').addEventListener('click',e=>{const b=e.target.closest('button[data-f]');if(!b)return;SL.f1=b.dataset.f;[...$('#slF1').children].forEach(x=>x.setAttribute('aria-selected',x===b));renderSalle()});
 async function slSaisonArray(champ,id,on){
   const FV=firebase.firestore.FieldValue;
   try{await db.doc('courses/s-saison-'+SL.saison).set({kind:'salle-saison',saison:SL.saison,[champ]:on?FV.arrayUnion(id):FV.arrayRemove(id),updated:new Date().toISOString()},{merge:true})}catch(err){handleErr(err)}
@@ -1797,7 +1799,7 @@ $('#tab-salle').addEventListener('click',async e=>{
   if(a==='del'){if(SL.armed!==id){SL.armed=id;renderSalle();setTimeout(()=>{if(SL.armed===id){SL.armed=null;renderSalle()}},3000);return}
     SL.armed=null;await delDoc('courses/'+id);toast('Supprimé');return}
   if(a==='vote'){
-    if(!me||!member(me)){toast('Choisis ton nom en haut de la page pour valider une idée.');return}
+    if(!me||!member(me)){toast('Choisis ton nom en haut de la page pour aimer une idée.');return}
     const on=(x.soutiens||[]).includes(me),FV=firebase.firestore.FieldValue;
     try{await db.doc('courses/'+id).set({soutiens:on?FV.arrayRemove(me):FV.arrayUnion(me)},{merge:true})}catch(err){handleErr(err)}
   }
@@ -1806,39 +1808,37 @@ function slKpi(cls,label,val,sub){return `<div class="sl-kpi ${cls}"><span>${lab
 function renderSalle(){
   const all=slSaisons();if(!SL.saison||!all.includes(SL.saison))SL.saison=all.includes(saisonDe(new Date()))?saisonDe(new Date()):all[0];
   $('#slSaison').innerHTML=all.map(s=>`<option value="${s}"${s===SL.saison?' selected':''}>Saison ${s}${s===saisonDe(new Date())?' (en cours)':''}</option>`).join('');
-  document.querySelectorAll('.sl-sign').forEach(p=>{const m=me&&member(me);p.textContent=m?'Proposé par '+m.first+' '+m.last+' (ta validation est comptée d’office)':'Choisis ton nom en haut de la page pour signer ta proposition (sinon : anonyme).'});
+  document.querySelectorAll('.sl-sign').forEach(p=>{const m=me&&member(me);p.textContent=m?'Proposé par '+m.first+' '+m.last+' (ton ♥ est compté d’office)':'Choisis ton nom en haut de la page pour signer ta proposition (sinon : anonyme).'});
   const sum=l=>Math.round(l.reduce((t,x)=>t+(Number(x.montant)||0),0)*100)/100,sansPrix=l=>l.filter(x=>x.montant==null).length;
   const B=slItems('besoin'),A=slItems('achat'),S0=slSaisonDoc(SL.saison);
-  const parts=slParticipants(),np=parts.length,seuil=slSeuil(),pset=new Set(parts);
-  const val=B.filter(b=>slEtat(b)!=='wait'),att=B.filter(b=>slEtat(b)==='wait');
+  const parts=slParticipants(),np=parts.length,pset=new Set(parts);
+  const val=B;
   const total=sum(val),part=np?Math.round(total/np*100)/100:0;
   const payes=new Set((S0.payes||[]).filter(i=>pset.has(i))),collecte=Math.round(payes.size*part*100)/100,dep=sum(A);
   const off=!connected?'<div class="empty">Données indisponibles pour le moment.</div>':null;
   const sansPart=SL_SANS_PART.includes(SL.saison);$('#slH2').closest('section').hidden=sansPart;
-  $('#slRule').textContent=`Chacun peut proposer une idée avec son prix, et valider celles qu’il soutient. Une idée est validée quand la moitié des participants l’ont validée (${seuil} sur ${np}).`;
-  $('#slKpis').innerHTML=slKpi('k1','Projets validés',euros(total),`${val.length} projet${val.length>1?'s':''}${sansPrix(val)?` · ${sansPrix(val)} sans prix`:''}${att.length?` · ${att.length} idée${att.length>1?'s':''} à valider`:''}`)
+  $('#slKpis').innerHTML=slKpi('k1','Total des projets',euros(total),`${val.length} projet${val.length>1?'s':''}${sansPrix(val)?` · ${sansPrix(val)} sans prix`:''}`)
     +(sansPart?slKpi('k2','Saison de démarrage','—','Pas de partage des frais cette saison'):slKpi('k2','Part par personne',euros(part),`${np} participant${np>1?'s':''} · ${payes.size} ${payes.size>1?'ont':'a'} payé`))
     +slKpi('k3','Dépensé',euros(dep),`${A.length} achat${A.length>1?'s':''}${sansPrix(A)?` · ${sansPrix(A)} prix à venir`:''}`);
-  // 1. idées et projets
-  const ord={ok:0,done:1,wait:2};
-  const lb=B.filter(b=>SL.f1==='all'||(SL.f1==='ok'?slEtat(b)!=='wait':slEtat(b)==='wait'))
-    .sort((a,b)=>(ord[slEtat(a)]-ord[slEtat(b)])||((b.soutiens||[]).length-(a.soutiens||[]).length)||(a.at||'').localeCompare(b.at||''));
-  $('#slSum1').innerHTML=`<span>Validé : <b>${euros(total)}</b>${sansPrix(val)?` <span class="hint">(+ ${sansPrix(val)} sans prix)</span>`:''}</span><span>À valider : <b>${euros(sum(att))}</b> <span class="hint">(${att.length})</span></span>`;
+  // 1. idées et projets : les plus aimées d'abord, les déjà achetées à la fin
+  const lb=B.slice().sort((a,b)=>((slEtat(a)==='done')-(slEtat(b)==='done'))||(slLikes(b).length-slLikes(a).length)||(a.at||'').localeCompare(b.at||''));
+  const maxL=Math.max(0,...lb.filter(b=>slEtat(b)!=='done').map(b=>slLikes(b).length));
+  $('#slSum1').innerHTML=`<span>Total : <b>${euros(total)}</b>${sansPrix(val)?` <span class="hint">(+ ${sansPrix(val)} sans prix)</span>`:''}</span><span>${B.length} idée${B.length>1?'s':''}</span>`;
   const achatsDe=new Set(A.map(a=>a.besoinId).filter(Boolean));
-  $('#slList1').innerHTML=off||(lb.length?lb.map(b=>{
-    const st=slEtat(b),vs=(b.soutiens||[]).filter(i=>pset.has(i)),mine=me&&(b.soutiens||[]).includes(me),d=b.at?new Date(b.at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
-    const pill=st==='done'?'<span class="pill done">Réalisée</span>':st==='ok'?'<span class="pill done">Validée</span>':`<span class="pill idee">${vs.length} / ${seuil} validations</span>`;
+  $('#slList1').innerHTML=off||(lb.length?lb.map((b,i)=>{
+    const st=slEtat(b),vs=slLikes(b),mine=me&&vs.includes(me),d=b.at?new Date(b.at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
+    const top=st!=='done'&&maxL>0&&vs.length===maxL;
+    const pill=st==='done'?'<span class="pill done">Réalisée</span>':top?'<span class="pill live">♥ La plus aimée</span>':'';
     const faces=vs.map(i=>{const m=member(i);return `<span class="sl-face${i===me?' me':''}" title="${esc(m.first+' '+m.last)}">${esc(initiales(m))}</span>`}).join('');
-    return `<div class="sl-item st-${st}"><div class="sl-it-top">${pill}<span class="sl-amt">${b.montant==null?'<span class="hint">prix ?</span>':euros(b.montant)}</span></div>
+    return `<div class="sl-item st-${st}${top?' st-top':''}"><div class="sl-it-top">${pill}<span class="sl-amt">${b.montant==null?'<span class="hint">prix ?</span>':euros(b.montant)}</span></div>
       <div class="tk-title">${esc(b.titre)}${slQte(b)}</div>${b.desc?`<p class="tk-body">${esc(b.desc)}</p>`:''}
       ${b.montant!=null&&np&&!sansPart?`<p class="hint">soit ${euros(Math.round(b.montant/np*100)/100)} par personne</p>`:''}
-      ${st==='done'?'':`<div class="sl-bar" role="img" aria-label="${vs.length} validations sur ${seuil} nécessaires"><i style="width:${Math.min(100,Math.round(vs.length/seuil*100))}%"></i></div>`}
-      ${vs.length?`<div class="sl-faces" aria-label="Ont validé : ${esc(vs.map(i=>member(i).first).join(', '))}">${faces}</div><p class="hint">Validée par ${esc(vs.map(i=>member(i).first).join(', '))}</p>`:st==='done'?'':'<p class="hint">Personne n’a encore validé.</p>'}
+      ${vs.length?`<div class="sl-faces" aria-hidden="true">${faces}</div><p class="hint">♥ Aimée par ${esc(vs.map(i=>member(i).first).join(', '))}</p>`:st==='done'?'':'<p class="hint">Pas encore de ♥.</p>'}
       <p class="hint">${b.auteur?'Proposée par '+esc(b.auteur):st==='done'?'Achat de la saison':'Proposée anonymement'}${d&&st!=='done'?' · '+esc(d):''}</p>
-      <div class="row">${st==='done'?'':`<button class="btn ${mine?'':'ghost'} small" data-w data-sl="vote" data-id="${esc(b.id)}" aria-pressed="${mine?'true':'false'}">${mine?'✓ Je valide':'Je valide'}</button>`}${st==='ok'?`<button class="btn ghost small" data-w data-sl="buy" data-id="${esc(b.id)}">${achatsDe.has(b.id)?'✓ Acheté · autre achat':'Inscrire l’achat'}</button>`:''}<button class="btn ghost small" data-w data-sl="edit" data-id="${esc(b.id)}">Modifier</button><button class="btn ${SL.armed===b.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(b.id)}">${SL.armed===b.id?'Confirmer ?':'Supprimer'}</button></div></div>`}).join('')
-    :`<div class="empty">${B.length?'Rien dans ce filtre.':'<strong>Aucune idée pour l’instant</strong>Propose la première idée de la saison ci-dessous.'}</div>`);
+      <div class="row"><button class="sl-like${mine?' on':''}" type="button" data-w data-sl="vote" data-id="${esc(b.id)}" aria-pressed="${mine?'true':'false'}" aria-label="${mine?'Je n’aime plus':'J’aime'} (${vs.length})"><span aria-hidden="true">${mine?'♥':'♡'}</span> ${vs.length}</button>${st!=='done'?`<button class="btn ghost small" data-w data-sl="buy" data-id="${esc(b.id)}">${achatsDe.has(b.id)?'✓ Acheté · autre achat':'Inscrire l’achat'}</button>`:''}<button class="btn ghost small" data-w data-sl="edit" data-id="${esc(b.id)}">Modifier</button><button class="btn ${SL.armed===b.id?'danger':'ghost'} small" data-w data-sl="del" data-id="${esc(b.id)}">${SL.armed===b.id?'Confirmer ?':'Supprimer'}</button></div></div>`}).join('')
+    :`<div class="empty"><strong>Aucune idée pour l’instant</strong>Propose la première idée de la saison ci-dessous.</div>`);
   // 2. participation
-  $('#slShare').innerHTML=`<div><span>Projets validés</span><b>${euros(total)}</b></div><div><span>Participants</span><b>${np}</b></div><div class="big"><span>À payer par personne</span><b>${euros(part)}</b></div>`
+  $('#slShare').innerHTML=`<div><span>Total des projets</span><b>${euros(total)}</b></div><div><span>Participants</span><b>${np}</b></div><div class="big"><span>À payer par personne</span><b>${euros(part)}</b></div>`
     +`<div><span>Déjà payé</span><b>${payes.size} / ${np}</b></div><div><span>Collecté</span><b>${euros(collecte)}</b></div><div><span>Reste à collecter</span><b>${euros(Math.max(0,Math.round((total-collecte)*100)/100))}</b></div>`;
   const ex=new Set(S0.exclus||[]);
   $('#slPeople').innerHTML=off||sortedMembers().filter(([,m])=>!isOff(m)).map(([id,m])=>{const inn=!ex.has(id),paid=inn&&payes.has(id);
