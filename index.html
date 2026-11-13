@@ -55,7 +55,7 @@ h3{font-size:1.25rem}
 .brand{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand h1{font-size:clamp(2.3rem,8vw,3.8rem);font-weight:900}
 .brand-id{display:flex;align-items:center;gap:14px;min-width:0}
-.logo{width:clamp(64px,18vw,96px);height:auto;aspect-ratio:1;max-width:100%;border-radius:50%;background:#fff;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--line);flex:0 0 auto}
+.logo{width:clamp(76px,23vw,112px);height:auto;aspect-ratio:1;max-width:100%;border-radius:50%;background:#fff;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--line);flex:0 0 auto}
 .brand h1 span{color:var(--red)} .brand h1 .b{color:var(--blue)}
 .who{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
 .who select{max-width:190px}
@@ -151,6 +151,10 @@ h3{font-size:1.25rem}
 .sl-pay{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:5px 10px;font:700 .72rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;min-height:32px}
 .sl-person.paid .sl-pay{background:var(--ok);border-color:var(--ok);color:#fff}
 
+.splash{position:fixed;inset:0;z-index:100;background:#0B0B0B url(splash.jpg) center 42%/cover no-repeat;display:grid;place-items:end center;padding-bottom:max(28px,env(safe-area-inset-bottom));transition:opacity .45s ease,visibility .45s}
+.splash.out{opacity:0;visibility:hidden}
+.splash span{font:700 .78rem var(--f-data);letter-spacing:.32em;text-transform:uppercase;color:#d8d8d8;opacity:.8}
+@media (min-aspect-ratio:3/4){.splash{background-size:contain}}
 .gate{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:30;padding:16px}
 .gate .panel{width:min(360px,100%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .pin{letter-spacing:.35em;font-family:var(--f-data);font-size:1.2rem}
@@ -515,6 +519,12 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 </style>
 </head>
 <body>
+<div class="splash" id="splash" aria-hidden="true"><span>Chargement…</span></div>
+<script>/* écran de chargement : une fois par ouverture de l'appli, retiré dès que les données arrivent (1 s mini, 3,5 s maxi) */
+(()=>{const el=document.getElementById('splash'),t0=Date.now();let vu=false;try{vu=sessionStorage.getItem('adb-splash')==='1';sessionStorage.setItem('adb-splash','1')}catch(e){}
+if(vu){el.remove();return}
+const fin=()=>{if(!el.isConnected)return;el.classList.add('out');setTimeout(()=>el.remove(),600)};
+window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeout(fin,3500)})();</script>
 
 <div class="wrap">
   <header class="hero">
@@ -1048,7 +1058,7 @@ async function boot(){
       const m=new Map();snap.docs.forEach(d=>m.set(d.id,d.data()));
       if(col==='fights'){for(const [id,l] of localF){const s=m.get(id);if(s&&s.rev===l.rev)localF.delete(id)}}
       if(col==='courses'){const n=new Map(),sl=new Map();for(const [id,d] of m){if(d&&d.kind==='note')n.set(id,d);else if(d&&(d.kind==='salle'||d.kind==='salle-saison'))sl.set(id,d);else continue;m.delete(id)}NOTES=n;SALLE=sl}
-      S[col]=m;loaded[col]=true;renderAll();
+      S[col]=m;loaded[col]=true;renderAll();if(col==='members'&&window.splashDone)splashDone();
     },handleErr);
   }
   applyRO();
