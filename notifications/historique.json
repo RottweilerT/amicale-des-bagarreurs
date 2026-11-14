@@ -1,1 +1,11 @@
-[]
+[
+ {
+  "date": "2026-11-14T20:48+01:00",
+  "categorie": "test",
+  "titre": "Amicale des Bagarreurs",
+  "message": "Notification de test",
+  "origine": "test",
+  "envoyes": 1,
+  "echecs": 0
+ }
+]
