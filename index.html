@@ -155,9 +155,8 @@ h3{font-size:1.25rem}
 .sl-pay{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:5px 10px;font:700 .72rem var(--f-data);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;min-height:32px}
 .sl-person.paid .sl-pay{background:var(--ok);border-color:var(--ok);color:#fff}
 
-.splash{position:fixed;inset:0;z-index:100;background:#0B0B0B url(splash.jpg) center 42%/cover no-repeat;display:grid;place-items:end center;padding-bottom:max(28px,env(safe-area-inset-bottom));transition:opacity .45s ease,visibility .45s}
+.splash{position:fixed;inset:0;z-index:100;background:#0B0B0B url(splash.jpg) center/cover no-repeat;transition:opacity .45s ease,visibility .45s}
 .splash.out{opacity:0;visibility:hidden}
-.splash span{font:700 .78rem var(--f-data);letter-spacing:.32em;text-transform:uppercase;color:#d8d8d8;opacity:.8}
 @media (min-aspect-ratio:3/4){.splash{background-size:contain}}
 .gate{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:30;padding:16px}
 .gate .panel{width:min(360px,100%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
@@ -523,7 +522,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 </style>
 </head>
 <body>
-<div class="splash" id="splash" aria-hidden="true"><span>Chargement…</span></div>
+<div class="splash" id="splash" role="img" aria-label="Chargement de l’Amicale des Bagarreurs"></div>
 <script>/* écran de chargement : une fois par ouverture de l'appli, retiré dès que les données arrivent (1 s mini, 3,5 s maxi) */
 (()=>{const el=document.getElementById('splash'),t0=Date.now();let vu=false;try{vu=sessionStorage.getItem('adb-splash')==='1';sessionStorage.setItem('adb-splash','1')}catch(e){}
 if(vu){el.remove();return}
