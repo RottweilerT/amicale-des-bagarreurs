@@ -18,6 +18,7 @@ on:
         required: true
         default: "test"
         type: choice
+        options: [test, rappel, changements, perso]
       destinataire:
         description: "perso : prénom et nom (ou identifiant) du membre"
         required: false
@@ -30,7 +31,6 @@ on:
         description: "perso : texte de la notification"
         required: false
         default: ""
-        options: [test, rappel, changements, perso]
 
 permissions:
   contents: write
