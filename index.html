@@ -494,6 +494,30 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 .wkstate.open{color:var(--ok)}
 .wkstate.closed{color:var(--muted)}
 @media (prefers-reduced-motion:no-preference){#wkDays{transition:opacity .15s}#wkDays.wkfade{opacity:.35}}
+/* Vue semaine compacte : une ligne par cours, réponse en un appui */
+.wksum{margin:0 0 6px;font-size:.85rem;color:var(--muted)}
+.wklist{display:grid;gap:6px}
+.wkrow{display:grid;grid-template-columns:40px minmax(0,1fr) auto 46px 46px;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:10px;padding:5px 6px 5px 8px;min-width:0}
+.wkrow.ba{border-left-color:#D5D8DE}.wkrow.bf,.wkrow.sp{border-left-color:#1F43A8}.wkrow.bt{border-left-color:#C8102E}.wkrow.pp{border-left-color:var(--brown)}
+.wkrow.today{box-shadow:inset 0 0 0 1.5px var(--red)}
+.wkrow.past{opacity:.6}
+.wkrow.r-present{background:var(--ok-soft)}.wkrow.r-absent{background:var(--red-soft)}
+.wkr-day{display:grid;line-height:1.05;text-align:center}
+.wkr-day b{font:700 .8rem var(--f-data);text-transform:uppercase;letter-spacing:.04em}
+.wkr-day span{font:700 1.05rem var(--f-data)}
+.wkrow.today .wkr-day{color:var(--red)}
+.wkr-info{all:unset;cursor:pointer;display:grid;min-width:0;padding:4px 2px}
+.wkr-t{font:700 1.05rem var(--f-data);display:flex;align-items:center;gap:6px}
+.wkr-t .ic{width:10px;height:10px}
+.wkr-p{font-size:.8rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkr-n{font:700 .95rem var(--f-data);color:var(--ok);min-width:26px;text-align:right}
+.wkr-n small{font-size:.75rem;margin-left:1px}
+.wkr-b{height:42px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);font:700 1.25rem/1 var(--f-data);cursor:pointer;touch-action:manipulation}
+.wkr-b.yes[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.wkr-b.no[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.wkr-b:disabled{cursor:default;opacity:.5}
+.wkr-more{grid-column:1/-1;font-size:.82rem;line-height:1.45;padding:4px 2px 2px;border-top:1px dashed var(--line);overflow-wrap:anywhere}
+.wkr-more .ok{color:var(--ok);font-weight:700}.wkr-more .ko{color:var(--red);font-weight:700}
 /* Calendrier sur une colonne : semaine, mois (et détail du jour), ajout d'un cours */
 .calcol{display:grid;gap:14px;max-width:760px;margin:0 auto;min-width:0}
 .calcol>*{min-width:0}
@@ -1617,29 +1641,35 @@ const wkSun=s=>{const d=parseYmd(s);d.setDate(d.getDate()-d.getDay());return ymd
 const wkAdd=(s,n)=>{const d=parseYmd(s);d.setDate(d.getDate()+n);return ymd(d)};
 function renderSemaine(){
   if(!ui.wk)ui.wk=wkSun(today);
+  if(!ui.wkOpen)ui.wkOpen=new Set();
   const a=parseYmd(ui.wk),b=parseYmd(wkAdd(ui.wk,6)),M=m=>new Date(2000,m,1).toLocaleDateString('fr-FR',{month:'short'});
   $('#wkTitle').textContent=a.getMonth()===b.getMonth()?`Du ${a.getDate()} au ${b.getDate()} ${MONTHS[b.getMonth()]}`:`Du ${a.getDate()} ${M(a.getMonth())} au ${b.getDate()} ${M(b.getMonth())}`;
   $('#wkToday').hidden=ui.wk===wkSun(today);
-  const mine=me&&S.members.has(me);let h='';
+  const mine=me&&S.members.has(me);let h='',n=0,rep=0,open=0;
   for(let i=0;i<7;i++){
-    const s=wkAdd(ui.wk,i),d=parseYmd(s),cs=coursesOn(s);
-    h+=`<div class="wkday${s===today?' today':''}${cs.length?'':' none'}"><div class="wkd"><b>${DAYS[d.getDay()].slice(0,3)}</b><span class="num">${d.getDate()} ${M(d.getMonth())}</span></div><div class="wkevs">`;
-    if(!cs.length)h+=`<span class="wknone">Pas de cours</span>`;
-    for(const [id,c] of cs){
-      const att=attOf(id),pres=sortedMembers().filter(([m])=>att.get(m)==='present'),abs=[...att.values()].filter(v=>v==='absent').length;
-      const nr=sortedMembers().filter(([m2,mm])=>!att.get(m2)&&!isOff(mm)).length,past=c.date<today,my=mine&&att.get(me);
+    const s=wkAdd(ui.wk,i),d=parseYmd(s);
+    for(const [id,c] of coursesOn(s)){
+      n++;
+      const att=attOf(id),pres=sortedMembers().filter(([m])=>att.get(m)==='present'),abs=sortedMembers().filter(([m])=>att.get(m)==='absent');
+      const nr=sortedMembers().filter(([m2,mm])=>!att.get(m2)&&!isOff(mm)).length,past=c.date<today,my=mine?att.get(me):null;
+      if(!past){open++;if(my)rep++}
       const endMin=Number(c.time.slice(0,2))*60+Number(c.time.slice(3))+(c.dur||90),end=pad(Math.floor(endMin/60)%24)+':'+pad(endMin%60);
-      h+=`<div class="wkev ${courseCls(c.type)}"><div class="top"><span class="pill ${courseCls(c.type)}"><i class="ic ${courseCls(c.type)}"></i>${esc(COURSE[c.type]||c.type)}</span><span class="when num">${esc(c.time)}–${end}</span>${c.place?`<span class="wkplace">${esc(c.place)}</span>`:''}</div>`;
-      h+=`<div class="wkwho"><span class="wklbl">${past?'Présents':'Inscrits'} ${pres.length}</span>${pres.length?pres.map(([m])=>`<span class="chip p${m===me?' me':''}">${esc(mName(m,true))}</span>`).join(''):'<span class="wkempty">Personne pour l’instant</span>'}</div>`;
-      h+=`<div class="wkfoot num">${abs} absent${abs>1?'s':''} · ${Math.max(0,nr)} sans réponse</div>`;
-      if(past)h+=`<div class="wkstate closed">Cours passé : inscriptions fermées</div>`;
-      else if(mine)h+=`<div class="wkstate open">Inscriptions ouvertes · ta réponse</div><div class="pres"><button class="btn small ghost yes" data-w data-act="att" data-id="${id}" data-v="present" aria-pressed="${my==='present'}">Je serai là</button><button class="btn small ghost no" data-w data-act="att" data-id="${id}" data-v="absent" aria-pressed="${my==='absent'}">Absent</button></div>`;
-      else h+=`<div class="wkstate open">Inscriptions ouvertes · choisis ton nom en haut de la page pour t’inscrire</div>`;
-      h+=`</div>`;
+      const act=mine?'att':'needMe',dis=past?' disabled':' data-w',ex=ui.wkOpen.has(id);
+      h+=`<div class="wkrow ${courseCls(c.type)}${s===today?' today':''}${past?' past':''}${my?' r-'+my:''}">
+        <div class="wkr-day"><b>${DAYS[d.getDay()].slice(0,3)}</b><span class="num">${d.getDate()}</span></div>
+        <button class="wkr-info" type="button" data-act="wkMore" data-id="${id}" aria-expanded="${ex}" aria-label="${esc(COURSE[c.type]||'Cours')} ${esc(DAYS[d.getDay()])} ${d.getDate()} à ${esc(c.time)}${c.place?', '+esc(c.place):''} : détails">
+          <span class="wkr-t num"><i class="ic ${courseCls(c.type)}"></i>${esc(c.time.replace(':','h'))}</span><span class="wkr-p">${esc(c.place||COURSE[c.type]||'')}</span></button>
+        <span class="wkr-n num" title="${pres.length} inscrit${pres.length>1?'s':''}">${pres.length}<small>✓</small></span>
+        <button class="wkr-b yes" type="button" data-act="${act}" data-id="${id}" data-v="present" aria-pressed="${my==='present'}" aria-label="Je serai là"${dis}>✓</button>
+        <button class="wkr-b no" type="button" data-act="${act}" data-id="${id}" data-v="absent" aria-pressed="${my==='absent'}" aria-label="Absent"${dis}>✕</button>
+        ${ex?`<div class="wkr-more"><b>${esc(COURSE[c.type]||c.type)}</b> · ${esc(c.time)}–${end}${c.place?' · '+esc(c.place):''}${c.coach?' · '+esc(c.coach):''}<br>
+          <span class="ok">${past?'Présents':'Inscrits'} (${pres.length})</span> : ${pres.length?pres.map(([m])=>esc(mName(m,true))).join(', '):'personne'}<br>
+          <span class="ko">Absents (${abs.length})</span>${abs.length?' : '+abs.map(([m])=>esc(mName(m,true))).join(', '):''} · ${Math.max(0,nr)} sans réponse${past?' · cours passé':''}</div>`:''}
+      </div>`;
     }
-    h+=`</div></div>`;
   }
-  $('#wkDays').innerHTML=h;
+  const head=n?(mine?(open?`<p class="wksum">Tu as répondu à <b>${rep}/${open}</b> cours à venir · ✓ je serai là · ✕ absent</p>`:''):`<p class="wksum">Choisis ton nom en haut de la page pour t’inscrire.</p>`):'';
+  $('#wkDays').innerHTML=n?head+'<div class="wklist">'+h+'</div>':'<p class="wknone" style="padding:8px 0">Pas de cours cette semaine.</p>';
 }
 function wkGo(s){const el=$('#wkDays');ui.wk=s;el.classList.add('wkfade');setTimeout(()=>{renderSemaine();applyRO();el.classList.remove('wkfade')},120)}
 $('#wkPrev').addEventListener('click',()=>wkGo(wkAdd(ui.wk||wkSun(today),-7)));
@@ -1903,6 +1933,8 @@ document.addEventListener('click',async e=>{
     case 'fDel':ui.confirm='f:'+ui.fightId;renderFights();break;
     case 'fDelYes':{const fid=ui.fightId;clearTimeout(fTimer[fid]);localF.delete(fid);delDoc('fights/'+fid);ui.fightId=null;ui.confirm=null;toast('Combat supprimé');renderFights();break}
     case 'day':ui.day=b.dataset.d;const dd=parseYmd(ui.day);if(dd.getMonth()!==ui.month.getMonth())ui.month=new Date(dd.getFullYear(),dd.getMonth(),1);$('#cDate').dataset.auto='1';renderCalendar();break;
+    case 'needMe':toast('Choisis ton nom en haut de la page pour t’inscrire.');break;
+    case 'wkMore':ui.wkOpen.has(id)?ui.wkOpen.delete(id):ui.wkOpen.add(id);renderSemaine();applyRO();break;
     case 'att':{const cur=attOf(id).get(me);setAtt(id,me,cur===b.dataset.v?null:b.dataset.v);break}
     case 'appelToggle':ui.appel=ui.appel===id?null:id;renderCalendar();break;
     case 'appel':{const cur=attOf(id).get(b.dataset.m);setAtt(id,b.dataset.m,!cur?'present':cur==='present'?'absent':null);break}
