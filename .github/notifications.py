@@ -19,7 +19,7 @@ servis (catégories « annonces », « changements », « rappel ») le temps qu
 Envoi : Firebase Cloud Messaging, API HTTP v1, un message par appareil (l'ancien envoi groupé n'existe plus).
 Chaque envoi est ajouté à notifications/historique.json (sans aucun jeton ni identifiant d'appareil).
 """
-import datetime, hmac, json, os, sys, time, urllib.error, urllib.parse, urllib.request
+import datetime, hashlib, hmac, json, os, sys, time, urllib.error, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from zoneinfo import ZoneInfo
 
@@ -200,8 +200,17 @@ def nettoyer():
     """Retire les appareils qui ne reçoivent plus rien."""
     if not morts: return
     anciens = {}
+    proprio = {c: mid for c, _, _, mid in abonnes()}
     for chemin, tok in morts:
-        if chemin.startswith("push_subs/"): supprimer(chemin)
+        if chemin.startswith("push_subs/"):
+            supprimer(chemin)
+            mid = proprio.get(chemin)
+            if mid:  # retirer aussi l'appareil de la fiche visible dans le profil
+                cle = "d" + hashlib.sha256(chemin.split("/", 1)[1].encode()).hexdigest()[:12]
+                try:
+                    http(f"{BASE}/members/{mid}?updateMask.fieldPaths=notifs.{cle}&currentDocument.exists=true", {"fields": {}}, "PATCH")
+                except urllib.error.HTTPError as e:
+                    print(f"::warning::Nettoyage du profil de {mid} impossible ({e.code})")
         else: anciens.setdefault(chemin.split("/", 1)[1], set()).add(tok)
     for mid, toks in anciens.items():
         m = membres().get(mid)

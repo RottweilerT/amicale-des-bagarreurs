@@ -158,6 +158,9 @@ h3{font-size:1.25rem}
 .splash{position:fixed;inset:0;z-index:100;background:#0B0B0B url(splash.jpg) center/cover no-repeat;transition:opacity .45s ease,visibility .45s}
 .splash.out{opacity:0;visibility:hidden}
 @media (min-aspect-ratio:3/4){.splash{background-size:contain}}
+.nt-line{font-size:.8rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.nt-line.on{color:var(--ink)}
+.nt-cat{background:var(--blue-soft);color:var(--blue);border-radius:99px;padding:1px 7px;font-weight:600;font-size:.74rem}
 .gate{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:30;padding:16px}
 .gate .panel{width:min(360px,100%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
 .pin{letter-spacing:.35em;font-family:var(--f-data);font-size:1.2rem}
@@ -965,7 +968,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
   <p class="np-msg" id="npMsg" role="status" hidden></p>
   <fieldset id="npCats"><legend>Me prévenir pour</legend></fieldset>
   <details><summary>Données et confidentialité</summary>
-    <p>Rien n'est demandé sans ton accord : les notifications ne s'activent qu'avec le bouton ci-dessus. On enregistre seulement l'identifiant technique de cet appareil fourni par le navigateur, tes catégories, ton profil s'il est choisi (pour le rappel des présences) et les dates d'abonnement. Ces données ne sont visibles par aucun membre, seulement par le programme d'envoi. « Se désabonner » les efface tout de suite. Un appareil qui ne reçoit plus rien est retiré automatiquement.</p>
+    <p>Rien n'est demandé sans ton accord : les notifications ne s'activent qu'avec le bouton ci-dessus. On enregistre seulement l'identifiant technique de cet appareil fourni par le navigateur, tes catégories, ton profil s'il est choisi (pour le rappel des présences) et les dates d'abonnement. Ces données ne sont visibles par aucun membre, seulement par le programme d'envoi. Seule exception : ton profil (onglet Membres) indique que tu as activé les notifications et lesquelles. « Se désabonner » les efface tout de suite. Un appareil qui ne reçoit plus rien est retiré automatiquement.</p>
   </details>
   <details id="npAdmin"><summary>Espace admin : envoyer une notification</summary>
     <form class="np-form" id="naForm" novalidate>
@@ -1172,6 +1175,14 @@ async function setOff(id,off){const m=member(id);if(!m||!db)return;m.off=off;ren
   try{await db.doc('members/'+id).set({off},{merge:true});toast(m.first+' '+m.last+(off?' : profil désactivé':' : profil activé'))}
   catch(e){m.off=!off;renderAll();toast('Enregistrement impossible, réessaie.')}}
 $('#bxActive').addEventListener('change',e=>{if(me)setOff(me,!e.target.checked)});
+/* Notifications activées par ce membre (tous ses appareils), d'après sa fiche publique */
+const NCOURT={annonces:'Annonces',changements:'Cours modifiés',nouveaux:'Nouveaux cours',rappel:'Rappel présences',combats:'Combats'};
+function notifLine(m){
+  const devs=m.notifs&&typeof m.notifs==='object'?Object.values(m.notifs).filter(x=>x&&Array.isArray(x.cats)):[];
+  if(!devs.length)return Array.isArray(m.push)&&m.push.length?'<div class="nt-line on">🔔 Notifications activées</div>':'<div class="nt-line">🔕 Notifications non activées</div>';
+  const c=new Set(devs.flatMap(d=>d.cats));const l=Object.keys(NCOURT).filter(k=>c.has(k));
+  return `<div class="nt-line on" title="Notifications activées sur ${devs.length} appareil${devs.length>1?'s':''}">🔔 ${l.length?l.map(k=>`<span class="nt-cat">${NCOURT[k]}</span>`).join(''):'Activées, aucune catégorie cochée'}${devs.length>1?` <small>(${devs.length} appareils)</small>`:''}</div>`;
+}
 function renderMembers(){
   renderReg();
   const list=sortedMembers();
@@ -1184,6 +1195,7 @@ function renderMembers(){
     const conf=ui.confirm==='m:'+id;
     return `<div class="member${isOff(m)?' off':''}"><div class="name">${esc(m.first)} ${esc(m.last)}${id===me?' <span class="pill">toi</span>':''}${isOff(m)?' <span class="pill offp">désactivé</span>':''}</div>${m.pin?'<div class="lock">Protégé par un code</div>':''}
       <div class="hint num">${esc(m.weight)} kg · ${esc(m.height)} cm</div>
+      ${notifLine(m)}
       <div class="stats"><span><b>${s.w}</b>V</span><span><b>${s.l}</b>D</span><span><b>${s.n-s.w-s.l}</b>N</span><span><b>${s.p}</b>cours</span></div>
       <div class="acts">${conf?`<button class="btn danger small" data-w data-act="mDelYes" data-id="${id}">Confirmer la suppression</button><button class="btn ghost small" data-act="noConfirm">Garder</button>`:`<button class="btn ghost small" data-w data-act="mEdit" data-id="${id}">Modifier</button><button class="btn ghost small" data-w data-act="mOff" data-id="${id}">${isOff(m)?'Activer':'Désactiver'}</button><button class="btn ghost small" data-w data-act="mDel" data-id="${id}">Supprimer</button>`}</div></div>`}).join('')+'</div>';
 }
@@ -1255,7 +1267,7 @@ const NCATS=[
   {k:'combats',t:'Combats',h:'Combat programmé et résultat'}];
 const NLINKS={calendrier:'Calendrier',minuteur:'Minuteur',combats:'Combats',elo:'Classement',salle:'La salle',membres:'Membres',regles:'Règles',notes:'Notes'};
 const Notif=(()=>{
-  const LS={id:'adb-push-id',tok:'push-token',who:'push-who',cats:'adb-push-cats',since:'adb-push-since',sync:'adb-push-sync',key:'adb-push-key',mode:'adb-push-mode'};
+  const LS={pub:'adb-push-pub',id:'adb-push-id',tok:'push-token',who:'push-who',cats:'adb-push-cats',since:'adb-push-since',sync:'adb-push-sync',key:'adb-push-key',mode:'adb-push-mode'};
   const get=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}};
   const put=(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}};
   const el=id=>document.getElementById(id);
@@ -1279,6 +1291,17 @@ const Notif=(()=>{
   }
   async function token(){const reg=await navigator.serviceWorker.ready;return messaging().getToken({vapidKey:PUSH.vapid,serviceWorkerRegistration:reg})}
   async function legacyRemove(t){for(const w of new Set([get(LS.who),memberId()].filter(Boolean)))await timeout(db.doc('members/'+w).set({push:FV().arrayRemove(t)},{merge:true})).catch(()=>{})}
+  /* Fiche visible dans les profils (aucun jeton) : members/<profil>.notifs.<clé de l'appareil> = {cats, at}.
+     La clé est dérivée de l'identifiant privé de l'appareil, sans permettre de le retrouver. */
+  async function pubKey(){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(subId()));return 'd'+[...new Uint8Array(b)].slice(0,6).map(x=>x.toString(16).padStart(2,'0')).join('')}
+  async function publish(on){
+    try{
+      const k=await pubKey(),prev=get(LS.pub),cur=on?memberId():null;
+      if(prev&&prev!==cur)await timeout(db.doc('members/'+prev).set({notifs:{[k]:FV().delete()}},{merge:true})).catch(()=>{});
+      if(cur)await timeout(db.doc('members/'+cur).set({notifs:{[k]:{cats:cats(),at:Date.now()}}},{merge:true}));
+      put(LS.pub,cur);
+    }catch(e){console.warn('notifications (profil)',e)}
+  }
   async function save(t){
     if(!db)throw Object.assign(new Error('pas de base'),{code:'unavailable'});
     let since=Number(get(LS.since));if(!since){since=Date.now();put(LS.since,String(since))}
@@ -1293,7 +1316,8 @@ const Notif=(()=>{
       if(old&&old!==t)await legacyRemove(old);
       await timeout(db.doc('members/'+id).set({push:FV().arrayUnion(t)},{merge:true}));put(LS.who,id);put(LS.mode,'ancien');
     }
-    put(LS.tok,t);put(LS.sync,String(Date.now()));put(LS.key,(memberId()||'')+'|'+get(LS.mode)+'|'+cats().join(','));
+    put(LS.tok,t);put(LS.sync,String(Date.now()));put(LS.key,(memberId()||'')+'|'+get(LS.mode)+'2|'+cats().join(','));
+    await publish(true);
   }
   function msg(t,id='npMsg'){const m=el(id);if(!m)return;m.textContent=t||'';m.hidden=!t;clearTimeout(msgT);if(t&&id==='npMsg')msgT=setTimeout(()=>{m.hidden=true},9000)}
   function errText(e){
@@ -1317,9 +1341,9 @@ const Notif=(()=>{
     if(busy)return;busy=true;render();
     const t=get(LS.tok);
     try{
-      if(db){await timeout(db.doc('push_subs/'+subId()).delete()).catch(()=>{});if(t)await legacyRemove(t)}
+      if(db){await timeout(db.doc('push_subs/'+subId()).delete()).catch(()=>{});if(t)await legacyRemove(t);await publish(false)}
       const m=supported()&&messaging();if(m)await timeout(m.deleteToken(),8000).catch(()=>{});
-    }finally{[LS.tok,LS.who,LS.sync,LS.key,LS.mode,LS.id,LS.since].forEach(k=>put(k,null));busy=false;msg('Tu es désabonné : plus aucune notification sur cet appareil.');render()}
+    }finally{[LS.tok,LS.who,LS.sync,LS.key,LS.mode,LS.id,LS.since,LS.pub].forEach(k=>put(k,null));busy=false;msg('Tu es désabonné : plus aucune notification sur cet appareil.');render()}
   }
   function setCat(k,v){
     const c=new Set(cats());v?c.add(k):c.delete(k);put(LS.cats,JSON.stringify(NCATS.map(x=>x.k).filter(x=>c.has(x))));
@@ -1329,9 +1353,9 @@ const Notif=(()=>{
   /* À chaque ouverture : jeton à jour, profil à jour, passage à la fiche privée (au plus une fois par semaine si rien n'a changé). */
   async function sync(){
     if(syncing||busy||!db||!active()||!supported())return;
-    const key=(memberId()||'')+'|prive|'+cats().join(',');
+    const key=(memberId()||'')+'|prive2|'+cats().join(',');
     if(get(LS.mode)==='prive'&&get(LS.key)===key&&Date.now()-Number(get(LS.sync)||0)<7*864e5)return;
-    if(get(LS.mode)==='ancien'&&Date.now()-Number(get(LS.sync)||0)<36e5&&get(LS.key).startsWith((memberId()||'')+'|'))return;
+    if(get(LS.mode)==='ancien'&&Date.now()-Number(get(LS.sync)||0)<36e5&&get(LS.key).startsWith((memberId()||'')+'|ancien2|'))return;
     syncing=true;
     try{const t=await token();if(t)await save(t)}catch(e){console.warn('notifications',e)}finally{syncing=false;render()}
   }
@@ -1426,6 +1450,7 @@ $('#fMember').addEventListener('submit',async e=>{
   const id=$('#mId').value||newId('members');
   const prev=S.members.get(id);data.createdAt=prev?.createdAt||Date.now();
   if(prev&&Array.isArray(prev.push))data.push=prev.push;
+  if(prev&&prev.notifs&&typeof prev.notifs==='object')data.notifs=prev.notifs;
   if(prev&&prev.off)data.off=true;
   data.pin=pin?await hashPin(id,pin):($('#mPinOff').checked?null:(prev?.pin||null));
   setDoc('members/'+id,data);S.members.set(id,data);
