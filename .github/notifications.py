@@ -382,6 +382,22 @@ def principal():
             json.dump(etat, open(ETAT, "w"), ensure_ascii=False, sort_keys=True)
             sortie("change=1")
 
+    elif MODE == "perso":
+        # message à une seule personne (lancé à la main depuis GitHub) : tous ses appareils abonnés avec son profil
+        qui = os.environ.get("DESTINATAIRE", "").strip().lower()
+        titre = (os.environ.get("TITRE") or NOM).strip()[:80]
+        texte = os.environ.get("MESSAGE", "").strip()[:400]
+        ids = {mid for mid, m in membres().items()
+               if qui and (mid.lower() == qui or f"{m.get('first', '')} {m.get('last', '')}".strip().lower() == qui)}
+        if not ids or not texte:
+            print(f"::error::Destinataire introuvable ou message vide ({qui!r})."); sys.exit(1)
+        dest = [(c, t) for c, t, _, mid in abonnes() if mid in ids]
+        if not dest:
+            print(f"::warning::Aucun appareil abonné avec ce profil ({qui!r}) : il faut avoir choisi son nom avant d'activer la cloche.")
+        ok, ko = envoyer(dest, titre, texte, "perso", "")
+        noter("perso", titre, "Message personnel", "admin", ok, ko)
+        print(f"::notice::Message personnel envoyé à {ok} appareil(s), {ko} échec(s).")
+
     elif MODE == "rappel":
         if os.environ.get("FORCER") != "1" and not (NOW.weekday() == 5 and NOW.hour == 16):
             print(f"Pas l'heure du rappel ({NOW:%A %H:%M} à Paris) : rien à faire."); return

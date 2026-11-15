@@ -14,11 +14,23 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "test = notification de test à tous ; rappel = rappel du samedi tout de suite ; changements = vérifier le calendrier"
+        description: "test = notification de test à tous ; rappel = rappel du samedi tout de suite ; changements = vérifier le calendrier ; perso = message à une seule personne"
         required: true
         default: "test"
         type: choice
-        options: [test, rappel, changements]
+      destinataire:
+        description: "perso : prénom et nom (ou identifiant) du membre"
+        required: false
+        default: ""
+      titre:
+        description: "perso : titre de la notification"
+        required: false
+        default: "Amicale des Bagarreurs"
+      message:
+        description: "perso : texte de la notification"
+        required: false
+        default: ""
+        options: [test, rappel, changements, perso]
 
 permissions:
   contents: write
@@ -60,6 +72,9 @@ jobs:
           FORCER: ${{ steps.mode.outputs.forcer }}
           FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
           ADMIN_CODE: ${{ secrets.ADMIN_CODE }}
+          DESTINATAIRE: ${{ github.event.inputs.destinataire }}
+          TITRE: ${{ github.event.inputs.titre }}
+          MESSAGE: ${{ github.event.inputs.message }}
         run: |
           pip install -q google-auth requests
           python3 .github/notifications.py
