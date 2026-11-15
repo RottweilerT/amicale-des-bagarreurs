@@ -7,5 +7,14 @@
   "origine": "test",
   "envoyes": 1,
   "echecs": 0
+ },
+ {
+  "date": "2026-11-15T21:49+01:00",
+  "categorie": "perso",
+  "titre": "Amicale des Bagarreurs",
+  "message": "Message personnel",
+  "origine": "admin",
+  "envoyes": 1,
+  "echecs": 1
  }
 ]
