@@ -16,5 +16,14 @@
   "origine": "admin",
   "envoyes": 1,
   "echecs": 1
+ },
+ {
+  "date": "2026-11-17T01:27+01:00",
+  "categorie": "nouveaux",
+  "titre": "Nouveau cours au calendrier",
+  "message": "Boxe anglaise le jeudi 19 novembre à 19h00.",
+  "origine": "auto",
+  "envoyes": 0,
+  "echecs": 2
  }
 ]
