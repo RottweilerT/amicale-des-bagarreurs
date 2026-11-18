@@ -25,5 +25,14 @@
   "origine": "auto",
   "envoyes": 0,
   "echecs": 2
+ },
+ {
+  "date": "2026-11-18T01:47+01:00",
+  "categorie": "changements",
+  "titre": "Cours annulé",
+  "message": "Boxe anglaise du jeudi 19 novembre à 19h00 : annulé.",
+  "origine": "auto",
+  "envoyes": 0,
+  "echecs": 1
  }
 ]
