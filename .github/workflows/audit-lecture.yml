@@ -1,0 +1,55 @@
+name: Audit (lecture seule, temporaire)
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  mesurer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mesurer les données (aucune écriture)
+        env:
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
+        run: |
+          pip install -q google-auth requests
+          python3 - <<'PY'
+          import json, os, urllib.request, collections, datetime
+          from google.oauth2 import service_account
+          import google.auth.transport.requests
+          cred = service_account.Credentials.from_service_account_info(json.loads(os.environ["FCM_COMPTE"]), scopes=["https://www.googleapis.com/auth/datastore"])
+          cred.refresh(google.auth.transport.requests.Request())
+          B = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/"
+          def lister(c):
+              out, t = [], ""
+              while True:
+                  r = urllib.request.Request(f"{B}{c}?pageSize=300" + (f"&pageToken={t}" if t else ""), headers={"Authorization": "Bearer " + cred.token})
+                  d = json.load(urllib.request.urlopen(r)); out += d.get("documents", []); t = d.get("nextPageToken")
+                  if not t: return out
+          def taille(doc): return len(json.dumps(doc.get("fields", {}), ensure_ascii=False).encode())
+          def v(f, k):
+              x = f.get(k, {}); return next(iter(x.values()), None) if x else None
+          rapport = {}
+          for col in ["members", "fights", "courses", "attendance", "push_subs", "push_requests"]:
+              docs = lister(col); tailles = [taille(d) for d in docs]
+              r = {"documents": len(docs), "octets_total": sum(tailles), "plus_gros_doc": max(tailles) if tailles else 0}
+              if col == "courses":
+                  kinds = collections.Counter(v(d.get("fields", {}), "kind") or "cours" for d in docs); r["par_type"] = dict(kinds)
+                  dates = sorted(v(d.get("fields", {}), "date") for d in docs if not v(d.get("fields", {}), "kind") and v(d.get("fields", {}), "date"))
+                  if dates: r["cours_du"], r["cours_au"] = dates[0], dates[-1]
+                  r["cours_par_mois"] = dict(collections.Counter(x[:7] for x in dates))
+              if col == "members":
+                  r["avec_code"] = sum(1 for d in docs if v(d.get("fields", {}), "pin"))
+                  r["desactives"] = sum(1 for d in docs if v(d.get("fields", {}), "off"))
+                  r["avec_anciens_jetons_push"] = sum(1 for d in docs if d.get("fields", {}).get("push", {}).get("arrayValue", {}).get("values"))
+                  r["avec_fiche_notifs"] = sum(1 for d in docs if d.get("fields", {}).get("notifs", {}).get("mapValue", {}).get("fields"))
+              if col == "fights":
+                  r["par_statut"] = dict(collections.Counter(v(d.get("fields", {}), "status") for d in docs))
+              if col == "push_subs":
+                  r["avec_profil"] = sum(1 for d in docs if v(d.get("fields", {}), "member"))
+              if col == "attendance":
+                  r["par_statut"] = dict(collections.Counter(v(d.get("fields", {}), "status") for d in docs))
+                  ids = {x["name"].split("/")[-1] for x in lister("courses")}
+                  r["orphelines"] = sum(1 for d in docs if v(d.get("fields", {}), "courseId") not in ids)
+              rapport[col] = r
+          print("RAPPORT " + json.dumps(rapport, ensure_ascii=False))
+          PY
