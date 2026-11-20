@@ -2,20 +2,17 @@
 Documentation complète : NOTIFICATIONS.md.
 
 Modes (variable MODE) :
-  changements : toutes les 15 minutes.
-                - compare le calendrier et les combats avec l'état du passage précédent (fichier ETAT) :
-                  cours modifié / annulé (catégorie « changements »), nouveaux cours (« nouveaux »),
-                  combat programmé ou terminé (« combats ») ;
-                - envoie les annonces écrites dans l'espace admin de l'appli (collection push_requests),
-                  seulement si le code admin correspond au secret ADMIN_CODE.
-                Au premier passage, l'état est seulement enregistré : rien n'est envoyé.
-  rappel      : le samedi à 16 h (heure de Paris), rappelle à chaque abonné de la catégorie « rappel » qui a choisi
-                son profil d'indiquer sa présence aux cours des 7 prochains jours auxquels il n'a pas encore répondu.
-  test        : envoie une notification de test à tous les appareils abonnés.
+  auto  : passage normal, déclenché toutes les 15 minutes (réveil externe + programmation GitHub, peu fiable seule) :
+          - compare le calendrier et les combats avec l'état précédent (notifications/etat.json, gardé dans le dépôt) :
+            cours modifié / annulé (« changements »), nouveaux cours (« nouveaux »), combat programmé ou terminé (« combats ») ;
+          - envoie les annonces de l'espace admin (push_requests), si le code correspond au secret ADMIN_CODE ;
+          - le samedi, une seule fois entre 16 h et 22 h (Paris) : rappel des présences de la semaine (« rappel ») ;
+          - le jour d'un cours, une seule fois entre 12 h et 1 h avant : « cours aujourd'hui » / « tu viens ? » (« rappel »).
+          Au tout premier passage, l'état est seulement enregistré : rien n'est envoyé.
+  rappel : rappel du samedi tout de suite.   test : notification de test à tous.   perso : message à une seule personne.
 
 Abonnés : collection privée push_subs (jeton FCM, catégories, profil facultatif) — illisible depuis l'appli,
-lue ici avec le compte de service. Les anciens jetons rangés dans la fiche des membres (champ « push ») sont encore
-servis (catégories « annonces », « changements », « rappel ») le temps que chaque téléphone passe au nouveau rangement.
+lue ici avec le compte de service.
 Envoi : Firebase Cloud Messaging, API HTTP v1, un message par appareil (l'ancien envoi groupé n'existe plus).
 Chaque envoi est ajouté à notifications/historique.json (sans aucun jeton ni identifiant d'appareil).
 """
@@ -26,7 +23,7 @@ from zoneinfo import ZoneInfo
 PROJET = os.environ["PROJET"]
 SITE = os.environ["SITE"].rstrip("/") + "/"
 MODE = os.environ.get("MODE", "changements")
-ETAT = os.environ.get("ETAT", "/tmp/etat-notifs/etat.json")
+ETAT = os.environ.get("ETAT", "notifications/etat.json")  # gardé dans le dépôt : survit aux pauses
 HISTORIQUE = os.environ.get("HISTORIQUE", "notifications/historique.json")
 ADMIN_CODE = os.environ.get("ADMIN_CODE", "").strip()
 PARIS = ZoneInfo("Europe/Paris")
@@ -40,7 +37,6 @@ TYPES = {"BA": "Boxe anglaise", "BF": "Boxe française", "BT": "Boxe thaï", "SP
 DISC = {"BA": "boxe anglaise", "BF": "boxe française", "BT": "boxe thaï"}
 METHODES = {"PTS": "aux points", "KO": "par KO", "ARB": "par arrêt de l'arbitre", "ABD": "par abandon", "DQ": "par disqualification"}
 CATS = ["annonces", "changements", "nouveaux", "rappel", "combats"]          # mêmes clés que NCATS dans index.html
-CATS_ANCIENS = ["annonces", "changements", "rappel"]                         # anciens abonnés (jeton dans la fiche membre)
 LIENS = {"calendrier", "minuteur", "combats", "elo", "salle", "membres", "regles", "notes"}  # mêmes clés que NLINKS
 MAX_ANNONCES_PAR_PASSAGE = 3
 MAX_ECHECS_CODE = 5          # codes admin faux tolérés sur 24 h ; au-delà, annonces bloquées jusqu'à ce que ça retombe
@@ -142,10 +138,6 @@ def abonnes():
         if not isinstance(t, str) or not t or s.get("active") is False or t in vus: continue
         vus.add(t)
         out.append((f"push_subs/{sid}", t, [c for c in (s.get("cats") or []) if c in CATS], s.get("member") or None))
-    for mid, m in membres().items():
-        for t in m.get("push") or []:
-            if isinstance(t, str) and t and t not in vus:
-                vus.add(t); out.append((f"members/{mid}", t, CATS_ANCIENS, mid))
     _abonnes = out
     return out
 
@@ -199,28 +191,16 @@ def publier(cat, titre, texte, tag, lien, origine="auto"):
 def nettoyer():
     """Retire les appareils qui ne reçoivent plus rien."""
     if not morts: return
-    anciens = {}
     proprio = {c: mid for c, _, _, mid in abonnes()}
     for chemin, tok in morts:
-        if chemin.startswith("push_subs/"):
-            supprimer(chemin)
-            mid = proprio.get(chemin)
-            if mid:  # retirer aussi l'appareil de la fiche visible dans le profil
-                cle = "d" + hashlib.sha256(chemin.split("/", 1)[1].encode()).hexdigest()[:12]
-                try:
-                    http(f"{BASE}/members/{mid}?updateMask.fieldPaths=notifs.{cle}&currentDocument.exists=true", {"fields": {}}, "PATCH")
-                except urllib.error.HTTPError as e:
-                    print(f"::warning::Nettoyage du profil de {mid} impossible ({e.code})")
-        else: anciens.setdefault(chemin.split("/", 1)[1], set()).add(tok)
-    for mid, toks in anciens.items():
-        m = membres().get(mid)
-        if not m: continue
-        reste = [t for t in (m.get("push") or []) if t not in toks]
-        body = {"fields": {"push": {"arrayValue": {"values": [{"stringValue": t} for t in reste]}}}}
-        try:
-            http(f"{BASE}/members/{mid}?updateMask.fieldPaths=push&currentDocument.exists=true", body, "PATCH")
-        except urllib.error.HTTPError as e:
-            print(f"::warning::Nettoyage de l'ancien jeton de {mid} impossible ({e.code})")
+        supprimer(chemin)
+        mid = proprio.get(chemin)
+        if mid:  # retirer aussi l'appareil de la fiche visible dans le profil
+            cle = "d" + hashlib.sha256(chemin.split("/", 1)[1].encode()).hexdigest()[:12]
+            try:
+                http(f"{BASE}/members/{mid}?updateMask.fieldPaths=notifs.{cle}&currentDocument.exists=true", {"fields": {}}, "PATCH")
+            except urllib.error.HTTPError as e:
+                print(f"::warning::Nettoyage du profil de {mid} impossible ({e.code})")
     print(f"{len(morts)} appareil(s) retiré(s) (désabonnés, appli supprimée ou jeton expiré)")
 
 
@@ -356,6 +336,71 @@ def annonces(etat):
 
 
 # ---------- Modes ----------
+def presences():
+    rep = {}
+    for a in lire("attendance").values():
+        if a.get("memberId") and a.get("courseId"): rep.setdefault(a["memberId"], {})[a["courseId"]] = a.get("status")
+    return rep
+
+
+def par_membre_rappel():
+    out = {}
+    for c, t, cats, mid in abonnes():
+        if "rappel" in cats and mid: out.setdefault(mid, []).append((c, t))
+    return out
+
+
+def rappel_samedi(etat, forcer=False):
+    """Le samedi, une seule fois entre 16 h et 22 h : à chacun, les cours des 7 jours où il n'a pas répondu."""
+    semaine_iso = "%d-%02d" % NOW.isocalendar()[:2]
+    if not forcer and not (NOW.weekday() == 5 and 16 <= NOW.hour < 22 and etat.get("rappel_semaine") != semaine_iso):
+        return
+    etat["rappel_semaine"] = semaine_iso
+    fin = (NOW.date() + datetime.timedelta(days=7)).isoformat()
+    semaine = sorted(((i, s) for i, s in cours().items() if TODAY < s["date"] <= fin), key=lambda x: (x[1]["date"], x[1]["heure"]))
+    if not semaine:
+        print("::notice::Aucun cours dans les 7 prochains jours : pas de rappel."); return
+    rep, ok, ko = presences(), 0, 0
+    for mid, dest in par_membre_rappel().items():
+        m = membres().get(mid)
+        if not m or m.get("off"): continue  # profil supprimé ou désactivé : on n'attend pas sa présence
+        manque = [s for i, s in semaine if i not in rep.get(mid, {})]
+        if not manque: continue
+        liste = ", ".join(f"{jour(s['date'], True)} ({s['nom']}{' ' + heure(s['heure']) if s['heure'] else ''})" for s in manque[:5])
+        a, b = envoyer(dest, "Tes présences de la semaine",
+                       f"{m.get('first', '')}, indique si tu viens : {liste}" + ("…" if len(manque) > 5 else "."), "rappel", "calendrier")
+        ok += a; ko += b
+    noter("rappel", "Tes présences de la semaine", "Rappel personnel à ceux à qui il manque des réponses", "auto", ok, ko)
+    print(f"::notice::Rappel du samedi envoyé à {ok} appareil(s).")
+
+
+def rappel_du_jour(etat):
+    """Le jour d'un cours, une fois, entre 12 h et 1 h avant : « ce soir » aux inscrits, « tu viens ? » à ceux qui n'ont pas répondu."""
+    a_faire = []
+    for i, s in etat["cours"].items():
+        if s["date"] != TODAY or i in etat["jour_j"] or not s["heure"]: continue
+        debut = datetime.datetime.combine(NOW.date(), datetime.time(*map(int, s["heure"].split(":"))), PARIS)
+        if NOW.hour >= 12 and NOW <= debut - datetime.timedelta(hours=1): a_faire.append((i, s))
+    if not a_faire: return
+    rep, ok, ko = presences(), 0, 0
+    inscrits = lambda cid: sum(1 for r in rep.values() if r.get(cid) == "present")
+    for i, s in sorted(a_faire, key=lambda x: x[1]["heure"]):
+        etat["jour_j"].append(i)
+        quoi = f"{s['nom']} à {heure(s['heure'])}" + (f", {s['lieu']}" if s["lieu"] else "")
+        n = inscrits(i)
+        for mid, dest in par_membre_rappel().items():
+            m = membres().get(mid)
+            if not m or m.get("off"): continue
+            st = rep.get(mid, {}).get(i)
+            if st == "absent": continue
+            if st == "present": titre, texte = "Cours aujourd'hui 🥊", f"{quoi} : tu es inscrit ({n} inscrit{'s' if n > 1 else ''}). À tout à l'heure !"
+            else: titre, texte = "Tu viens au cours ?", f"{quoi} : indique si tu viens ({n} inscrit{'s' if n > 1 else ''} pour l'instant)."
+            a, b = envoyer(dest, titre, texte, f"jour-{i[:8]}", "calendrier")
+            ok += a; ko += b
+        noter("rappel", "Cours aujourd'hui", quoi, "auto", ok, ko)
+    print(f"::notice::Rappel du jour envoyé à {ok} appareil(s).")
+
+
 def charger_etat():
     try:
         e = json.load(open(ETAT))
@@ -374,21 +419,29 @@ def principal():
         noter("test", NOM, "Notification de test", "test", ok, ko)
         print(f"::notice::Test envoyé à {ok} appareil(s), {ko} échec(s).")
 
-    elif MODE == "changements":
+    elif MODE in ("auto", "changements", "rappel"):
+        # Un seul passage fait tout : calendrier, combats, annonces, rappel du samedi, rappel du jour.
+        # Les rappels ne partent qu'une fois (trace dans l'état), dans une plage horaire large : un passage en retard
+        # ne les fait plus sauter.
         avant = charger_etat()
         etat = {"v": 2, "cours": {i: s for i, s in cours().items() if s["date"] >= TODAY}, "combats": combats_etat(),
-                "echecs_code": (avant or {}).get("echecs_code", [])}
-        if avant is None:
-            print("::notice::Premier passage : état enregistré, aucune notification envoyée.")
-        else:
-            changements_calendrier(avant["cours"], etat["cours"])
-            nouveaux_cours(avant["cours"], etat["cours"])
-            if avant.get("combats") is None: print("::notice::Combats : état enregistré (premier passage).")
-            else: changements_combats(avant["combats"], etat["combats"])
-        annonces(etat)
+                "echecs_code": (avant or {}).get("echecs_code", []),
+                "rappel_semaine": (avant or {}).get("rappel_semaine", ""),
+                "jour_j": [i for i in (avant or {}).get("jour_j", []) if i in (avant or {}).get("cours", {}) and (avant or {})["cours"][i]["date"] >= TODAY]}
+        if MODE != "rappel":
+            if avant is None:
+                print("::notice::Premier passage : état enregistré, aucune notification envoyée.")
+            else:
+                changements_calendrier(avant["cours"], etat["cours"])
+                nouveaux_cours(avant["cours"], etat["cours"])
+                if avant.get("combats") is None: print("::notice::Combats : état enregistré (premier passage).")
+                else: changements_combats(avant["combats"], etat["combats"])
+            annonces(etat)
+            rappel_du_jour(etat)
+        rappel_samedi(etat, forcer=MODE == "rappel")
         if avant != etat:
-            os.makedirs(os.path.dirname(ETAT), exist_ok=True)
-            json.dump(etat, open(ETAT, "w"), ensure_ascii=False, sort_keys=True)
+            os.makedirs(os.path.dirname(ETAT) or ".", exist_ok=True)
+            json.dump(etat, open(ETAT, "w"), ensure_ascii=False, sort_keys=True, indent=0)
             sortie("change=1")
 
     elif MODE == "perso":
@@ -406,32 +459,6 @@ def principal():
         ok, ko = envoyer(dest, titre, texte, "perso", "")
         noter("perso", titre, "Message personnel", "admin", ok, ko)
         print(f"::notice::Message personnel envoyé à {ok} appareil(s), {ko} échec(s).")
-
-    elif MODE == "rappel":
-        if os.environ.get("FORCER") != "1" and not (NOW.weekday() == 5 and NOW.hour == 16):
-            print(f"Pas l'heure du rappel ({NOW:%A %H:%M} à Paris) : rien à faire."); return
-        fin = (NOW.date() + datetime.timedelta(days=7)).isoformat()
-        semaine = sorted(((i, s) for i, s in cours().items() if TODAY < s["date"] <= fin), key=lambda x: (x[1]["date"], x[1]["heure"]))
-        if not semaine:
-            print("::notice::Aucun cours dans les 7 prochains jours : pas de rappel."); return
-        rep = {}
-        for a in lire("attendance").values():
-            if a.get("memberId") and a.get("courseId"): rep.setdefault(a["memberId"], set()).add(a["courseId"])
-        par_membre = {}
-        for c, t, cats, mid in abonnes():
-            if "rappel" in cats and mid: par_membre.setdefault(mid, []).append((c, t))
-        ok = ko = 0
-        for mid, dest in par_membre.items():
-            m = membres().get(mid)
-            if not m or m.get("off"): continue  # profil supprimé ou désactivé : on n'attend pas sa présence
-            manque = [s for i, s in semaine if i not in rep.get(mid, set())]
-            if not manque: continue
-            liste = ", ".join(f"{jour(s['date'], True)} ({s['nom']}{' ' + heure(s['heure']) if s['heure'] else ''})" for s in manque[:5])
-            a, b = envoyer(dest, "Tes présences de la semaine",
-                           f"{m.get('first', '')}, indique si tu viens : {liste}" + ("…" if len(manque) > 5 else "."), "rappel", "calendrier")
-            ok += a; ko += b
-        noter("rappel", "Tes présences de la semaine", "Rappel personnel à ceux à qui il manque des réponses", "auto", ok, ko)
-        print(f"::notice::Rappel du samedi envoyé à {ok} appareil(s).")
 
     nettoyer()
     ecrire_historique()

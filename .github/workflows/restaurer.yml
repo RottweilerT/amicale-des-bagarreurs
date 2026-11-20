@@ -11,9 +11,14 @@ on:
         required: false
         default: ""
       confirmer:
-        description: "Tape RESTAURER pour confirmer"
-        required: true
+        description: "Tape RESTAURER pour réécrire la base (laisser vide pour un simple essai)"
+        required: false
         default: ""
+      essai:
+        description: "Essai à blanc : déchiffrer et vérifier la sauvegarde, sans rien écrire"
+        required: true
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -21,7 +26,7 @@ permissions:
 jobs:
   restaurer:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.confirmer == 'RESTAURER' }}
+    if: ${{ github.event.inputs.confirmer == 'RESTAURER' || github.event.inputs.essai == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,18 +38,41 @@ jobs:
         run: |
           if [ -n "$VERSION" ]; then git show "$VERSION:sauvegarde/base.json.enc" > /tmp/base.enc; else cp sauvegarde/base.json.enc /tmp/base.enc; fi
           openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in /tmp/base.enc -out /tmp/base.json -pass env:CLE
-      - name: Réécrire les documents
+      - name: Vérifier ou réécrire les documents
+        env:
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
+          ESSAI: ${{ github.event.inputs.essai == 'true' || github.event.inputs.confirmer != 'RESTAURER' }}
         run: |
+          pip install -q google-auth requests
           python3 - <<'PY'
-          import json, re, urllib.request, urllib.error
-          KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
-          HDR = {"Referer": "https://rottweilert.github.io/amicale-des-bagarreurs/", "Content-Type": "application/json"}
+          import json, os, urllib.request, urllib.error
+          from google.oauth2 import service_account
+          import google.auth.transport.requests
+          cred = service_account.Credentials.from_service_account_info(json.loads(os.environ["FCM_COMPTE"]), scopes=["https://www.googleapis.com/auth/datastore"])
+          cred.refresh(google.auth.transport.requests.Request())
+          H = {"Authorization": "Bearer " + cred.token, "Content-Type": "application/json"}
           b = json.load(open("/tmp/base.json"))
           base = f"https://firestore.googleapis.com/v1/projects/{b['projet']}/databases/(default)/documents"
+          essai = os.environ["ESSAI"] == "true"
+          if essai:
+              # Essai à blanc : la sauvegarde se déchiffre, chaque document est complet, et on compare avec la base actuelle.
+              def compter(col):
+                  n, t = 0, ""
+                  while True:
+                      d = json.load(urllib.request.urlopen(urllib.request.Request(f"{base}/{col}?pageSize=300&mask.fieldPaths=__name__" + (f"&pageToken={t}" if t else ""), headers=H)))
+                      n += len(d.get("documents", [])); t = d.get("nextPageToken")
+                      if not t: return n
+              mauvais = 0
+              for col, docs in b["collections"].items():
+                  vides = sum(1 for f in docs.values() if not isinstance(f, dict) or not f)
+                  mauvais += vides
+                  print(f"::notice::{col} : {len(docs)} documents dans la sauvegarde, {compter(col)} dans la base actuelle, {vides} vide(s)")
+              print(f"::notice::Essai à blanc réussi : la sauvegarde se déchiffre et se relit ({sum(len(d) for d in b['collections'].values())} documents). Rien n'a été écrit.")
+              raise SystemExit(1 if mauvais else 0)
           ok = err = 0
           for col, docs in b["collections"].items():
               for i, fields in docs.items():
-                  req = urllib.request.Request(f"{base}/{col}/{i}?key={KEY}", data=json.dumps({"fields": fields}).encode(), method="PATCH", headers=HDR)
+                  req = urllib.request.Request(f"{base}/{col}/{i}", data=json.dumps({"fields": fields}).encode(), method="PATCH", headers=H)
                   try: urllib.request.urlopen(req).read(); ok += 1
                   except urllib.error.HTTPError as e: err += 1; print("Échec", col, i, e.code)
           print(f"::notice::Restauration : {ok} documents réécrits, {err} échecs")

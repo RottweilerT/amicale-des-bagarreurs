@@ -642,7 +642,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
             <label class="reg-f" for="mPin2"><span>Confirme le code</span><input id="mPin2" class="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="new-password"></label>
           </div>
           <label class="reg-check" for="mPinOff" id="mPinOffRow" hidden><input type="checkbox" id="mPinOff"> Supprimer mon code d'accès</label>
-          <p class="reg-note" id="mPinHint">4 à 8 chiffres. Avec un code, personne d'autre ne peut ouvrir ta fiche sur son téléphone ni la supprimer.</p>
+          <p class="reg-note" id="mPinHint">4 à 8 chiffres. Le code évite qu'un autre membre ouvre ou modifie ta fiche par erreur depuis l'appli. Ce n'est pas un mot de passe : ne réutilise pas un code important.</p>
         </fieldset>
         <p class="reg-err" id="mErr" role="alert" hidden></p>
         <div class="reg-actions"><button class="reg-btn" data-w type="submit" id="mSubmit">Je m'inscris</button><button class="reg-btn ghost" type="button" id="mCancel" hidden>Annuler</button></div>
@@ -782,7 +782,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
         <div id="dayList" class="courses"></div>
       </div>
       <form id="fCourse" class="panel" autocomplete="off">
-        <h3>Ajouter un cours</h3>
+        <h3 id="cTitle">Ajouter un cours</h3>
         <label for="cType">Cours<select id="cType">
           <option value="BA">Boxe anglaise</option>
           <option value="BF">Boxe française</option>
@@ -800,8 +800,10 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
           <label for="cCoach">Coach<input id="cCoach" maxlength="50"></label>
         </div>
         <label for="cPlace">Lieu<input id="cPlace" maxlength="80" placeholder="Salle, gymnase, parc…"></label>
-        <label for="cUntil">Répéter chaque semaine jusqu'au (facultatif)<input id="cUntil" type="date"></label>
-        <button class="btn" data-w type="submit" id="cSubmit">Ajouter au calendrier</button>
+        <label for="cUntil" id="cUntilRow">Répéter chaque semaine jusqu'au (facultatif)<input id="cUntil" type="date"></label>
+        <label for="cScope" id="cScopeRow" hidden>Appliquer à<select id="cScope"><option value="one">Ce cours seulement</option><option value="serie">Ce cours et les suivants de la série</option></select></label>
+        <p class="hint" id="cEditHint" hidden style="margin:0">Les réponses de présence déjà données sont gardées.</p>
+        <div class="row"><button class="btn" data-w type="submit" id="cSubmit">Ajouter au calendrier</button><button class="btn ghost" type="button" id="cCancel" hidden>Annuler la modification</button></div>
       </form>
   </section>
 
@@ -1056,10 +1058,12 @@ function banner(msg){const b=$('#banner');b.hidden=!msg;b.textContent=msg||''}
 function applyRO(){document.querySelectorAll('[data-w]').forEach(el=>{el.disabled=!canWrite||!connected})}
 function handleErr(e){
   const c=e&&e.code;
-  if(c==='permission-denied'){banner("La base refuse l'accès : les règles Firestore ne sont pas encore publiées (étape 3 du guide).")}
-  else if(c==='resource-exhausted')toast("Limite gratuite du jour atteinte, réessaie demain.");
-  else if(c==='invalid-argument')toast("Donnée refusée par la base.");
-  else toast("Connexion instable, la modification sera envoyée dès le retour du réseau.");
+  console.warn('Firestore',c,e&&e.message);
+  if(c==='permission-denied')toast("Modification refusée par la base : elle n'a pas été enregistrée.");
+  else if(c==='resource-exhausted')toast("Limite gratuite du jour atteinte : la modification n'est pas enregistrée. Réessaie après 9 h.");
+  else if(c==='invalid-argument'||c==='failed-precondition'||c==='not-found')toast("Modification refusée : elle n'a pas été enregistrée.");
+  else if(c==='unavailable'||c==='deadline-exceeded'||!navigator.onLine)toast("Pas de réseau : la modification partira dès le retour de la connexion.");
+  else toast("Problème inattendu : la modification n'a peut-être pas été enregistrée. Vérifie et réessaie.");
 }
 function enqueue(path,fn){Q[path]=(Q[path]||Promise.resolve()).then(fn).catch(handleErr);return Q[path]}
 const setDoc=(path,data)=>enqueue(path,()=>db.doc(path).set(data));
@@ -1274,7 +1278,7 @@ function renderReg(){
     $('#mSubmit').textContent=edited?'Enregistrer':(mine?'Inscrire':'Je m’inscris');$('#mCancel').hidden=!ui.regForm;
     const hasPin=!!(edited&&edited.pin);
     $('#mPinLabel').textContent=hasPin?'Nouveau code':'Code d’accès';$('#mPin').placeholder=hasPin?'Laisse vide pour garder':'Facultatif';$('#mPinOffRow').hidden=!hasPin;
-    $('#mPinHint').textContent=hasPin?'Il y a déjà un code : laisse vide pour le garder, ou tape un nouveau code (4 à 8 chiffres).':'4 à 8 chiffres. Avec un code, personne d’autre ne peut ouvrir ta fiche sur son téléphone ni la supprimer.';
+    $('#mPinHint').textContent=hasPin?'Il y a déjà un code : laisse vide pour le garder, ou tape un nouveau code (4 à 8 chiffres).':'4 à 8 chiffres. Le code évite qu’un autre membre ouvre ou modifie ta fiche par erreur depuis l’appli. Ce n’est pas un mot de passe : ne réutilise pas un code important.';
   }
   $('#telCard').hidden=!(mine&&!showForm);Tel.render();Tel.sync();
 }
@@ -1282,12 +1286,12 @@ const PUSH={vapid:'BJB53XBL72om9F12Ifu5uy46_DFg7Cbl9k71iqviMunQtKZEixFqh1y2O9Ozb
 /* ----- Notifications push (Firebase Cloud Messaging) — voir NOTIFICATIONS.md -----
    Chaque appareil abonné a une fiche privée push_subs/<identifiant aléatoire> : jeton FCM, catégories, profil (facultatif),
    dates. Les règles Firestore interdisent toute lecture depuis l'appli ; seule la GitHub Action « Notifications » les lit.
-   Tant que ces règles ne sont pas en place, on garde l'ancien rangement (jeton dans la fiche du membre) pour ne rien casser. */
+   (L'ancien rangement, jeton dans la fiche du membre, a été retiré le 20/11/2026 : plus aucun appareil ne l'utilisait.) */
 const NCATS=[
   {k:'annonces',t:'Annonces du groupe',h:'Messages envoyés par les organisateurs'},
   {k:'changements',t:'Cours modifiés ou annulés',h:'Horaire, lieu ou date qui change, cours annulé'},
   {k:'nouveaux',t:'Nouveaux cours',h:'Cours ajoutés au calendrier'},
-  {k:'rappel',t:'Rappel des présences',h:'Le samedi à 16 h, s’il te manque des réponses pour la semaine (profil choisi)'},
+  {k:'rappel',t:'Rappels',h:'Le samedi après-midi s’il te manque des réponses pour la semaine, et le jour d’un cours (profil choisi)'},
   {k:'combats',t:'Combats',h:'Combat programmé et résultat'}];
 const NLINKS={calendrier:'Calendrier',minuteur:'Minuteur',combats:'Combats',elo:'Classement',salle:'La salle',membres:'Membres',regles:'Règles',notes:'Notes'};
 const Notif=(()=>{
@@ -1314,8 +1318,8 @@ const Notif=(()=>{
     return active()?'on':'off';
   }
   async function token(){const reg=await navigator.serviceWorker.ready;return messaging().getToken({vapidKey:PUSH.vapid,serviceWorkerRegistration:reg})}
-  async function legacyRemove(t){for(const w of new Set([get(LS.who),memberId()].filter(Boolean)))await timeout(db.doc('members/'+w).set({push:FV().arrayRemove(t)},{merge:true})).catch(()=>{})}
-  /* Fiche visible dans les profils (aucun jeton) : members/<profil>.notifs.<clé de l'appareil> = {cats, at}.
+  /* (l'ancien rangement des jetons dans la fiche membre a été retiré : plus aucun appareil ne l'utilisait) */
+    /* Fiche visible dans les profils (aucun jeton) : members/<profil>.notifs.<clé de l'appareil> = {cats, at}.
      La clé est dérivée de l'identifiant privé de l'appareil, sans permettre de le retrouver. */
   async function pubKey(){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(subId()));return 'd'+[...new Uint8Array(b)].slice(0,6).map(x=>x.toString(16).padStart(2,'0')).join('')}
   async function publish(on){
@@ -1329,24 +1333,16 @@ const Notif=(()=>{
   async function save(t){
     if(!db)throw Object.assign(new Error('pas de base'),{code:'unavailable'});
     let since=Number(get(LS.since));if(!since){since=Date.now();put(LS.since,String(since))}
-    const old=get(LS.tok);
-    try{
-      await timeout(db.doc('push_subs/'+subId()).set({token:t,cats:cats(),active:true,member:memberId(),createdAt:since,updatedAt:FV().serverTimestamp()}));
-      await legacyRemove(t);if(old&&old!==t)await legacyRemove(old);
-      put(LS.mode,'prive');put(LS.who,null);
-    }catch(e){
-      if(!e||e.code!=='permission-denied')throw e;
-      const id=memberId();if(!id)throw Object.assign(new Error('profil requis'),{code:'need-profile'});
-      if(old&&old!==t)await legacyRemove(old);
-      await timeout(db.doc('members/'+id).set({push:FV().arrayUnion(t)},{merge:true}));put(LS.who,id);put(LS.mode,'ancien');
-    }
-    put(LS.tok,t);put(LS.sync,String(Date.now()));put(LS.key,(memberId()||'')+'|'+get(LS.mode)+'2|'+cats().join(','));
+    await timeout(db.doc('push_subs/'+subId()).set({token:t,cats:cats(),active:true,member:memberId(),createdAt:since,updatedAt:FV().serverTimestamp()}));
+    put(LS.mode,'prive');put(LS.who,null);
+    put(LS.tok,t);put(LS.sync,String(Date.now()));put(LS.key,(memberId()||'')+'|prive2|'+cats().join(','));
     await publish(true);
   }
   function msg(t,id='npMsg'){const m=el(id);if(!m)return;m.textContent=t||'';m.hidden=!t;clearTimeout(msgT);if(t&&id==='npMsg')msgT=setTimeout(()=>{m.hidden=true},9000)}
   function errText(e){
     if(e&&e.code==='need-profile')return 'Choisis d’abord ton nom en haut de la page, puis réessaie.';
     if(e&&e.code==='timeout'||!navigator.onLine)return 'Pas de connexion pour l’instant : réessaie quand tu as du réseau.';
+    if(e&&e.code==='permission-denied')return 'La base a refusé l’enregistrement de l’abonnement. Préviens l’organisateur.';
     if(e&&/permission|blocked/i.test(String(e.code||e.message)))return 'Le navigateur a bloqué les notifications : autorise-les dans ses réglages pour ce site.';
     return 'Impossible d’activer les notifications pour l’instant. Réessaie dans un moment.';
   }
@@ -1357,7 +1353,7 @@ const Notif=(()=>{
       if(p!=='granted'){msg(p==='denied'?'Tu as refusé les notifications. Pour changer d’avis : réglages du navigateur (ou du téléphone) → Notifications → autoriser ce site, puis reviens ici.':'Notifications pas activées : il faut accepter la demande du navigateur.');return}
       const t=await token();if(!t)throw new Error('jeton vide');
       await save(t);
-      msg(get(LS.mode)==='ancien'?'C’est activé sur cet appareil. Le choix des catégories sera pris en compte dès que le serveur sera à jour.':'C’est activé sur cet appareil 👊');
+      msg('C’est activé sur cet appareil 👊');
     }catch(e){console.error('notifications',e);msg(errText(e))}
     finally{busy=false;render()}
   }
@@ -1365,7 +1361,7 @@ const Notif=(()=>{
     if(busy)return;busy=true;render();
     const t=get(LS.tok);
     try{
-      if(db){await timeout(db.doc('push_subs/'+subId()).delete()).catch(()=>{});if(t)await legacyRemove(t);await publish(false)}
+      if(db){await timeout(db.doc('push_subs/'+subId()).delete()).catch(()=>{});await publish(false)}
       const m=supported()&&messaging();if(m)await timeout(m.deleteToken(),8000).catch(()=>{});
     }finally{[LS.tok,LS.who,LS.sync,LS.key,LS.mode,LS.id,LS.since,LS.pub].forEach(k=>put(k,null));busy=false;msg('Tu es désabonné : plus aucune notification sur cet appareil.');render()}
   }
@@ -1379,7 +1375,6 @@ const Notif=(()=>{
     if(syncing||busy||!db||!active()||!supported())return;
     const key=(memberId()||'')+'|prive2|'+cats().join(',');
     if(get(LS.mode)==='prive'&&get(LS.key)===key&&Date.now()-Number(get(LS.sync)||0)<7*864e5)return;
-    if(get(LS.mode)==='ancien'&&Date.now()-Number(get(LS.sync)||0)<36e5&&get(LS.key).startsWith((memberId()||'')+'|ancien2|'))return;
     syncing=true;
     try{const t=await token();if(t)await save(t)}catch(e){console.warn('notifications',e)}finally{syncing=false;render()}
   }
@@ -1632,7 +1627,7 @@ function courseHtml(id,c,showDate){
       :(pres.length||abs.length?`<div class="chips">${pres.map(([m])=>`<span class="chip p">${esc(mName(m,true))}</span>`).join('')}${abs.map(([m])=>`<span class="chip a">${esc(mName(m,true))}</span>`).join('')}</div>`:'')}
     <div class="row">
       <button class="btn ghost small" data-act="appelToggle" data-id="${id}" style="flex:0 0 auto">${appel?'Fermer l’appel':'Faire l’appel'}</button>
-      ${conf?`<button class="btn danger small" data-w data-act="cDelYes" data-id="${id}" style="flex:0 0 auto">Supprimer ce cours</button>${c.serie?`<button class="btn danger small" data-w data-act="cDelSerie" data-id="${id}" style="flex:0 0 auto">Toute la série à venir</button>`:''}<button class="btn ghost small" data-act="noConfirm" style="flex:0 0 auto">Garder</button>`:`<button class="btn ghost small" data-w data-act="cDel" data-id="${id}" style="flex:0 0 auto">Supprimer</button>`}
+      ${conf?`<button class="btn danger small" data-w data-act="cDelYes" data-id="${id}" style="flex:0 0 auto">Supprimer ce cours</button>${c.serie?`<button class="btn danger small" data-w data-act="cDelSerie" data-id="${id}" style="flex:0 0 auto">Toute la série à venir</button>`:''}<button class="btn ghost small" data-act="noConfirm" style="flex:0 0 auto">Garder</button>`:`<button class="btn ghost small" data-w data-act="cEdit" data-id="${id}" style="flex:0 0 auto">Modifier</button><button class="btn ghost small" data-w data-act="cDel" data-id="${id}" style="flex:0 0 auto">Supprimer</button>`}
     </div></div>`;
 }
 /* ---------- Vue semaine : du dimanche au samedi ----------
@@ -1699,9 +1694,32 @@ function renderCalendar(){
 $('#cDate').addEventListener('input',e=>e.target.dataset.auto='0');
 $('#calPrev').addEventListener('click',()=>{ui.month=new Date(ui.month.getFullYear(),ui.month.getMonth()-1,1);renderCalendar()});
 $('#calNext').addEventListener('click',()=>{ui.month=new Date(ui.month.getFullYear(),ui.month.getMonth()+1,1);renderCalendar()});
+/* Modifier un cours (ou la suite de sa série) : mêmes champs que l'ajout ; l'identifiant ne change pas, donc les présences restent. */
+function courseFormReset(){
+  ui.cEdit=null;$('#fCourse').reset();$('#cTitle').textContent='Ajouter un cours';$('#cSubmit').textContent='Ajouter au calendrier';
+  $('#cCancel').hidden=$('#cScopeRow').hidden=$('#cEditHint').hidden=true;$('#cUntilRow').hidden=false;$('#cDate').dataset.auto='1';$('#cDate').value=ui.day;
+}
+function courseEdit(id){
+  const c=S.courses.get(id);if(!c)return;ui.cEdit=id;
+  $('#cType').value=c.type;$('#cDate').value=c.date;$('#cDate').dataset.auto='0';$('#cTime').value=c.time;$('#cPlace').value=c.place||'';$('#cCoach').value=c.coach||'';
+  const dur=String(c.dur||90);if(![...$('#cDurMin').options].some(o=>o.value===dur))$('#cDurMin').insertAdjacentHTML('beforeend',`<option value="${dur}">${Math.floor(dur/60)} h ${pad(dur%60)}</option>`);$('#cDurMin').value=dur;
+  const serie=c.serie&&[...S.courses.values()].some(x=>x.serie===c.serie&&x.date>c.date);
+  $('#cScopeRow').hidden=!serie;$('#cScope').value='one';$('#cUntilRow').hidden=true;$('#cEditHint').hidden=false;$('#cCancel').hidden=false;
+  $('#cTitle').textContent='Modifier le cours';$('#cSubmit').textContent='Enregistrer';
+  $('#fCourse').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>$('#cTime').focus({preventScroll:true}),300);
+}
+$('#cCancel').addEventListener('click',courseFormReset);
 $('#fCourse').addEventListener('submit',async e=>{
   e.preventDefault();if(!db)return;
   const base={type:$('#cType').value,time:$('#cTime').value,dur:Number($('#cDurMin').value),place:$('#cPlace').value.trim(),coach:$('#cCoach').value.trim()};
+  if(ui.cEdit){
+    const id=ui.cEdit,c=S.courses.get(id);if(!c){toast('Ce cours a été supprimé entre-temps.');courseFormReset();return}
+    const ids=$('#cScope').value==='serie'&&c.serie?[...S.courses].filter(([,x])=>x.serie===c.serie&&x.date>=c.date).map(([k])=>k):[id];
+    $('#cSubmit').disabled=true;
+    for(const k of ids)await enqueue('courses/'+k,()=>db.doc('courses/'+k).set(k===id?{...base,date:$('#cDate').value||c.date}:base,{merge:true}));
+    $('#cSubmit').disabled=false;toast(ids.length>1?ids.length+' cours modifiés':'Cours modifié');
+    const d0=$('#cDate').value||c.date;courseFormReset();ui.day=d0;const dd=parseYmd(d0);ui.month=new Date(dd.getFullYear(),dd.getMonth(),1);renderCalendar();return;
+  }
   const d0=$('#cDate').value,until=$('#cUntil').value;if(!d0)return;
   const dates=[d0];
   if(until&&until>d0){let d=parseYmd(d0);while(dates.length<60){d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+7);const s=ymd(d);if(s>until)break;dates.push(s)}}
@@ -1776,7 +1794,7 @@ function renderNotes(){
   applyRO();
 }
 
-/* ---------- la salle : idées validées par le groupe, part de chacun, achats (documents « courses » de kind « salle » / « salle-saison ») ---------- */
+/* ---------- la salle : idées classées par ♥, part de chacun, achats (documents « courses » de kind « salle » / « salle-saison ») ---------- */
 let SALLE=new Map();
 /* Saisons sans partage des frais (2025-2026 : saison de démarrage, achats faits avant l'onglet) */
 const SL_SANS_PART=['2025-2026'];
@@ -1938,6 +1956,7 @@ document.addEventListener('click',async e=>{
     case 'att':{const cur=attOf(id).get(me);setAtt(id,me,cur===b.dataset.v?null:b.dataset.v);break}
     case 'appelToggle':ui.appel=ui.appel===id?null:id;renderCalendar();break;
     case 'appel':{const cur=attOf(id).get(b.dataset.m);setAtt(id,b.dataset.m,!cur?'present':cur==='present'?'absent':null);break}
+    case 'cEdit':courseEdit(id);break;
     case 'cDel':ui.confirm='c:'+id;renderCalendar();break;
     case 'cDelYes':deleteCourse(id);ui.confirm=null;toast('Cours supprimé');break;
     case 'cDelSerie':{const c=S.courses.get(id);if(c&&c.serie){for(const [cid,x] of S.courses)if(x.serie===c.serie&&x.date>=c.date)deleteCourse(cid)}ui.confirm=null;toast('Série supprimée');break}

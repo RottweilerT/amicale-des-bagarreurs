@@ -9,7 +9,7 @@ Chaque membre peut recevoir des notifications sur son téléphone ou son ordinat
 | Annonces du groupe (`annonces`) | Message écrit dans l'espace admin | l'organisateur, après vérification du code admin |
 | Cours modifiés ou annulés (`changements`) | Un cours à venir change d'horaire, de durée, de lieu ou de date, ou est supprimé | automatique |
 | Nouveaux cours (`nouveaux`) | Des cours à venir sont ajoutés au calendrier (une série = un seul message) | automatique |
-| Rappel des présences (`rappel`) | Le samedi à 16 h, s'il manque des réponses pour les 7 prochains jours (il faut avoir choisi son profil) | automatique |
+| Rappels (`rappel`) | Le samedi, une fois entre 16 h et 22 h, s'il manque des réponses pour les 7 prochains jours ; et le jour d'un cours, une fois entre 12 h et 1 h avant (« cours aujourd'hui » si inscrit, « tu viens ? » sans réponse, rien si absent). Il faut avoir choisi son profil. | automatique |
 | Combats (`combats`) | Un combat est programmé, ou un combat est terminé avec son résultat | automatique |
 
 Toucher la notification ouvre l'appli sur le bon onglet.
@@ -18,7 +18,7 @@ Toucher la notification ouvre l'appli sur le bon onglet.
 
 ```
 Appli (index.html)                 Firestore                       GitHub Action « Notifications »
-  cloche → jeton FCM  ───────────► push_subs/<id aléatoire>        (toutes les 15 min + samedi 16 h)
+  cloche → jeton FCM  ───────────► push_subs/<id aléatoire>        (toutes les 15 min)
   (catégories, profil facultatif)  illisible depuis l'appli  ◄──── lit avec le compte de service
   espace admin ──────────────────► push_requests/<id>       ◄──── vérifie le code admin, envoie, efface
                                    courses, fights, members ◄──── compare avec l'état précédent
@@ -36,7 +36,8 @@ Appli (index.html)                 Firestore                       GitHub Action
   - L'envoi se fait appareil par appareil (API HTTP v1, l'ancien envoi groupé n'existe plus), 8 en parallèle, avec deux nouvelles tentatives en cas d'erreur passagère.
   - Un appareil qui ne répond plus est retiré automatiquement. C'est le cas quand le jeton est expiré, que l'appli a été supprimée ou que l'abonnement a été coupé.
   - Chaque envoi est ajouté à `notifications/historique.json` : date, titre, message, nombre d'appareils, jamais de jeton. L'espace admin l'affiche dans « Derniers envois ».
-- **Délai** : une notification automatique part au passage suivant de l'Action, en général dans le quart d'heure, parfois plus quand GitHub est chargé.
+- **Délai** : la programmation de GitHub (« toutes les 15 min ») n'est pas fiable : on a constaté 3 à 4 passages par jour seulement. Le **réveil externe** ci-dessous déclenche l'Action toutes les 15 min ; tant qu'il n'est pas en place, les notifications peuvent arriver avec plusieurs heures de retard. Les rappels sont tolérants : un passage en retard ne les fait plus sauter, et ils ne partent qu'une fois.
+- **État** : ce que l'Action a déjà vu (calendrier, combats, rappels envoyés) est gardé dans `notifications/etat.json`, dans le dépôt, pour survivre aux pauses.
 - **Lectures Firestore** : environ 130 documents par passage, soit environ 12 000 par jour, sous le quota gratuit de 50 000. Les abonnés ne sont lus que quand il y a quelque chose à envoyer.
 
 ## Données et sécurité
@@ -88,6 +89,27 @@ Appli (index.html)                 Firestore                       GitHub Action
    2. Dans GitHub → **Actions** → **Notifications** → **Run workflow**, choisis le mode `test`, puis **Run workflow**.
    3. Le test doit arriver dans la minute.
 
+## Réveil externe (pour des notifications à l'heure)
+
+GitHub lance l'Action quand il peut. Pour qu'elle tourne vraiment toutes les 15 minutes, un service gratuit l'appelle.
+
+1. **Créer un jeton GitHub limité à ce dépôt** :
+   1. Va sur https://github.com/settings/personal-access-tokens/new (jeton « fine-grained »).
+   2. Nom : `reveil-bagarreurs`. Expiration : 1 an.
+   3. *Repository access* : **Only select repositories** → `amicale-des-bagarreurs`.
+   4. *Permissions* → *Repository permissions* : **Contents : Read and write**. C'est le seul droit qui permet de « réveiller » une Action ; ne coche rien d'autre.
+   5. **Generate token**, puis copie le jeton (il commence par `github_pat_`). Ne le partage avec personne.
+2. **Créer la tâche de réveil** sur https://cron-job.org (compte gratuit) → **Create cronjob** :
+   - *Title* : `Réveil Bagarreurs`.
+   - *URL* : `https://api.github.com/repos/RottweilerT/amicale-des-bagarreurs/dispatches`.
+   - *Execution schedule* : **Every 15 minutes**.
+   - Onglet **Advanced** :
+     - *Request method* : **POST**.
+     - *Request body* : `{"event_type":"reveil"}`.
+     - *Headers* : `Accept: application/vnd.github+json` · `Authorization: Bearer <ton jeton>` · `X-GitHub-Api-Version: 2022-11-28`.
+   - **Create**. Le bouton *Test run* doit répondre **204** ; l'Action « Notifications » apparaît alors dans l'onglet Actions de GitHub.
+3. Le jeton expire au bout d'un an : en créer un nouveau et le remplacer dans cron-job.org.
+
 ## Utilisation au quotidien
 
 - **Envoyer une annonce** : ouvre la cloche, puis **Espace admin**.
@@ -99,6 +121,7 @@ Appli (index.html)                 Firestore                       GitHub Action
 - **Déclencher à la main** : dans GitHub → Actions → Notifications → Run workflow, choisis un mode.
   - `test` : notification de test à tous les abonnés.
   - `rappel` : le rappel des présences, tout de suite.
-  - `changements` : vérifie le calendrier et envoie les annonces en attente.
+  - `auto` : un passage normal (calendrier, annonces, rappels).
+  - `perso` : un message à une seule personne (prénom et nom).
 - **Voir ce qui s'est passé** : l'onglet Actions de GitHub (chaque passage liste ce qui a été envoyé), et `notifications/historique.json`.
 - **Point d'attention** : GitHub suspend les tâches planifiées d'un dépôt resté 60 jours sans aucun commit. La sauvegarde quotidienne fait des commits, donc ça n'arrive pas tant qu'elle tourne.

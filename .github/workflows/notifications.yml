@@ -8,17 +8,17 @@ name: Notifications
 # Chaque envoi est ajouté à notifications/historique.json (affiché dans l'espace admin).
 on:
   schedule:
-    - cron: "*/15 * * * *"
-    - cron: "0 14 * * 6"
-    - cron: "0 15 * * 6"
+    - cron: "*/15 * * * *"      # GitHub ne garantit pas cet horaire (3 à 4 passages par jour constatés)
+  repository_dispatch:
+    types: [reveil]             # réveil externe toutes les 15 min (voir NOTIFICATIONS.md, « Réveil externe »)
   workflow_dispatch:
     inputs:
       mode:
-        description: "test = notification de test à tous ; rappel = rappel du samedi tout de suite ; changements = vérifier le calendrier ; perso = message à une seule personne"
+        description: "auto = passage normal ; test = notification de test à tous ; rappel = rappel du samedi tout de suite ; perso = message à une seule personne"
         required: true
-        default: "test"
+        default: "auto"
         type: choice
-        options: [test, rappel, changements, perso]
+        options: [auto, test, rappel, perso]
       destinataire:
         description: "perso : prénom et nom (ou identifiant) du membre"
         required: false
@@ -45,23 +45,14 @@ jobs:
       - name: Choisir le mode
         id: mode
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then m="${{ github.event.inputs.mode }}"; f=1
-          elif [ "${{ github.event.schedule }}" = "*/15 * * * *" ]; then m=changements; f=0
-          else m=rappel; f=0; fi
-          echo "mode=$m" >> "$GITHUB_OUTPUT"; echo "forcer=$f" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "mode=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
+          else echo "mode=auto" >> "$GITHUB_OUTPUT"; fi
       - name: Vérifier le secret
         id: secret
         env:
           FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
         run: |
           if [ -z "$FCM_COMPTE" ]; then echo "::warning::Secret FCM_COMPTE absent : notifications pas encore activées."; echo "ok=0" >> "$GITHUB_OUTPUT"; else echo "ok=1" >> "$GITHUB_OUTPUT"; fi
-      - name: Reprendre l'état du calendrier
-        if: steps.secret.outputs.ok == '1' && steps.mode.outputs.mode == 'changements'
-        uses: actions/cache/restore@v4
-        with:
-          path: /tmp/etat-notifs
-          key: etat-notifs-${{ github.run_id }}
-          restore-keys: etat-notifs-
       - name: Envoyer
         id: envoi
         if: steps.secret.outputs.ok == '1'
@@ -69,7 +60,6 @@ jobs:
           PROJET: amicale-des-bagarreurs
           SITE: https://rottweilert.github.io/amicale-des-bagarreurs/
           MODE: ${{ steps.mode.outputs.mode }}
-          FORCER: ${{ steps.mode.outputs.forcer }}
           FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
           ADMIN_CODE: ${{ secrets.ADMIN_CODE }}
           DESTINATAIRE: ${{ github.event.inputs.destinataire }}
@@ -78,18 +68,12 @@ jobs:
         run: |
           pip install -q google-auth requests
           python3 .github/notifications.py
-      - name: Garder l'état du calendrier
-        if: steps.envoi.outputs.change == '1'
-        uses: actions/cache/save@v4
-        with:
-          path: /tmp/etat-notifs
-          key: etat-notifs-${{ github.run_id }}
-      - name: Enregistrer l'historique des envois
-        if: steps.envoi.outputs.historique == '1'
+      - name: Enregistrer l'état et l'historique
+        if: steps.envoi.outputs.historique == '1' || steps.envoi.outputs.change == '1'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add notifications/historique.json
+          git add notifications/
           git diff --cached --quiet && exit 0
-          git commit -m "Notifications : historique des envois"
+          git commit -q -m "Notifications : état et historique"
           for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done; exit 1
