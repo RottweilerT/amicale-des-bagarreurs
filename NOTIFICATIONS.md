@@ -125,3 +125,23 @@ GitHub lance l'Action quand il peut. Pour qu'elle tourne vraiment toutes les 15 
   - `perso` : un message à une seule personne (prénom et nom).
 - **Voir ce qui s'est passé** : l'onglet Actions de GitHub (chaque passage liste ce qui a été envoyé), et `notifications/historique.json`.
 - **Point d'attention** : GitHub suspend les tâches planifiées d'un dépôt resté 60 jours sans aucun commit. La sauvegarde quotidienne fait des commits, donc ça n'arrive pas tant qu'elle tourne.
+
+## App Check (protéger la base contre les accès extérieurs)
+
+Aujourd'hui, n'importe qui connaissant l'adresse du projet peut lire et modifier la base. App Check n'accepte que les requêtes venant de l'appli elle-même. Les automatisations GitHub (sauvegarde, notifications, export, ménage, restauration) passent déjà par le compte de service et ne sont pas concernées.
+
+1. **Créer une clé reCAPTCHA v3** : https://www.google.com/recaptcha/admin/create → *Libellé* `Bagarreurs`, type **reCAPTCHA v3** (score), domaine `rottweilert.github.io` → **Envoyer**. Copie la **clé du site** et la **clé secrète**.
+2. **L'enregistrer dans Firebase** : console → **App Check** (menu Sécurité) → onglet **Applications** → l'appli web → **reCAPTCHA** → colle la **clé secrète** → **Enregistrer**.
+3. **Me donner la clé du site** : c'est une clé publique, faite pour être dans la page. Je la mets dans `APPCHECK_SITE_KEY` en haut d'`index.html`.
+4. **Observer une semaine** : App Check → onglet **API** → Cloud Firestore montre la part de requêtes « vérifiées ». Quand elle est proche de 100 %, clique sur **Appliquer** (*Enforce*). À partir de là, seules l'appli et les automatisations peuvent toucher la base.
+
+Limite à connaître : quelqu'un qui ouvre l'appli elle-même peut toujours tout modifier, comme un membre. App Check bloque les scripts extérieurs, pas les utilisateurs de l'appli.
+
+## Quotas
+
+L'Action **Quotas Firebase** relève chaque 1er du mois les lectures, écritures et suppressions Firestore des 30 derniers jours, et les compare aux limites gratuites. Le résultat est dans `rapports/quotas.json` et dans le résumé de l'exécution.
+
+Si elle échoue avec une erreur 403, donne au compte de service le droit de lire ces compteurs :
+1. Va sur https://console.cloud.google.com/iam-admin/iam?project=amicale-des-bagarreurs.
+2. Sur la ligne `firebase-adminsdk-…@amicale-des-bagarreurs.iam.gserviceaccount.com`, clique sur le crayon.
+3. Clique sur **Ajouter un autre rôle**, choisis **Lecteur Monitoring** (*Monitoring Viewer*), puis **Enregistrer**.

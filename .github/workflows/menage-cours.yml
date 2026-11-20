@@ -36,13 +36,23 @@ jobs:
       - uses: actions/checkout@v4
       - name: Lister / supprimer
         env:
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
           JOUR: ${{ github.event.inputs.jour }}
           DEPUIS: ${{ github.event.inputs.depuis }}
           SUPPRIMER: ${{ github.event.inputs.supprimer }}
           HEURE: ${{ github.event.inputs.heure }}
           DUREE: ${{ github.event.inputs.duree }}
         run: |
+          pip install -q google-auth requests
           python3 - <<'PY'
+          import json as _j, os as _o, urllib.request as _u
+          from google.oauth2 import service_account as _sa
+          import google.auth.transport.requests as _gr
+          _c = _sa.Credentials.from_service_account_info(_j.loads(_o.environ["FCM_COMPTE"]), scopes=["https://www.googleapis.com/auth/datastore"]); _c.refresh(_gr.Request())
+          class _Auth(_u.BaseHandler):  # compte de service : passe les règles et App Check, sans clé d'API
+              def http_request(self, req): req.add_unredirected_header("Authorization", "Bearer " + _c.token); return req
+              https_request = http_request
+          _u.install_opener(_u.build_opener(_Auth()))
           import json, os, re, urllib.request, datetime
           KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
           root = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/"
@@ -60,7 +70,7 @@ jobs:
           def lister(col):
               out, tok = [], ""
               while True:
-                  d = json.load(urllib.request.urlopen(f"{root}{col}?pageSize=300&key={KEY}" + (f"&pageToken={tok}" if tok else "")))
+                  d = json.load(urllib.request.urlopen(f"{root}{col}?pageSize=300" + (f"&pageToken={tok}" if tok else "")))
                   out += d.get("documents", []); tok = d.get("nextPageToken")
                   if not tok: return out
           cours = []
@@ -75,9 +85,9 @@ jobs:
           pres = [d["name"].split("/")[-1] for d in lister("attendance") if val(d.get("fields",{}).get("courseId",{})) in ids]
           if go:
               for c in cours:
-                  urllib.request.urlopen(urllib.request.Request(f"{root}courses/{c['id']}?key={KEY}", method="DELETE")).read()
+                  urllib.request.urlopen(urllib.request.Request(f"{root}courses/{c['id']}", method="DELETE")).read()
               for p in pres:
-                  urllib.request.urlopen(urllib.request.Request(f"{root}attendance/{p}?key={KEY}", method="DELETE")).read()
+                  urllib.request.urlopen(urllib.request.Request(f"{root}attendance/{p}", method="DELETE")).read()
           modif = bool(heure or duree) and not go
           if modif:
               champs, masque = {}, []
@@ -85,7 +95,7 @@ jobs:
               if duree: champs["dur"] = {"integerValue": duree}; masque.append("dur")
               q = "&".join(f"updateMask.fieldPaths={m}" for m in masque)
               for c in cours:
-                  urllib.request.urlopen(urllib.request.Request(f"{root}courses/{c['id']}?{q}&key={KEY}", data=json.dumps({"fields": champs}).encode(),
+                  urllib.request.urlopen(urllib.request.Request(f"{root}courses/{c['id']}?{q}", data=json.dumps({"fields": champs}).encode(),
                                          method="PATCH", headers={"Content-Type": "application/json"})).read()
           cours.sort(key=lambda c: (c["date"], c["heure"]))
           rapport = {"jours": [JOURS[j] for j in jours], "depuis": depuis or None, "supprime": go, "modifie": ({"heure": heure or None, "duree": duree or None} if modif else None), "nb_cours": len(cours), "nb_presences": len(pres),

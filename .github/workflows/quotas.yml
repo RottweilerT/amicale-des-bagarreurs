@@ -1,0 +1,66 @@
+name: Quotas Firebase
+
+# S-02 : chaque mois (et à la demande), relève dans Google Cloud Monitoring les lectures, écritures et suppressions
+# Firestore jour par jour sur 30 jours, et les compare aux limites du forfait gratuit (50 000 lectures, 20 000 écritures,
+# 20 000 suppressions par jour). Résultat dans rapports/quotas.json et dans le résumé de l'exécution.
+on:
+  schedule:
+    - cron: "23 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  quotas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Relever les compteurs
+        env:
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
+        run: |
+          pip install -q google-auth requests
+          python3 - <<'PY'
+          import json, os, datetime, urllib.request, urllib.parse, urllib.error
+          from google.oauth2 import service_account
+          import google.auth.transport.requests
+          info = json.loads(os.environ["FCM_COMPTE"])
+          cred = service_account.Credentials.from_service_account_info(info, scopes=["https://www.googleapis.com/auth/monitoring.read"])
+          cred.refresh(google.auth.transport.requests.Request())
+          fin = datetime.datetime.now(datetime.timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+          debut = fin - datetime.timedelta(days=30)
+          LIMITES = {"read_count": 50000, "write_count": 20000, "delete_count": 20000}
+          rapport = {"releve_le": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="minutes"), "jours": {}, "max": {}, "limites": LIMITES}
+          for m in LIMITES:
+              q = urllib.parse.urlencode({
+                  "filter": f'metric.type="firestore.googleapis.com/document/{m}"',
+                  "interval.startTime": debut.isoformat().replace("+00:00", "Z"), "interval.endTime": fin.isoformat().replace("+00:00", "Z"),
+                  "aggregation.alignmentPeriod": "86400s", "aggregation.perSeriesAligner": "ALIGN_SUM", "aggregation.crossSeriesReducer": "REDUCE_SUM"})
+              try:
+                  d = json.load(urllib.request.urlopen(urllib.request.Request(
+                      f"https://monitoring.googleapis.com/v3/projects/{info['project_id']}/timeSeries?{q}", headers={"Authorization": "Bearer " + cred.token})))
+              except urllib.error.HTTPError as e:
+                  print(f"::error::Lecture des compteurs impossible ({e.code}) : {' '.join(e.read().decode('utf-8','replace').split())[:300]}")
+                  print("::error::Donner au compte de service le rôle « Lecteur Monitoring » (voir NOTIFICATIONS.md, Quotas).")
+                  raise SystemExit(1)
+              for ts in d.get("timeSeries", []):
+                  for p in ts.get("points", []):
+                      jour = p["interval"]["startTime"][:10]
+                      rapport["jours"].setdefault(jour, {})[m] = int(p["value"].get("int64Value", 0))
+              rapport["max"][m] = max((v.get(m, 0) for v in rapport["jours"].values()), default=0)
+          os.makedirs("rapports", exist_ok=True)
+          json.dump(rapport, open("rapports/quotas.json", "w"), ensure_ascii=False, indent=1, sort_keys=True)
+          lignes = [f"| {m.replace('_count','')} | {rapport['max'][m]} | {LIMITES[m]} | {round(100 * rapport['max'][m] / LIMITES[m], 1)} % |" for m in LIMITES]
+          resume = "## Firestore, 30 derniers jours\n\n| Compteur | Jour le plus chargé | Limite gratuite / jour | Occupation |\n|---|---|---|---|\n" + "\n".join(lignes)
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a").write(resume + "\n")
+          print(resume)
+          PY
+      - name: Enregistrer le relevé
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rapports/quotas.json
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Quotas Firebase : relevé"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done; exit 1

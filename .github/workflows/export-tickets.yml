@@ -3,6 +3,7 @@ name: Exporter les tickets
 # Copie les tickets de l'onglet Notes (base Firebase amicale-des-bagarreurs) dans tickets/tickets.json,
 # pour que Claude puisse les lire depuis le dépôt.
 # Lancée avec l'entrée « resoudre », elle passe d'abord ces tickets en Résolu.
+# Plus de passage horaire (F-10) : la tâche Claude qui traite les tickets lance elle-même cet export.
 on:
   workflow_dispatch:
     inputs:
@@ -10,8 +11,6 @@ on:
         description: "Identifiants des tickets à passer en Résolu (séparés par des virgules), ex. n-abc,n-def"
         required: false
         default: ""
-  schedule:
-    - cron: "47 * * * *"
 
 permissions:
   contents: write
@@ -24,9 +23,19 @@ jobs:
       - name: Passer en Résolu les tickets traités
         if: ${{ github.event.inputs.resoudre != '' }}
         env:
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
           RESOUDRE: ${{ github.event.inputs.resoudre }}
         run: |
+          pip install -q google-auth requests
           python3 - <<'PY'
+          import json as _j, os as _o, urllib.request as _u
+          from google.oauth2 import service_account as _sa
+          import google.auth.transport.requests as _gr
+          _c = _sa.Credentials.from_service_account_info(_j.loads(_o.environ["FCM_COMPTE"]), scopes=["https://www.googleapis.com/auth/datastore"]); _c.refresh(_gr.Request())
+          class _Auth(_u.BaseHandler):  # compte de service : passe les règles et App Check, sans clé d'API
+              def http_request(self, req): req.add_unredirected_header("Authorization", "Bearer " + _c.token); return req
+              https_request = http_request
+          _u.install_opener(_u.build_opener(_Auth()))
           import json, os, re, urllib.request, datetime
           # Même clé web publique que l'appli : relue dans index.html.
           KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
@@ -37,21 +46,32 @@ jobs:
               if not re.fullmatch(r"n-[a-z0-9]{4,40}", i):
                   print("Ignoré (identifiant invalide) :", i); continue
               try:
-                  doc = json.load(urllib.request.urlopen(f"{base}/{i}?key={KEY}"))
+                  doc = json.load(urllib.request.urlopen(f"{base}/{i}"))
               except Exception as e:
                   print("Introuvable :", i, e); continue
               if doc.get("fields", {}).get("kind", {}).get("stringValue") != "note":
                   print("Ignoré (pas un ticket) :", i); continue
               body = json.dumps({"fields": {"status": {"stringValue": "done"}, "updated": {"stringValue": now}}}).encode()
-              url = (f"{base}/{i}?key={KEY}&updateMask.fieldPaths=status&updateMask.fieldPaths=updated"
+              url = (f"{base}/{i}?updateMask.fieldPaths=status&updateMask.fieldPaths=updated"
                      "&currentDocument.exists=true")
               req = urllib.request.Request(url, data=body, method="PATCH", headers={"Content-Type": "application/json"})
               urllib.request.urlopen(req).read()
               print("Résolu :", i)
           PY
       - name: Lire les tickets dans Firebase
+        env:
+          FCM_COMPTE: ${{ secrets.FCM_COMPTE }}
         run: |
+          pip install -q google-auth requests
           python3 - <<'PY'
+          import json as _j, os as _o, urllib.request as _u
+          from google.oauth2 import service_account as _sa
+          import google.auth.transport.requests as _gr
+          _c = _sa.Credentials.from_service_account_info(_j.loads(_o.environ["FCM_COMPTE"]), scopes=["https://www.googleapis.com/auth/datastore"]); _c.refresh(_gr.Request())
+          class _Auth(_u.BaseHandler):  # compte de service : passe les règles et App Check, sans clé d'API
+              def http_request(self, req): req.add_unredirected_header("Authorization", "Bearer " + _c.token); return req
+              https_request = http_request
+          _u.install_opener(_u.build_opener(_Auth()))
           import json, re, urllib.request
           KEY = re.search(r'apiKey:\s*"([^"]+)"', open("index.html", encoding="utf-8").read()).group(1)
           base = "https://firestore.googleapis.com/v1/projects/amicale-des-bagarreurs/databases/(default)/documents/courses"
@@ -66,7 +86,7 @@ jobs:
               return None
           docs, token = [], ""
           while True:
-              url = f"{base}?pageSize=300&key={KEY}" + (f"&pageToken={token}" if token else "")
+              url = f"{base}?pageSize=300" + (f"&pageToken={token}" if token else "")
               data = json.load(urllib.request.urlopen(url))
               docs += data.get("documents", [])
               token = data.get("nextPageToken")

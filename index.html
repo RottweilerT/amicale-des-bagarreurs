@@ -496,6 +496,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 @media (prefers-reduced-motion:no-preference){#wkDays{transition:opacity .15s}#wkDays.wkfade{opacity:.35}}
 /* Vue semaine compacte : une ligne par cours, réponse en un appui */
 .wksum{margin:0 0 6px;font-size:.85rem;color:var(--muted)}
+.wkshare{margin-top:10px}.wkshare .btn{flex:1 1 150px}
 .wklist{display:grid;gap:6px}
 .wkrow{display:grid;grid-template-columns:40px minmax(0,1fr) auto 46px 46px;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:10px;padding:5px 6px 5px 8px;min-width:0}
 .wkrow.ba{border-left-color:#D5D8DE}.wkrow.bf,.wkrow.sp{border-left-color:#1F43A8}.wkrow.bt{border-left-color:#C8102E}.wkrow.pp{border-left-color:var(--brown)}
@@ -1014,6 +1015,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script>
 /* ==========================================================
    CONFIGURATION FIREBASE — remplace ce bloc par celui que
@@ -1027,6 +1029,8 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "1048082458359",
   appId: "1:1048082458359:web:330923261e0bb4ef0d95f2"
 };
+/* App Check (SEC-01) : clé de site reCAPTCHA v3 (publique). Vide = App Check inactif. Voir NOTIFICATIONS.md, « App Check ». */
+const APPCHECK_SITE_KEY = "";
 </script>
 <script>
 const $=s=>document.querySelector(s);
@@ -1081,6 +1085,7 @@ async function boot(){
   if(!FIREBASE_CONFIG.apiKey||FIREBASE_CONFIG.apiKey==='COLLE_ICI'||!FIREBASE_CONFIG.projectId){banner("Configuration manquante : colle la configuration Firebase en haut du fichier.");renderAll();return}
   try{
     firebase.initializeApp(FIREBASE_CONFIG);
+    if(APPCHECK_SITE_KEY&&firebase.appCheck){try{const ac=firebase.appCheck();ac.activate(firebase.appCheck.ReCaptchaV3Provider?new firebase.appCheck.ReCaptchaV3Provider(APPCHECK_SITE_KEY):APPCHECK_SITE_KEY,true)}catch(e){console.warn('App Check',e)}}
     db=firebase.firestore();
     db.settings({ignoreUndefinedProperties:true,merge:true});
     db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
@@ -1664,7 +1669,27 @@ function renderSemaine(){
     }
   }
   const head=n?(mine?(open?`<p class="wksum">Tu as répondu à <b>${rep}/${open}</b> cours à venir · ✓ je serai là · ✕ absent</p>`:''):`<p class="wksum">Choisis ton nom en haut de la page pour t’inscrire.</p>`):'';
-  $('#wkDays').innerHTML=n?head+'<div class="wklist">'+h+'</div>':'<p class="wknone" style="padding:8px 0">Pas de cours cette semaine.</p>';
+  const share=n?`<div class="row wkshare"><button class="btn ghost small" type="button" data-act="wkShare" data-k="sondage">📲 Partager le sondage</button><button class="btn ghost small" type="button" data-act="wkShare" data-k="inscrits">📋 Partager les inscrits</button></div>`:'';
+  $('#wkDays').innerHTML=n?head+'<div class="wklist">'+h+'</div>'+share:'<p class="wknone" style="padding:8px 0">Pas de cours cette semaine.</p>';
+}
+/* Partage WhatsApp (F-01) : le sondage de la semaine avec le lien, ou le récapitulatif des inscrits.
+   Feuille de partage du téléphone si elle existe (WhatsApp, Messages…), sinon lien WhatsApp direct. */
+function wkShareText(k){
+  const a=parseYmd(ui.wk||wkSun(today)),b=parseYmd(wkAdd(ui.wk||wkSun(today),6)),j=d=>`${DAYS[d.getDay()].slice(0,3)}. ${pad(d.getDate())}/${pad(d.getMonth()+1)}`;
+  const lines=[];
+  for(let i=0;i<7;i++){const s=wkAdd(ui.wk||wkSun(today),i),d=parseYmd(s);for(const [id,c] of coursesOn(s)){
+    const where=`${j(d)} ${c.time.replace(':','h')}${c.place?' · '+c.place:''}`;
+    if(k==='sondage')lines.push(`• ${where} (${COURSE[c.type]||'cours'})`);
+    else{const att=attOf(id),pres=sortedMembers().filter(([m])=>att.get(m)==='present').map(([m])=>member(m).first);lines.push(`• ${where} : ${pres.length} inscrit${pres.length>1?'s':''}${pres.length?' — '+pres.join(', '):''}`)}
+  }}
+  const url=location.origin+location.pathname+'#calendrier',per=`du ${a.getDate()}/${pad(a.getMonth()+1)} au ${b.getDate()}/${pad(b.getMonth()+1)}`;
+  return k==='sondage'?`🥊 *Cours de la semaine ${per}*\nDis-nous si tu viens :\n${lines.join('\n')}\n\n👉 Réponds en un appui (✓ / ✕) : ${url}`
+    :`🥊 *Inscrits de la semaine ${per}*\n${lines.join('\n')}\n\nPas encore répondu ? 👉 ${url}`;
+}
+async function wkShare(k){
+  const text=wkShareText(k);
+  if(navigator.share){try{await navigator.share({text});return}catch(e){if(e&&e.name==='AbortError')return}}
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');
 }
 function wkGo(s){const el=$('#wkDays');ui.wk=s;el.classList.add('wkfade');setTimeout(()=>{renderSemaine();applyRO();el.classList.remove('wkfade')},120)}
 $('#wkPrev').addEventListener('click',()=>wkGo(wkAdd(ui.wk||wkSun(today),-7)));
@@ -1952,6 +1977,7 @@ document.addEventListener('click',async e=>{
     case 'fDelYes':{const fid=ui.fightId;clearTimeout(fTimer[fid]);localF.delete(fid);delDoc('fights/'+fid);ui.fightId=null;ui.confirm=null;toast('Combat supprimé');renderFights();break}
     case 'day':ui.day=b.dataset.d;const dd=parseYmd(ui.day);if(dd.getMonth()!==ui.month.getMonth())ui.month=new Date(dd.getFullYear(),dd.getMonth(),1);$('#cDate').dataset.auto='1';renderCalendar();break;
     case 'needMe':toast('Choisis ton nom en haut de la page pour t’inscrire.');break;
+    case 'wkShare':wkShare(b.dataset.k);break;
     case 'wkMore':ui.wkOpen.has(id)?ui.wkOpen.delete(id):ui.wkOpen.add(id);renderSemaine();applyRO();break;
     case 'att':{const cur=attOf(id).get(me);setAtt(id,me,cur===b.dataset.v?null:b.dataset.v);break}
     case 'appelToggle':ui.appel=ui.appel===id?null:id;renderCalendar();break;
