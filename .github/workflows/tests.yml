@@ -6,7 +6,7 @@ name: Tests
 on:
   push:
     branches: [main, "audit-*"]
-    paths: ["index.html", "config.js", "sw.js", ".github/notifications.py", "firestore.rules.notifications", "tests/**"]
+    paths: ["index.html", "config.js", "sw.js", ".github/notifications.py", "firestore.rules.notifications", "tests/**", ".github/workflows/tests.yml"]
   workflow_dispatch:
 
 permissions:
