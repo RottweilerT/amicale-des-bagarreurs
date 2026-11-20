@@ -1,8 +1,8 @@
 // Mode hors ligne : la page et ses ressources sont gardées sur l'appareil.
 // La page est toujours redemandée au réseau d'abord (pour avoir la dernière version),
 // et la copie locale ne sert que sans connexion. Les données Firebase ne passent pas par ici.
-const CACHE = 'adb-v16';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png', './config.js?v=1', './splash.jpg', './icon-maskable-512.png', './apple-touch-icon.png'];
+const CACHE = 'adb-v17';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png', './config.js?v=1', './app.css?v=16', './app.js?v=16', './onglets.js?v=16', './ergonomie.js?v=16', './splash.jpg', './icon-maskable-512.png', './apple-touch-icon.png'];
 const EXTERNAL = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', e => {
