@@ -5,7 +5,7 @@ name: Tests
 # de config.js avec les règles Firestore. Un échec apparaît en rouge dans l'onglet Actions et sur le commit.
 on:
   push:
-    branches: [main]
+    branches: [main, "audit-*"]
     paths: ["index.html", "config.js", "sw.js", ".github/notifications.py", "firestore.rules.notifications", "tests/**"]
   workflow_dispatch:
 
