@@ -502,7 +502,9 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 .wkrow.ba{border-left-color:#D5D8DE}.wkrow.bf,.wkrow.sp{border-left-color:#1F43A8}.wkrow.bt{border-left-color:#C8102E}.wkrow.pp{border-left-color:var(--brown)}
 .wkrow.today{box-shadow:inset 0 0 0 1.5px var(--red)}
 .wkrow.past{opacity:.6}
-.wkrow.r-present{background:var(--ok-soft)}.wkrow.r-absent{background:var(--red-soft)}
+.wkrow.r-present{background:var(--ok-soft)}.wkrow.r-absent{background:var(--red-soft)}.wkrow.r-attente{background:var(--gold-soft)}
+.wkr-n.full{color:var(--red)}
+.wkr-b.yes[aria-pressed="true"][aria-label^="En liste"]{background:var(--gold);border-color:var(--gold)}
 .wkr-day{display:grid;line-height:1.05;text-align:center}
 .wkr-day b{font:700 .8rem var(--f-data);text-transform:uppercase;letter-spacing:.04em}
 .wkr-day span{font:700 1.05rem var(--f-data)}
@@ -800,7 +802,10 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
           <label for="cDurMin">Durée<select id="cDurMin"><option value="60">1 h</option><option value="90" selected>1 h 30</option><option value="120">2 h</option></select></label>
           <label for="cCoach">Coach<input id="cCoach" maxlength="50"></label>
         </div>
-        <label for="cPlace">Lieu<input id="cPlace" maxlength="80" placeholder="Salle, gymnase, parc…"></label>
+        <div class="row">
+          <label for="cPlace">Lieu<input id="cPlace" maxlength="80" placeholder="Salle, gymnase, parc…"></label>
+          <label for="cPlaces" style="flex:0 1 130px">Places max<input id="cPlaces" type="number" min="1" max="200" inputmode="numeric" placeholder="Illimité"></label>
+        </div>
         <label for="cUntil" id="cUntilRow">Répéter chaque semaine jusqu'au (facultatif)<input id="cUntil" type="date"></label>
         <label for="cScope" id="cScopeRow" hidden>Appliquer à<select id="cScope"><option value="one">Ce cours seulement</option><option value="serie">Ce cours et les suivants de la série</option></select></label>
         <p class="hint" id="cEditHint" hidden style="margin:0">Les réponses de présence déjà données sont gardées.</p>
@@ -1012,10 +1017,11 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
   </details>
 </section></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
+<script src="config.js?v=1"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check-compat.js"></script>
 <script>
 /* ==========================================================
    CONFIGURATION FIREBASE — remplace ce bloc par celui que
@@ -1042,8 +1048,10 @@ const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const parseYmd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
 const MONTHS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const DAYS=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
-const COURSE={BA:'Boxe anglaise',BF:'Boxe française',SP:'Combat',PP:'Préparation physique',MX:'Cours mixte',BT:'Boxe thaï'};
-const courseCls=t=>({BA:'ba',BF:'bf',BT:'bt',SP:'sp',PP:'pp'})[t]??'o';
+const CFG=window.ADB_CONFIG;  /* config.js : vocabulaire commun appli / serveur */
+const ONGLETS=CFG.onglets.map(o=>o.id);
+const COURSE=Object.fromEntries(Object.entries(CFG.cours).map(([k,v])=>[k,v.nom]));
+const courseCls=t=>(CFG.cours[t]||{}).classe||'o';
 const METHODS={PTS:'aux points',KO:'par KO',ARB:"par arrêt de l'arbitre",ABD:'par abandon',DQ:'par disqualification',NUL:'Match nul'};
 
 const S={members:new Map(),fights:new Map(),courses:new Map(),attendance:new Map()};
@@ -1106,13 +1114,13 @@ async function boot(){
 function showTab(t){
   ui.tab=t;
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t))
-  for(const id of ['membres','combats','elo','salle','calendrier','regles','minuteur','notes'])$('#tab-'+id).hidden=id!==t;
+  for(const id of ONGLETS)$('#tab-'+id).hidden=id!==t;
   try{history.replaceState(null,'','#'+t)}catch(e){}
 }
 document.querySelector('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(b)showTab(b.dataset.tab)});
-{const h=(location.hash||'').slice(1);if(['membres','combats','elo','salle','calendrier','regles','minuteur','notes'].includes(h))showTab(h)}
+{const h=(location.hash||'').slice(1);if(ONGLETS.includes(h))showTab(h)}
 /* ouverture depuis une notification alors que l'appli est déjà ouverte : seul le #onglet change */
-addEventListener('hashchange',()=>{const h=(location.hash||'').slice(1);if(['membres','combats','elo','salle','calendrier','regles','minuteur','notes'].includes(h)&&h!==ui.tab)showTab(h)});
+addEventListener('hashchange',()=>{const h=(location.hash||'').slice(1);if(ONGLETS.includes(h)&&h!==ui.tab)showTab(h)});
 
 /* ---------- identity ---------- */
 function fillMemberSelect(sel,placeholder,keep){
@@ -1292,13 +1300,8 @@ const PUSH={vapid:'BJB53XBL72om9F12Ifu5uy46_DFg7Cbl9k71iqviMunQtKZEixFqh1y2O9Ozb
    Chaque appareil abonné a une fiche privée push_subs/<identifiant aléatoire> : jeton FCM, catégories, profil (facultatif),
    dates. Les règles Firestore interdisent toute lecture depuis l'appli ; seule la GitHub Action « Notifications » les lit.
    (L'ancien rangement, jeton dans la fiche du membre, a été retiré le 20/11/2026 : plus aucun appareil ne l'utilisait.) */
-const NCATS=[
-  {k:'annonces',t:'Annonces du groupe',h:'Messages envoyés par les organisateurs'},
-  {k:'changements',t:'Cours modifiés ou annulés',h:'Horaire, lieu ou date qui change, cours annulé'},
-  {k:'nouveaux',t:'Nouveaux cours',h:'Cours ajoutés au calendrier'},
-  {k:'rappel',t:'Rappels',h:'Le samedi après-midi s’il te manque des réponses pour la semaine, et le jour d’un cours (profil choisi)'},
-  {k:'combats',t:'Combats',h:'Combat programmé et résultat'}];
-const NLINKS={calendrier:'Calendrier',minuteur:'Minuteur',combats:'Combats',elo:'Classement',salle:'La salle',membres:'Membres',regles:'Règles',notes:'Notes'};
+const NCATS=CFG.notifications;
+const NLINKS=Object.fromEntries(CFG.onglets.map(o=>[o.id,o.nom]));
 const Notif=(()=>{
   const LS={pub:'adb-push-pub',id:'adb-push-id',tok:'push-token',who:'push-who',cats:'adb-push-cats',since:'adb-push-since',sync:'adb-push-sync',key:'adb-push-key',mode:'adb-push-mode'};
   const get=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}};
@@ -1617,6 +1620,18 @@ $('#tab-combats').addEventListener('submit',e=>{
 
 /* ---------- calendar ---------- */
 function attOf(courseId){const m=new Map();for(const a of S.attendance.values())if(a.courseId===courseId&&S.members.has(a.memberId))m.set(a.memberId,a.status);return m}
+/* F-04 : places limitées. Au-delà de « places », une nouvelle inscription passe en liste d'attente (statut « attente »),
+   par ordre d'arrivée ; quand un inscrit se retire, le premier en attente prend sa place. */
+function attWaiting(courseId){return [...S.attendance.values()].filter(a=>a.courseId===courseId&&a.status==='attente'&&S.members.has(a.memberId)).sort((a,b)=>(a.at||0)-(b.at||0))}
+function courseFull(courseId){const c=S.courses.get(courseId);if(!c||!c.places)return false;let n=0;for(const v of attOf(courseId).values())if(v==='present')n++;return n>=c.places}
+function attToggle(id,mid,v){
+  const cur=attOf(id).get(mid);
+  if(v==='present'&&(cur==='present'||cur==='attente')){setAtt(id,mid,null);if(cur==='present')promote(id,mid);return}
+  if(v==='present'&&courseFull(id)){setAtt(id,mid,'attente');toast('Cours complet : tu es en liste d’attente (n° '+(attWaiting(id).length+1)+').');return}
+  if(v==='absent'&&cur==='absent'){setAtt(id,mid,null);return}
+  setAtt(id,mid,v);if(cur==='present'&&v!=='present')promote(id,mid);
+}
+function promote(id,leaving){const w=attWaiting(id).filter(a=>a.memberId!==leaving)[0];if(w){setAtt(id,w.memberId,'present');toast(mName(w.memberId,true)+' passe de la liste d’attente aux inscrits.')}}
 function coursesOn(d){return [...S.courses.entries()].filter(([,c])=>c.date===d).sort((a,b)=>a[1].time.localeCompare(b[1].time))}
 function courseHtml(id,c,showDate){
   const att=attOf(id),mine=me&&att.get(me),pres=[...att].filter(x=>x[1]==='present'),abs=[...att].filter(x=>x[1]==='absent');
@@ -1659,12 +1674,12 @@ function renderSemaine(){
         <div class="wkr-day"><b>${DAYS[d.getDay()].slice(0,3)}</b><span class="num">${d.getDate()}</span></div>
         <button class="wkr-info" type="button" data-act="wkMore" data-id="${id}" aria-expanded="${ex}" aria-label="${esc(COURSE[c.type]||'Cours')} ${esc(DAYS[d.getDay()])} ${d.getDate()} à ${esc(c.time)}${c.place?', '+esc(c.place):''} : détails">
           <span class="wkr-t num"><i class="ic ${courseCls(c.type)}"></i>${esc(c.time.replace(':','h'))}</span><span class="wkr-p">${esc(c.place||COURSE[c.type]||'')}</span></button>
-        <span class="wkr-n num" title="${pres.length} inscrit${pres.length>1?'s':''}">${pres.length}<small>✓</small></span>
-        <button class="wkr-b yes" type="button" data-act="${act}" data-id="${id}" data-v="present" aria-pressed="${my==='present'}" aria-label="Je serai là"${dis}>✓</button>
+        <span class="wkr-n num${c.places&&pres.length>=c.places?' full':''}" title="${pres.length} inscrit${pres.length>1?'s':''}${c.places?' sur '+c.places+' places':''}">${pres.length}${c.places?'<small>/'+c.places+'</small>':'<small>✓</small>'}</span>
+        <button class="wkr-b yes" type="button" data-act="${act}" data-id="${id}" data-v="present" aria-pressed="${my==='present'||my==='attente'}" aria-label="${my==='attente'?'En liste d’attente':'Je serai là'}"${dis}>${my==='attente'?'⏳':'✓'}</button>
         <button class="wkr-b no" type="button" data-act="${act}" data-id="${id}" data-v="absent" aria-pressed="${my==='absent'}" aria-label="Absent"${dis}>✕</button>
         ${ex?`<div class="wkr-more"><b>${esc(COURSE[c.type]||c.type)}</b> · ${esc(c.time)}–${end}${c.place?' · '+esc(c.place):''}${c.coach?' · '+esc(c.coach):''}<br>
           <span class="ok">${past?'Présents':'Inscrits'} (${pres.length})</span> : ${pres.length?pres.map(([m])=>esc(mName(m,true))).join(', '):'personne'}<br>
-          <span class="ko">Absents (${abs.length})</span>${abs.length?' : '+abs.map(([m])=>esc(mName(m,true))).join(', '):''} · ${Math.max(0,nr)} sans réponse${past?' · cours passé':''}</div>`:''}
+          ${c.places?`Places : ${pres.length}/${c.places}${attWaiting(id).length?` · <b>En attente (${attWaiting(id).length})</b> : ${attWaiting(id).map(a=>esc(mName(a.memberId,true))).join(', ')}`:''}<br>`:''}<span class="ko">Absents (${abs.length})</span>${abs.length?' : '+abs.map(([m])=>esc(mName(m,true))).join(', '):''} · ${Math.max(0,nr)} sans réponse${past?' · cours passé':''}</div>`:''}
       </div>`;
     }
   }
@@ -1726,7 +1741,7 @@ function courseFormReset(){
 }
 function courseEdit(id){
   const c=S.courses.get(id);if(!c)return;ui.cEdit=id;
-  $('#cType').value=c.type;$('#cDate').value=c.date;$('#cDate').dataset.auto='0';$('#cTime').value=c.time;$('#cPlace').value=c.place||'';$('#cCoach').value=c.coach||'';
+  $('#cType').value=c.type;$('#cDate').value=c.date;$('#cDate').dataset.auto='0';$('#cTime').value=c.time;$('#cPlace').value=c.place||'';$('#cCoach').value=c.coach||'';$('#cPlaces').value=c.places||'';
   const dur=String(c.dur||90);if(![...$('#cDurMin').options].some(o=>o.value===dur))$('#cDurMin').insertAdjacentHTML('beforeend',`<option value="${dur}">${Math.floor(dur/60)} h ${pad(dur%60)}</option>`);$('#cDurMin').value=dur;
   const serie=c.serie&&[...S.courses.values()].some(x=>x.serie===c.serie&&x.date>c.date);
   $('#cScopeRow').hidden=!serie;$('#cScope').value='one';$('#cUntilRow').hidden=true;$('#cEditHint').hidden=false;$('#cCancel').hidden=false;
@@ -1736,7 +1751,7 @@ function courseEdit(id){
 $('#cCancel').addEventListener('click',courseFormReset);
 $('#fCourse').addEventListener('submit',async e=>{
   e.preventDefault();if(!db)return;
-  const base={type:$('#cType').value,time:$('#cTime').value,dur:Number($('#cDurMin').value),place:$('#cPlace').value.trim(),coach:$('#cCoach').value.trim()};
+  const base={type:$('#cType').value,time:$('#cTime').value,dur:Number($('#cDurMin').value),place:$('#cPlace').value.trim(),coach:$('#cCoach').value.trim(),places:Math.max(0,parseInt($('#cPlaces').value)||0)||null};
   if(ui.cEdit){
     const id=ui.cEdit,c=S.courses.get(id);if(!c){toast('Ce cours a été supprimé entre-temps.');courseFormReset();return}
     const ids=$('#cScope').value==='serie'&&c.serie?[...S.courses].filter(([,x])=>x.serie===c.serie&&x.date>=c.date).map(([k])=>k):[id];
@@ -1979,7 +1994,7 @@ document.addEventListener('click',async e=>{
     case 'needMe':toast('Choisis ton nom en haut de la page pour t’inscrire.');break;
     case 'wkShare':wkShare(b.dataset.k);break;
     case 'wkMore':ui.wkOpen.has(id)?ui.wkOpen.delete(id):ui.wkOpen.add(id);renderSemaine();applyRO();break;
-    case 'att':{const cur=attOf(id).get(me);setAtt(id,me,cur===b.dataset.v?null:b.dataset.v);break}
+    case 'att':attToggle(id,me,b.dataset.v);break;
     case 'appelToggle':ui.appel=ui.appel===id?null:id;renderCalendar();break;
     case 'appel':{const cur=attOf(id).get(b.dataset.m);setAtt(id,b.dataset.m,!cur?'present':cur==='present'?'absent':null);break}
     case 'cEdit':courseEdit(id);break;
@@ -2422,7 +2437,7 @@ function TabsPerso(o){
    le reste est rangé dans ⋯. Sans profil choisi, tout reste visible pour pouvoir s'inscrire. */
 const ongletVisible=vis=>{const a=vis.find(b=>b.dataset.tab===ui.tab);if(!a&&vis[0])showTab(vis[0].dataset.tab)};
 TabsPerso({container:document.querySelector('nav.tabs'),buttons:[...document.querySelectorAll('nav.tabs button[data-tab]')],key:b=>b.dataset.tab,activeAttr:'aria-selected',profile:()=>me,storage:'adb-onglets-masques-2',toast,
-  defaut:['membres','combats','elo','salle','regles','notes'],anciens:['membres','calendrier','minuteur','combats','elo','regles','notes'],
+  defaut:CFG.onglets_masques_par_defaut,anciens:CFG.onglets_anciens,
   onRender:(vis,more)=>{const C=['b','w','r'];vis.forEach((b,i)=>{b.dataset.tc=C[i%3]});more.dataset.tc=C[vis.length%3]},
   onProfile:ongletVisible});
 if(!location.hash)ongletVisible([...document.querySelectorAll('nav.tabs button[data-tab]')].filter(b=>!b.hidden));

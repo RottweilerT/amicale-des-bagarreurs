@@ -33,11 +33,12 @@ BASE = f"https://firestore.googleapis.com/v1/projects/{PROJET}/databases/(defaul
 NOM = "Amicale des Bagarreurs"
 JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
 MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
-TYPES = {"BA": "Boxe anglaise", "BF": "Boxe française", "BT": "Boxe thaï", "SP": "Combat", "PP": "Préparation physique", "MX": "Mixte"}
+_CFG = json.loads(open("config.js", encoding="utf-8").read().split("\nwindow.ADB_CONFIG =", 1)[1].strip().rstrip(";"))  # Q-02
+TYPES = {k: v["nom"] for k, v in _CFG["cours"].items()}
 DISC = {"BA": "boxe anglaise", "BF": "boxe française", "BT": "boxe thaï"}
 METHODES = {"PTS": "aux points", "KO": "par KO", "ARB": "par arrêt de l'arbitre", "ABD": "par abandon", "DQ": "par disqualification"}
-CATS = ["annonces", "changements", "nouveaux", "rappel", "combats"]          # mêmes clés que NCATS dans index.html
-LIENS = {"calendrier", "minuteur", "combats", "elo", "salle", "membres", "regles", "notes"}  # mêmes clés que NLINKS
+CATS = [c["k"] for c in _CFG["notifications"]]
+LIENS = {o["id"] for o in _CFG["onglets"]}
 MAX_ANNONCES_PAR_PASSAGE = 3
 MAX_ECHECS_CODE = 5          # codes admin faux tolérés sur 24 h ; au-delà, annonces bloquées jusqu'à ce que ça retombe
 
@@ -393,7 +394,8 @@ def rappel_du_jour(etat):
             if not m or m.get("off"): continue
             st = rep.get(mid, {}).get(i)
             if st == "absent": continue
-            if st == "present": titre, texte = "Cours aujourd'hui 🥊", f"{quoi} : tu es inscrit ({n} inscrit{'s' if n > 1 else ''}). À tout à l'heure !"
+            if st == "attente": titre, texte = "Liste d'attente", f"{quoi} : tu es en liste d'attente, tu seras prévenu dans l'appli si une place se libère."
+            elif st == "present": titre, texte = "Cours aujourd'hui 🥊", f"{quoi} : tu es inscrit ({n} inscrit{'s' if n > 1 else ''}). À tout à l'heure !"
             else: titre, texte = "Tu viens au cours ?", f"{quoi} : indique si tu viens ({n} inscrit{'s' if n > 1 else ''} pour l'instant)."
             a, b = envoyer(dest, titre, texte, f"jour-{i[:8]}", "calendrier")
             ok += a; ko += b

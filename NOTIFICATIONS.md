@@ -28,7 +28,7 @@ Appli (index.html)                 Firestore                       GitHub Action
                                                      sw.js affiche la notification
 ```
 
-- **Côté appli**, le module `Notif` d'`index.html` gère la cloche, le panneau, les catégories, le désabonnement et l'espace admin. Il utilise le SDK `firebase-messaging-compat` 10.12.2 avec `getToken({vapidKey, serviceWorkerRegistration})`, ce qui reste la méthode prise en charge. La clé publique VAPID est dans `PUSH.vapid`.
+- **Côté appli**, le module `Notif` d'`index.html` gère la cloche, le panneau, les catégories, le désabonnement et l'espace admin. Il utilise le SDK `firebase-messaging-compat` 12.18.0 avec `getToken({vapidKey, serviceWorkerRegistration})`, ce qui reste la méthode prise en charge. La clé publique VAPID est dans `PUSH.vapid`.
 - **Le service worker** est le seul de l'appli : `sw.js`, qui sert aussi au mode hors ligne. Il affiche la notification (événement `push`) et ouvre ou réutilise l'appli au clic. Une notification qui en remplace une autre du même sujet a le même `tag`, ce qui évite les doublons à l'écran.
 - **Côté serveur**, il n'y a pas de Cloud Functions, qui demanderaient le forfait payant Blaze. C'est la GitHub Action `.github/workflows/notifications.yml` qui fait le travail, avec le programme `.github/notifications.py`, gratuitement.
   - Elle retient l'état du calendrier et des combats d'un passage à l'autre, dans le cache GitHub. Elle n'envoie donc que les vraies nouveautés, et une seule fois. Au tout premier passage, elle enregistre l'état sans rien envoyer.

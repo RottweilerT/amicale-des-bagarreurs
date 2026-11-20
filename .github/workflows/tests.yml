@@ -1,0 +1,31 @@
+name: Tests
+
+# Q-07 : à chaque modification de l'appli ou du serveur de notifications, vérifie les parcours essentiels
+# (onglets, présence en un appui, modification d'un cours), le serveur de notifications (rappels) et la cohérence
+# de config.js avec les règles Firestore. Un échec apparaît en rouge dans l'onglet Actions et sur le commit.
+on:
+  push:
+    branches: [main]
+    paths: ["index.html", "config.js", "sw.js", ".github/notifications.py", "firestore.rules.notifications", "tests/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Préparer le navigateur
+        run: |
+          pip install -q playwright
+          python3 -m playwright install --with-deps chromium > /dev/null
+      - name: Cohérence de la configuration
+        run: python3 tests/test_coherence.py
+      - name: Serveur de notifications
+        run: python3 tests/test_notifications.py
+      - name: Parcours de l'appli
+        run: python3 tests/test_appli.py
+      - name: Vrai SDK Firebase (lecture seule)
+        run: python3 tests/test_sdk.py
