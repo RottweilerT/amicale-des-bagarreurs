@@ -1,12 +1,16 @@
 // Mode hors ligne : la page et ses ressources sont gardées sur l'appareil.
 // La page est toujours redemandée au réseau d'abord (pour avoir la dernière version),
 // et la copie locale ne sert que sans connexion. Les données Firebase ne passent pas par ici.
-const CACHE = 'adb-v17';
+const CACHE = 'adb-v18';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png', './config.js?v=1', './app.css?v=16', './app.js?v=16', './onglets.js?v=16', './ergonomie.js?v=16', './splash.jpg', './icon-maskable-512.png', './apple-touch-icon.png'];
+// Moteur Firebase : mis en cache dès l'installation, pour que l'appli démarre sans réseau même juste après une mise à jour.
+const SDK = ['https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check-compat.js'];
 const EXTERNAL = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
+  // Le moteur Firebase est rangé à part : s'il ne se télécharge pas, l'installation continue quand même.
+  const sdk = c => Promise.all(SDK.map(u => fetch(u, { mode: 'cors', cache: 'reload' }).then(r => r.ok && c.put(u, r)).catch(() => {})));
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all([c.addAll(CORE), sdk(c)])).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
