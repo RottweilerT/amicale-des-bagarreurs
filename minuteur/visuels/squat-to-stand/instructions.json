@@ -1,0 +1,39 @@
+{
+ "id": "squat-to-stand",
+ "nom": "Squat-to-stand",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Attrape tes pointes de pieds, genoux fléchis."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends en squat profond sans lâcher les pieds."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte les fesses en tendant les jambes."
+  }
+ ],
+ "instructions": "Attrape tes pointes de pieds, descends en squat, remonte jambes tendues.",
+ "erreur": "Tirer trop fort sur le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux fléchis.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras levés en bas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

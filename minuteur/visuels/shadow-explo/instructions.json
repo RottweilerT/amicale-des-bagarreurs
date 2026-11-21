@@ -1,0 +1,35 @@
+{
+ "id": "shadow-explo",
+ "nom": "Shadow boxing explosif",
+ "categories": [
+  "Explosivité et puissance",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Coups au maximum de vitesse et de puissance."
+  }
+ ],
+ "instructions": "Coups au maximum de vitesse et de puissance.",
+ "erreur": "Rester bras tendu après le coup.",
+ "variantes": {
+  "facile": {
+   "texte": "Directs uniquement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rafales de 3 s.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

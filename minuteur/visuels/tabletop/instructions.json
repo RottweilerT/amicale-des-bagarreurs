@@ -1,0 +1,35 @@
+{
+ "id": "tabletop",
+ "nom": "Reverse tabletop",
+ "categories": [
+  "Fessiers et chaîne postérieure",
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Assis, mains derrière, pieds au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte le bassin : buste et cuisses à l’horizontale."
+  }
+ ],
+ "instructions": "Mains derrière, pieds au sol, monte le bassin en table.",
+ "erreur": "Laisser la tête partir en arrière.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Maintien plus long.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

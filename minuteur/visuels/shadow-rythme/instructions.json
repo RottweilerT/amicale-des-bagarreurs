@@ -1,0 +1,39 @@
+{
+ "id": "shadow-rythme",
+ "nom": "Shadow boxing avec changements de rythme",
+ "categories": [
+  "Boxe et combat",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "5 s à rythme lent."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "5 s à fond, puis de nouveau lent."
+  }
+ ],
+ "instructions": "Alterne 5 s lent et 5 s à fond.",
+ "erreur": "Garder le même rythme tout le temps.",
+ "variantes": {
+  "facile": {
+   "texte": "Alternance 10 s / 10 s.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Accélérations de 3 s à fond.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

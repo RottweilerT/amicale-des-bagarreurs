@@ -1,0 +1,39 @@
+{
+ "id": "hindu-squats",
+ "nom": "Hindu squats",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout, bras devant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends sur les pointes, bras qui balancent en arrière."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte en ramenant les bras, rythme continu."
+  }
+ ],
+ "instructions": "Squat sur les pointes avec balancier des bras, rythme continu.",
+ "erreur": "Bloquer la respiration.",
+ "variantes": {
+  "facile": {
+   "texte": "Talons au sol.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

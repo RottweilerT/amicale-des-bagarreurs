@@ -1,0 +1,38 @@
+{
+ "id": "jab-cross",
+ "nom": "Jab-cross",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jab."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Direct arrière : pivote le pied arrière et la hanche."
+  }
+ ],
+ "instructions": "Jab puis direct arrière avec rotation de hanche et du pied arrière.",
+ "erreur": "Oublier de pivoter le pied arrière sur le direct.",
+ "variantes": {
+  "facile": {
+   "texte": "Lent, en contrôlant la rotation.",
+   "exercice": "jab"
+  },
+  "difficile": {
+   "texte": "Enchaîne avec une esquive.",
+   "exercice": "jab-cross-hook"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

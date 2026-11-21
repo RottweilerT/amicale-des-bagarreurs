@@ -1,0 +1,39 @@
+{
+ "id": "pompes-pause",
+ "nom": "Pompes avec pause basse",
+ "categories": [
+  "Bras et triceps",
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends et bloque 2 s en bas."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Pousse pour remonter, corps gainé."
+  }
+ ],
+ "instructions": "Marque 2 s en bas, poitrine au-dessus du sol.",
+ "erreur": "Poser la poitrine au sol pendant la pause.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Pause de 4 s.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "id": "hip-hinge",
+ "nom": "Hip hinge contrôlé",
+ "categories": [
+  "Fessiers et chaîne postérieure",
+  "Dos et posture",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout, mains sur les hanches."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Recule les hanches, dos plat, genoux souples."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens debout en poussant les hanches."
+  }
+ ],
+ "instructions": "Recule les hanches, dos plat, et reviens debout.",
+ "erreur": "Plier les genoux comme un squat.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite amplitude.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Tempo lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

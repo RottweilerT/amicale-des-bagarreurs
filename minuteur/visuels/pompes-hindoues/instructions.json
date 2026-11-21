@@ -1,0 +1,39 @@
+{
+ "id": "pompes-hindoues",
+ "nom": "Pompes hindoues",
+ "categories": [
+  "Bras et triceps",
+  "Conditionnement traditionnel"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Fesses hautes, mains et pieds au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Plonge vers l’avant, poitrine près du sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte en cobra, bras tendus, puis repousse les fesses en arrière."
+  }
+ ],
+ "instructions": "Fesses en l'air, plonge vers l'avant et remonte en cobra.",
+ "erreur": "Laisser les coudes s’ouvrir sur les côtés.",
+ "variantes": {
+  "facile": {
+   "texte": "Mouvement lent.",
+   "exercice": "pompes-pike"
+  },
+  "difficile": {
+   "texte": "Enchaîné sans pause.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

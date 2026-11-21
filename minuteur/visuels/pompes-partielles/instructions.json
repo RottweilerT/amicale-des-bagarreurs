@@ -1,0 +1,34 @@
+{
+ "id": "pompes-partielles",
+ "nom": "Pompes partielles",
+ "categories": [
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bas de la pompe."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits mouvements en bas, sans t’arrêter."
+  }
+ ],
+ "instructions": "Mini-amplitude en bas du mouvement, sans t'arrêter.",
+ "erreur": "Remonter jusqu’en haut : l’amplitude reste petite.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "id": "squat-hold",
+ "nom": "Squat hold",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Accroupi, coudes qui poussent les genoux vers l’extérieur."
+  }
+ ],
+ "instructions": "Reste accroupi, coudes poussant les genoux.",
+ "erreur": "Laisser le dos s’arrondir.",
+ "variantes": {
+  "facile": {
+   "texte": "Talons surélevés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus longtemps.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

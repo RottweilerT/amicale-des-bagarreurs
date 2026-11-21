@@ -1,0 +1,43 @@
+{
+ "id": "bob-weave",
+ "nom": "Bob and weave",
+ "categories": [
+  "Boxe et combat",
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "De face, en garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Fléchis et passe sous un crochet imaginaire."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Le buste dessine un U, dos droit."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Remonte de l’autre côté, en garde."
+  }
+ ],
+ "instructions": "Rouleau sous un crochet imaginaire, en U, buste droit.",
+ "erreur": "Se pencher en avant au lieu de fléchir les jambes.",
+ "variantes": {
+  "facile": {
+   "texte": "Moins de flexion.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rouleau suivi de deux crochets.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

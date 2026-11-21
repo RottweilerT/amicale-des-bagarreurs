@@ -1,0 +1,38 @@
+{
+ "id": "jab",
+ "nom": "Jab uniquement",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute, menton rentré."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Tends le bras avant, l’épaule protège le menton."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Ramène le poing en garde aussitôt."
+  }
+ ],
+ "instructions": "Jab bras avant, épaule qui protège le menton, retour rapide.",
+ "erreur": "Abaisser la main arrière pendant le jab.",
+ "variantes": {
+  "facile": {
+   "texte": "Jab lent en marquant le retour.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Jab en avançant et reculant.",
+   "exercice": "double-jab"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

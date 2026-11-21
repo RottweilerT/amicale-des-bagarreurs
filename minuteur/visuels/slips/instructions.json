@@ -1,0 +1,38 @@
+{
+ "id": "slips",
+ "nom": "Slips alternés",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "De face : garde haute, genoux souples."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Esquive en penchant le buste d’un côté."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Puis de l’autre côté, menton rentré."
+  }
+ ],
+ "instructions": "Esquives rotatives à gauche puis à droite, menton rentré.",
+ "erreur": "Pencher seulement la tête : c’est le buste qui bouge.",
+ "variantes": {
+  "facile": {
+   "texte": "Lents, petite amplitude.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Slip puis direct en contre.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

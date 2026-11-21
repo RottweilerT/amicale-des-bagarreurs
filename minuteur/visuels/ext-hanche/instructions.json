@@ -1,0 +1,34 @@
+{
+ "id": "ext-hanche",
+ "nom": "Extensions de hanche",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À plat ventre."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Lève une jambe tendue, puis redescends."
+  }
+ ],
+ "instructions": "À plat ventre, lève une jambe tendue.",
+ "erreur": "Décoller le bassin.",
+ "variantes": {
+  "facile": {
+   "texte": "Genou fléchi.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

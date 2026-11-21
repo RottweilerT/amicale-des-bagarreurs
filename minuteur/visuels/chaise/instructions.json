@@ -1,0 +1,30 @@
+{
+ "id": "chaise",
+ "nom": "Chaise contre un mur",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Dos contre le mur, cuisses parallèles au sol, immobile."
+  }
+ ],
+ "instructions": "Dos au mur, cuisses parallèles au sol, immobile.",
+ "erreur": "Genoux au-delà des pointes de pieds.",
+ "variantes": {
+  "facile": {
+   "texte": "Moins bas.",
+   "exercice": "squat-iso"
+  },
+  "difficile": {
+   "texte": "Une jambe tendue.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "id": "asymetriques",
+ "nom": "Combinaisons de mouvements asymétriques",
+ "categories": [
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : un bras fait des cercles, l’autre monte et descend."
+  }
+ ],
+ "instructions": "Un bras fait des cercles, l'autre monte et descend.",
+ "erreur": "Aller trop vite.",
+ "variantes": {
+  "facile": {
+   "texte": "Lentement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Change de sens.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

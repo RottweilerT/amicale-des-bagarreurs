@@ -1,0 +1,30 @@
+{
+ "id": "planche",
+ "nom": "Planche classique",
+ "categories": [
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur les avant-bras, corps aligné, fessiers et abdos serrés."
+  }
+ ],
+ "instructions": "Sur les avant-bras, corps aligné, fessiers serrés.",
+ "erreur": "Bassin qui s’affaisse ou trop haut.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Une jambe levée.",
+   "exercice": "planche-jambe"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

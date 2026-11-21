@@ -1,0 +1,31 @@
+{
+ "id": "etir-mollets",
+ "nom": "Étirement des mollets",
+ "categories": [
+  "Mobilité et récupération",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Grand pas en avant, talon arrière au sol, jambe arrière tendue."
+  }
+ ],
+ "instructions": "Grand pas en avant, talon arrière au sol.",
+ "erreur": "Décoller le talon arrière.",
+ "variantes": {
+  "facile": {
+   "texte": "Pas plus court.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pas plus long.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

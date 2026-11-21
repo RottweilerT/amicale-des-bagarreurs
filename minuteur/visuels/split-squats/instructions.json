@@ -1,0 +1,34 @@
+{
+ "id": "split-squats",
+ "nom": "Split squats",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pieds décalés, fixes."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends à la verticale, puis remonte."
+  }
+ ],
+ "instructions": "Pieds décalés fixes, monte et descends.",
+ "erreur": "Avancer le buste.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pied arrière surélevé.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

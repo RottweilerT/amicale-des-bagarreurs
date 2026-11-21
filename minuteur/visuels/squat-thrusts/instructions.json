@@ -1,0 +1,39 @@
+{
+ "id": "squat-thrusts",
+ "nom": "Squat thrusts",
+ "categories": [
+  "Cardio sur place",
+  "Conditionnement traditionnel"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Accroupi, mains au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pieds en arrière : planche."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Ramène les pieds, recommence."
+  }
+ ],
+ "instructions": "Mains au sol, pieds en arrière puis retour accroupi.",
+ "erreur": "Fesses trop hautes en planche.",
+ "variantes": {
+  "facile": {
+   "texte": "Un pied après l'autre.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": "burpees"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

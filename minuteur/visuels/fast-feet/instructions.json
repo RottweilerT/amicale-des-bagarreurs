@@ -1,0 +1,35 @@
+{
+ "id": "fast-feet",
+ "nom": "Fast feet",
+ "categories": [
+  "Cardio sur place",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Légèrement accroupi, sur l’avant des pieds."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits pas ultra-rapides sur place."
+  }
+ ],
+ "instructions": "Accroupi léger, petits pas ultra-rapides.",
+ "erreur": "Se redresser.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus bas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

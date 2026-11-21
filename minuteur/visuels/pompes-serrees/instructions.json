@@ -1,0 +1,42 @@
+{
+ "id": "pompes-serrees",
+ "nom": "Pompes serrées",
+ "categories": [
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : mains à largeur d’épaules."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Descends coudes collés au corps."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Pousse pour remonter, corps gainé."
+  }
+ ],
+ "instructions": "Mains à largeur d'épaules, coudes le long du corps.",
+ "erreur": "Écarter les coudes.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Pause d'une seconde en bas.",
+   "exercice": "pompes-diamant"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "id": "genoux-croises",
+ "nom": "Montées de genoux croisées",
+ "categories": [
+  "Coordination et équilibre",
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : genou vers le coude opposé."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Puis l’autre côté."
+  }
+ ],
+ "instructions": "Genou vers le coude opposé, debout.",
+ "erreur": "Arrondir le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

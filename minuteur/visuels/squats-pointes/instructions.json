@@ -1,0 +1,35 @@
+{
+ "id": "squats-pointes",
+ "nom": "Squats avec montée sur pointes",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Squat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "En remontant, monte sur la pointe des pieds."
+  }
+ ],
+ "instructions": "Squat puis, en remontant, monte sur les pointes.",
+ "erreur": "Perdre l’équilibre vers l’avant.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans les pointes.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause sur les pointes.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

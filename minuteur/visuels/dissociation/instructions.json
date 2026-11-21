@@ -1,0 +1,34 @@
+{
+ "id": "dissociation",
+ "nom": "Dissociation bras-jambes",
+ "categories": [
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : bras en l’air, pieds serrés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Bras en bas quand les jambes s’écartent : deux rythmes différents."
+  }
+ ],
+ "instructions": "Les bras font un rythme, les jambes un autre.",
+ "erreur": "Synchroniser bras et jambes par habitude.",
+ "variantes": {
+  "facile": {
+   "texte": "Mouvements lents.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rythmes plus complexes.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

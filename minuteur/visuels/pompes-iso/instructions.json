@@ -1,0 +1,38 @@
+{
+ "id": "pompes-iso",
+ "nom": "Pompes avec maintien isométrique",
+ "categories": [
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Une pompe, puis bloque 3 s à mi-hauteur."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Pousse pour remonter, corps gainé."
+  }
+ ],
+ "instructions": "Une pompe, puis 3 s bloqué à mi-hauteur.",
+ "erreur": "Retenir sa respiration pendant le blocage.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Maintien plus long.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

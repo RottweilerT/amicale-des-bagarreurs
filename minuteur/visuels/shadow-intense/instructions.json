@@ -1,0 +1,43 @@
+{
+ "id": "shadow-intense",
+ "nom": "Shadow boxing intensif",
+ "categories": [
+  "Boxe et combat",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jab."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Direct arrière."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Crochet, puis enchaîne à pleine vitesse."
+  }
+ ],
+ "instructions": "Volume maximal de coups, sans lâcher la garde.",
+ "erreur": "Lâcher la garde quand la fatigue arrive.",
+ "variantes": {
+  "facile": {
+   "texte": "Rythme soutenu mais régulier.",
+   "exercice": "shadow-libre"
+  },
+  "difficile": {
+   "texte": "Rafales de 5 s à fond.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

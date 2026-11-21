@@ -1,0 +1,34 @@
+{
+ "id": "russian-twists",
+ "nom": "Russian twists",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Assis, buste incliné, pieds légèrement décollés : mains d’un côté."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Tourne le buste pour amener les mains de l’autre côté."
+  }
+ ],
+ "instructions": "Assis, buste incliné, tourne d'un côté à l'autre.",
+ "erreur": "Bouger seulement les bras : c’est le buste qui tourne.",
+ "variantes": {
+  "facile": {
+   "texte": "Pieds au sol.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pieds décollés.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "La rotation se lit mal de profil."
+ }
+}

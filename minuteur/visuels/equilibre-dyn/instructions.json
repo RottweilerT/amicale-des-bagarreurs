@@ -1,0 +1,31 @@
+{
+ "id": "equilibre-dyn",
+ "nom": "Équilibre dynamique",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur un pied, l’autre jambe dessine des cercles."
+  }
+ ],
+ "instructions": "Sur un pied, l'autre jambe dessine des cercles.",
+ "erreur": "Se pencher pour compenser.",
+ "variantes": {
+  "facile": {
+   "texte": "Petits mouvements.",
+   "exercice": "equilibre-pied"
+  },
+  "difficile": {
+   "texte": "Plus amples.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

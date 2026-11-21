@@ -1,0 +1,30 @@
+{
+ "id": "pont-pulse",
+ "nom": "Pont fessier pulsé",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En haut du pont, petites montées rapides."
+  }
+ ],
+ "instructions": "En haut du pont, petites montées rapides.",
+ "erreur": "Redescendre au sol entre chaque.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Une jambe.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

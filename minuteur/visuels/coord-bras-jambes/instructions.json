@@ -1,0 +1,39 @@
+{
+ "id": "coord-bras-jambes",
+ "nom": "Coordination bras-jambes",
+ "categories": [
+  "Boxe et combat",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jab avec un pas avant."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Direct avec un pas arrière."
+  }
+ ],
+ "instructions": "Chaque coup est porté avec un pas : jab-pas avant, direct-pas arrière.",
+ "erreur": "Frapper après le pas au lieu de pendant.",
+ "variantes": {
+  "facile": {
+   "texte": "Un coup, un pas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Enchaînements avec pivots.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

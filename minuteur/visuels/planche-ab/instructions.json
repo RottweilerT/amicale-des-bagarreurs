@@ -1,0 +1,30 @@
+{
+ "id": "planche-ab",
+ "nom": "Planche sur les avant-bras",
+ "categories": [
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Coudes sous les épaules, regard vers le sol, corps aligné."
+  }
+ ],
+ "instructions": "Coudes sous les épaules, regard vers le sol.",
+ "erreur": "Creuser le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Avant-bras plus avancés.",
+   "exercice": "planche-jambe"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

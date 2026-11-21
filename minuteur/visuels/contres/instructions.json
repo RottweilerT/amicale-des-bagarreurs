@@ -1,0 +1,38 @@
+{
+ "id": "contres",
+ "nom": "Travail de contres",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Esquive le coup."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Riposte immédiatement."
+  }
+ ],
+ "instructions": "Parade ou esquive puis riposte immédiate.",
+ "erreur": "Attendre trop longtemps avant de riposter.",
+ "variantes": {
+  "facile": {
+   "texte": "Une défense, un contre.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Contres en série.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

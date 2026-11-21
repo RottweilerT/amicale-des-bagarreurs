@@ -1,0 +1,30 @@
+{
+ "id": "equilibre-bras",
+ "nom": "Équilibre avec mouvements de bras",
+ "categories": [
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur un pied, enchaîne des coups ou des cercles avec les bras."
+  }
+ ],
+ "instructions": "Sur un pied, fais des cercles ou des coups avec les bras.",
+ "erreur": "Se pencher pour compenser.",
+ "variantes": {
+  "facile": {
+   "texte": "Mouvements lents.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

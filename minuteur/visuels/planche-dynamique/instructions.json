@@ -1,0 +1,40 @@
+{
+ "id": "planche-dynamique",
+ "nom": "Planche dynamique",
+ "categories": [
+  "Abdominaux",
+  "Gainage et stabilité",
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche sur les avant-bras."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte sur une main, puis l’autre."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Redescends sur un avant-bras, puis l’autre."
+  }
+ ],
+ "instructions": "Passe des avant-bras aux mains et inversement.",
+ "erreur": "Balancer le bassin.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "planche"
+  },
+  "difficile": {
+   "texte": "Plus vite, bassin stable.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

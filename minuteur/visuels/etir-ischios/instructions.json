@@ -1,0 +1,30 @@
+{
+ "id": "etir-ischios",
+ "nom": "Étirement des ischio-jambiers",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Jambe tendue devant, talon au sol : penche le buste dos droit."
+  }
+ ],
+ "instructions": "Jambe tendue devant, penche le buste dos droit.",
+ "erreur": "Arrondir le dos pour aller plus bas.",
+ "variantes": {
+  "facile": {
+   "texte": "Genou fléchi.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus bas.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

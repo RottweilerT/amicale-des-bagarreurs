@@ -1,0 +1,38 @@
+{
+ "id": "squats-pause",
+ "nom": "Squats avec pause basse",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pieds largeur d’épaules, pointes légèrement ouvertes."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Bloque 2 s en bas, dos droit."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Pousse dans les talons pour remonter."
+  }
+ ],
+ "instructions": "Bloque 2 s en bas à chaque répétition.",
+ "erreur": "Se relâcher en bas.",
+ "variantes": {
+  "facile": {
+   "texte": "Pause courte.",
+   "exercice": "squats"
+  },
+  "difficile": {
+   "texte": "Pause de 5 s.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

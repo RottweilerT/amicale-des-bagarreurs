@@ -1,0 +1,35 @@
+{
+ "id": "corde-imaginaire",
+ "nom": "Corde à sauter imaginaire",
+ "categories": [
+  "Cardio sur place",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : fais tourner les poignets comme avec une corde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits sauts réguliers sur les pointes."
+  }
+ ],
+ "instructions": "Saute comme avec une corde, en faisant tourner les poignets.",
+ "erreur": "Atterrir à plat.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Alternance des pieds.",
+   "exercice": "corde"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

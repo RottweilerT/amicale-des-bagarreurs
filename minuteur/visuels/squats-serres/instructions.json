@@ -1,0 +1,34 @@
+{
+ "id": "squats-serres",
+ "nom": "Squats serrés",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pieds joints."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends, genoux vers l’avant, talons au sol."
+  }
+ ],
+ "instructions": "Pieds joints, genoux en avant.",
+ "erreur": "Décoller les talons.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Tempo lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

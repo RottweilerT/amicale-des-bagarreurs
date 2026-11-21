@@ -1,0 +1,35 @@
+{
+ "id": "pogo",
+ "nom": "Pogo jumps",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Jambes presque tendues."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en rebondissant, contact au sol très court."
+  }
+ ],
+ "instructions": "Sauts jambes tendues, contact au sol très court.",
+ "erreur": "Plier les genoux à la réception.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus bas.",
+   "exercice": "rebonds"
+  },
+  "difficile": {
+   "texte": "Plus haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

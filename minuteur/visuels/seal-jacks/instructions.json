@@ -1,0 +1,35 @@
+{
+ "id": "seal-jacks",
+ "nom": "Seal jacks",
+ "categories": [
+  "Cardio sur place",
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : bras devant, mains jointes."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute : ouvre les bras sur les côtés et écarte les jambes."
+  }
+ ],
+ "instructions": "Bras tendus devant, ouvre et frappe des mains en sautant.",
+ "erreur": "Bras qui tombent.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

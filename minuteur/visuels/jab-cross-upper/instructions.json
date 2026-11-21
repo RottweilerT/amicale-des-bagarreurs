@@ -1,0 +1,42 @@
+{
+ "id": "jab-cross-upper",
+ "nom": "Jab-cross-uppercut",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jab."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Direct arrière."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Uppercut avant : pousse sur les jambes."
+  }
+ ],
+ "instructions": "Jab, direct, uppercut avant en poussant sur les jambes.",
+ "erreur": "Baisser le poing trop bas avant l’uppercut.",
+ "variantes": {
+  "facile": {
+   "texte": "Décompose les trois coups.",
+   "exercice": "jab-cross"
+  },
+  "difficile": {
+   "texte": "Ajoute un crochet arrière.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

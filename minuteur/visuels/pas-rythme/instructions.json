@@ -1,0 +1,39 @@
+{
+ "id": "pas-rythme",
+ "nom": "Pas de boxe en rythme",
+ "categories": [
+  "Coordination et équilibre",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Un pas avant…"
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "… un pas arrière, toujours au même rythme."
+  }
+ ],
+ "instructions": "Suis un rythme régulier : avant, arrière, côté.",
+ "erreur": "Accélérer sans le vouloir.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rythme irrégulier.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

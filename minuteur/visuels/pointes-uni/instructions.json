@@ -1,0 +1,34 @@
+{
+ "id": "pointes-uni",
+ "nom": "Montées sur pointes unilatérales",
+ "categories": [
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur un pied, l’autre jambe pliée."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte sur la pointe, redescends lentement."
+  }
+ ],
+ "instructions": "Montées sur un seul pied.",
+ "erreur": "Rebondir.",
+ "variantes": {
+  "facile": {
+   "texte": "Appui sur un mur.",
+   "exercice": "pointes"
+  },
+  "difficile": {
+   "texte": "Tempo lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

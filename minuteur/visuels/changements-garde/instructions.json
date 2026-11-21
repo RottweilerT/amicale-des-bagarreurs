@@ -1,0 +1,39 @@
+{
+ "id": "changements-garde",
+ "nom": "Changements de garde",
+ "categories": [
+  "Coordination et équilibre",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petit saut : les pieds changent de place."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Te voilà en garde inversée."
+  }
+ ],
+ "instructions": "Passe de garde orthodoxe à fausse garde en sautillant.",
+ "erreur": "Baisser la garde pendant le changement.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Avec coups.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

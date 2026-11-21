@@ -1,0 +1,44 @@
+{
+ "id": "inchworm",
+ "nom": "Marche sur les mains",
+ "categories": [
+  "Bras et triceps",
+  "Épaules et haut du corps",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout, pieds serrés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Penche-toi, mains au sol (genoux fléchis si besoin)."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Avance les mains une à une."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Jusqu’à la planche haute, puis reviens en arrière."
+  }
+ ],
+ "instructions": "Debout, pose les mains et marche jusqu'à la planche, puis reviens.",
+ "erreur": "Laisser le dos s’arrondir fortement en position penchée.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux fléchis.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Ajoute une pompe en planche.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

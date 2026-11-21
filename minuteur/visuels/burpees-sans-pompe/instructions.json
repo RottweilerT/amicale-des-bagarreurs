@@ -1,0 +1,46 @@
+{
+ "id": "burpees-sans-pompe",
+ "nom": "Burpees sans pompe",
+ "categories": [
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Accroupis-toi, mains au sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Jette les pieds en arrière : planche."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Ramène les pieds sous toi."
+  },
+  {
+   "image": "step-05.svg",
+   "texte": "Saute bras en l’air."
+  }
+ ],
+ "instructions": "Burpee complet sans la pompe.",
+ "erreur": "Arrondir le dos en se relevant.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut.",
+   "exercice": "burpees-sans-saut"
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": "burpees"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

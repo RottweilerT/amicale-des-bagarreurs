@@ -1,0 +1,35 @@
+{
+ "id": "appuis-boxe",
+ "nom": "Travail d'appuis de boxe",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde, poids sur l’avant des pieds."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits rebonds légers."
+  }
+ ],
+ "instructions": "Rebonds légers en garde, poids sur l'avant du pied.",
+ "erreur": "Rester sur les talons.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Changements de garde.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

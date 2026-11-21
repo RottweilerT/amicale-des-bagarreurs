@@ -1,0 +1,35 @@
+{
+ "id": "cadence",
+ "nom": "Travail de cadence",
+ "categories": [
+  "Coordination et équilibre",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Un pas, un coup : même rythme tout le temps."
+  }
+ ],
+ "instructions": "Garde un rythme fixe de pas et de coups, sans accélérer.",
+ "erreur": "Accélérer en fin de round.",
+ "variantes": {
+  "facile": {
+   "texte": "Rythme lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rythme rapide.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

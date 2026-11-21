@@ -1,0 +1,39 @@
+{
+ "id": "precision",
+ "nom": "Travail de précision",
+ "categories": [
+  "Boxe et combat",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Choisis une cible imaginaire précise."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Vise exactement la cible."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Change de cible à chaque coup."
+  }
+ ],
+ "instructions": "Vise une cible imaginaire précise à chaque coup.",
+ "erreur": "Frapper « dans le vague » sans viser.",
+ "variantes": {
+  "facile": {
+   "texte": "Une cible fixe.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Cibles qui changent à chaque coup.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "id": "planche-bras",
+ "nom": "Planche avec levée de bras",
+ "categories": [
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche haute, pieds écartés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Tends un bras devant toi 2 s, puis l’autre."
+  }
+ ],
+ "instructions": "En planche haute, tends un bras devant toi 2 s.",
+ "erreur": "Tourner les épaules.",
+ "variantes": {
+  "facile": {
+   "texte": "Pieds écartés.",
+   "exercice": "planche-haute"
+  },
+  "difficile": {
+   "texte": "Pieds serrés.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

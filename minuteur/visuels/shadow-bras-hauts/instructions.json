@@ -1,0 +1,35 @@
+{
+ "id": "shadow-bras-hauts",
+ "nom": "Shadow boxing bras maintenus hauts",
+ "categories": [
+  "Épaules et haut du corps",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains hautes, jamais sous le menton."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Boxe sans laisser descendre les mains."
+  }
+ ],
+ "instructions": "Boxe sans jamais descendre les mains sous le menton.",
+ "erreur": "Laisser tomber les coudes.",
+ "variantes": {
+  "facile": {
+   "texte": "Coups lents.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rafales.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

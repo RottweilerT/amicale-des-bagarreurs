@@ -1,0 +1,39 @@
+{
+ "id": "mobilite-epaules",
+ "nom": "Mobilité des épaules",
+ "categories": [
+  "Mobilité et récupération",
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bras tendu devant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte-le au-dessus de la tête…"
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "… puis vers l’arrière : grands cercles lents."
+  }
+ ],
+ "instructions": "Grands cercles bras tendus, lents.",
+ "erreur": "Cambrer le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras pliés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus amples.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "shadow-libre",
+ "nom": "Shadow boxing libre",
+ "categories": [
+  "Boxe et combat",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde : mains hautes, menton rentré, poids sur l’avant des pieds."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Lance des coups variés dans le vide."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens en garde et déplace-toi entre les coups."
+  }
+ ],
+ "instructions": "Boxe dans le vide en restant mobile, garde haute.",
+ "erreur": "Baisser la garde entre les coups.",
+ "variantes": {
+  "facile": {
+   "texte": "Rythme lent, coups simples.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Enchaînements longs et déplacements rapides.",
+   "exercice": "shadow-intense"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

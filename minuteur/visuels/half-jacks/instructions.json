@@ -1,0 +1,38 @@
+{
+ "id": "half-jacks",
+ "nom": "Half jacks",
+ "categories": [
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : pieds serrés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en écartant les jambes, bras à l’horizontale seulement."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Referme."
+  }
+ ],
+ "instructions": "Jumping jacks avec les bras à l'horizontale seulement.",
+ "erreur": "Monter les bras trop haut.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": "jumping-jacks"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

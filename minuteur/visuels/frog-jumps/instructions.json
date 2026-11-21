@@ -1,0 +1,39 @@
+{
+ "id": "frog-jumps",
+ "nom": "Frog jumps sur place",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Accroupi, mains au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en ouvrant le corps."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens accroupi, mains au sol."
+  }
+ ],
+ "instructions": "Accroupi mains au sol, saute et reviens accroupi.",
+ "erreur": "Atterrir jambes tendues.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

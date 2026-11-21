@@ -1,0 +1,38 @@
+{
+ "id": "jumping-jacks",
+ "nom": "Jumping jacks",
+ "categories": [
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : pieds serrés, bras le long du corps."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en écartant bras et jambes."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Saute pour refermer."
+  }
+ ],
+ "instructions": "Saute en écartant bras et jambes, puis referme.",
+ "erreur": "Atterrir sur les talons.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut, un pied après l'autre.",
+   "exercice": "half-jacks"
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

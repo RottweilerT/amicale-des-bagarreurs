@@ -1,0 +1,43 @@
+{
+ "id": "frappes-max",
+ "nom": "Enchaînements de frappes maximales",
+ "categories": [
+  "Explosivité et puissance",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jab."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Direct."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Crochet, à pleine puissance, puis 2 s de pause."
+  }
+ ],
+ "instructions": "Enchaînements de 4 coups à pleine puissance, 2 s de pause.",
+ "erreur": "Perdre l’équilibre en frappant.",
+ "variantes": {
+  "facile": {
+   "texte": "3 coups.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Sans pause.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

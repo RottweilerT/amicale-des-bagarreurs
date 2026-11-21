@@ -1,0 +1,35 @@
+{
+ "id": "planche-genou-coude",
+ "nom": "Planche avec genoux vers les coudes",
+ "categories": [
+  "Abdominaux",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Amène le genou vers le coude, puis change."
+  }
+ ],
+ "instructions": "En planche, amène le genou vers le coude du même côté.",
+ "erreur": "Remonter les fesses.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Avec pause.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

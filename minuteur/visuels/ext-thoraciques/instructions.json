@@ -1,0 +1,35 @@
+{
+ "id": "ext-thoraciques",
+ "nom": "Extensions thoraciques",
+ "categories": [
+  "Dos et posture",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À genoux, mains loin devant au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Laisse descendre la poitrine vers le sol."
+  }
+ ],
+ "instructions": "À genoux, mains au sol devant, laisse descendre la poitrine.",
+ "erreur": "Forcer avec les épaules.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Maintien.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

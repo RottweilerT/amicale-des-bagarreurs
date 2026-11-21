@@ -1,0 +1,42 @@
+{
+ "id": "pompes-diamant",
+ "nom": "Pompes diamant",
+ "categories": [
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : pouces et index se touchent sous la poitrine."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Descends lentement, coudes vers l’arrière."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Pousse pour remonter, corps gainé."
+  }
+ ],
+ "instructions": "Pouces et index se touchent sous la poitrine.",
+ "erreur": "Mains trop en avant de la poitrine.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-serrees"
+  },
+  "difficile": {
+   "texte": "Tempo 3 s en descente.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

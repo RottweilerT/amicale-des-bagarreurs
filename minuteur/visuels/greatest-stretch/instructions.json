@@ -1,0 +1,42 @@
+{
+ "id": "greatest-stretch",
+ "nom": "Grand étirement complet",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Fente, mains au sol à l’intérieur du pied avant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Coude vers le pied avant."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Ouvre le bras vers le ciel."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Recule les hanches, jambe avant tendue."
+  }
+ ],
+ "instructions": "Fente, coude vers le pied, rotation bras au ciel, puis jambe tendue.",
+ "erreur": "Aller trop vite d’une position à l’autre.",
+ "variantes": {
+  "facile": {
+   "texte": "Genou arrière au sol.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "L’ouverture du bras est vue de profil."
+ }
+}

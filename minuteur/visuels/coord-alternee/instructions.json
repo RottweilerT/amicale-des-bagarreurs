@@ -1,0 +1,34 @@
+{
+ "id": "coord-alternee",
+ "nom": "Coordination alternée",
+ "categories": [
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Main touche le pied opposé derrière toi."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Puis l’inverse, en rythme."
+  }
+ ],
+ "instructions": "Main droite touche le pied gauche derrière, puis l'inverse.",
+ "erreur": "Se pencher en avant.",
+ "variantes": {
+  "facile": {
+   "texte": "Devant soi.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Croisement main-pied peu visible de profil."
+ }
+}

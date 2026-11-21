@@ -1,0 +1,34 @@
+{
+ "id": "etir-flechisseurs",
+ "nom": "Étirement des fléchisseurs de hanche",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Fente basse, genou arrière au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pousse le bassin vers l’avant."
+  }
+ ],
+ "instructions": "En fente basse genou au sol, pousse le bassin en avant.",
+ "erreur": "Cambrer le bas du dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Moins loin.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras levé.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

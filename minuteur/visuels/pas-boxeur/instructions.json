@@ -1,0 +1,36 @@
+{
+ "id": "pas-boxeur",
+ "nom": "Pas de boxeur",
+ "categories": [
+  "Cardio sur place",
+  "Boxe et combat",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur un pied…"
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "… puis l’autre, en petits rebonds."
+  }
+ ],
+ "instructions": "Rebonds d'un pied sur l'autre comme à la corde.",
+ "erreur": "Rester sur les talons.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

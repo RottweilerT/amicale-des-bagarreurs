@@ -1,0 +1,35 @@
+{
+ "id": "touches-croisees",
+ "nom": "Touches croisées main-genou",
+ "categories": [
+  "Coordination et équilibre",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : main droite sur le genou gauche…"
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "… puis l’inverse, en rythme."
+  }
+ ],
+ "instructions": "Main droite sur genou gauche, puis l'inverse, en rythme.",
+ "erreur": "Pencher le dos pour aller chercher le genou.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "id": "squats-sautes",
+ "nom": "Squats sautés",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Explosivité et puissance",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Squat, bras devant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute le plus haut possible."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Réception souple, enchaîne."
+  }
+ ],
+ "instructions": "Squat puis saut vertical, réception souple.",
+ "erreur": "Atterrir jambes tendues.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les pointes sans décoller.",
+   "exercice": "squats"
+  },
+  "difficile": {
+   "texte": "Saut plus haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

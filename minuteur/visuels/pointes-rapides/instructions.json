@@ -1,0 +1,35 @@
+{
+ "id": "pointes-rapides",
+ "nom": "Montées rapides sur pointes",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Montées courtes et rapides."
+  }
+ ],
+ "instructions": "Montées courtes et rapides.",
+ "erreur": "Plier les genoux.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Sur un pied.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

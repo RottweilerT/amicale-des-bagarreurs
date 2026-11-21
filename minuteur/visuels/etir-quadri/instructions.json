@@ -1,0 +1,30 @@
+{
+ "id": "etir-quadri",
+ "nom": "Étirement des quadriceps",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur une jambe, talon tenu vers la fesse, genoux serrés."
+  }
+ ],
+ "instructions": "Debout, talon tenu vers la fesse, genoux serrés.",
+ "erreur": "Cambrer le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Appui sur un mur.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Sans appui.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

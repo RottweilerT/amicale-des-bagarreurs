@@ -1,0 +1,34 @@
+{
+ "id": "planche-jambe",
+ "nom": "Planche avec levée de jambe",
+ "categories": [
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche sur les avant-bras."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Lève une jambe tendue 2 s, puis l’autre."
+  }
+ ],
+ "instructions": "En planche, lève une jambe tendue 2 s, puis l'autre.",
+ "erreur": "Cambrer en levant la jambe.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus bas.",
+   "exercice": "planche"
+  },
+  "difficile": {
+   "texte": "Maintien plus long.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

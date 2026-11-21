@@ -1,0 +1,34 @@
+{
+ "id": "swimmers",
+ "nom": "Swimmers au sol",
+ "categories": [
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À plat ventre, bras et jambes décollés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Bats des bras et des jambes comme en crawl."
+  }
+ ],
+ "instructions": "À plat ventre, bras et jambes battent comme en crawl.",
+ "erreur": "Poser les membres au sol.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras seulement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

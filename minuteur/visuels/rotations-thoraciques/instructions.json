@@ -1,0 +1,35 @@
+{
+ "id": "rotations-thoraciques",
+ "nom": "Rotations thoraciques",
+ "categories": [
+  "Mobilité et récupération",
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À quatre pattes, une main derrière la tête, coude vers le sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Ouvre le coude vers le ciel en tournant le buste."
+  }
+ ],
+ "instructions": "À quatre pattes, main derrière la tête, ouvre le coude vers le ciel.",
+ "erreur": "Tourner le bassin.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus petit.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Maintien en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "La rotation du buste se lit mal de profil."
+ }
+}

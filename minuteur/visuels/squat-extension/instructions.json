@@ -1,0 +1,35 @@
+{
+ "id": "squat-extension",
+ "nom": "Alternance squat et extension",
+ "categories": [
+  "Cardio sur place",
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Squat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Extension complète sur les pointes, bras en l’air."
+  }
+ ],
+ "instructions": "Squat puis extension complète bras en l'air sur les pointes.",
+ "erreur": "Arrondir le dos en bas.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Avec saut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

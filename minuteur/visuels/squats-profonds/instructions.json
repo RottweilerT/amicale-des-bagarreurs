@@ -1,0 +1,39 @@
+{
+ "id": "squats-profonds",
+ "nom": "Squats profonds",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pieds largeur d’épaules, pointes légèrement ouvertes."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends aussi bas que ta mobilité le permet, dos droit."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte en poussant dans les talons."
+  }
+ ],
+ "instructions": "Descends aussi bas que ta mobilité le permet, dos droit.",
+ "erreur": "Décoller les talons ou arrondir le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Mains devant pour l'équilibre.",
+   "exercice": "squats"
+  },
+  "difficile": {
+   "texte": "Pause en bas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

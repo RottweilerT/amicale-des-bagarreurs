@@ -198,7 +198,7 @@ function rBloc(b,cle,i,prof){
   const menu=`<button type="button" class="mn-menu" data-mn="menuBloc" data-id="${b.id}" aria-label="Actions du bloc">⋯</button>`;
   if(b.t==='act'){const e=b.exo.id&&S.exo(b.exo.id);
     return `<div class="mn-b act${coche?' sel':''}${err?' err':''}" data-id="${b.id}">${head}
-      <button type="button" class="mn-b-nom" data-mn="choisirExo" data-id="${b.id}"><b>${E(b.exo.nom||'Choisir un exercice')}</b><small>${E(S.CAT[b.exo.cat]||'')}${b.variante?' · '+E(b.variante):''}${b.intensite?' · intensité '+'●'.repeat(b.intensite):''}${e&&e.mat?' · '+E(L.materiel[e.mat]):''}</small></button>
+      <div class="mn-b-main">${e?`<button type="button" class="mn-b-img" data-mn="ficheExo" data-id="${E(e.id)}" aria-label="Fiche illustrée de ${E(e.nom)}">${imgMini(e.id)}</button>`:''}<button type="button" class="mn-b-nom" data-mn="choisirExo" data-id="${b.id}"><b>${E(b.exo.nom||'Choisir un exercice')}</b><small>${E(S.CAT[b.exo.cat]||'')}${b.variante?' · '+E(b.variante):''}${b.intensite?' · intensité '+'●'.repeat(b.intensite):''}${e&&e.mat?' · '+E(L.materiel[e.mat]):''}</small></button></div>
       ${dureeCtl(b)}${menu}${err?`<div class="mn-b-err">${E(err)}</div>`:''}</div>`}
   if(b.t==='repos'||b.t==='recup')return `<div class="mn-b ${b.t}${coche?' sel':''}" data-id="${b.id}">${head}
       <div class="mn-b-nom"><b>${b.t==='repos'?'Repos':'Récupération longue'}</b><small>puis : ${E(ed.suite[b.id]||'—')}${b.note?' · '+E(b.note):''}</small></div>${dureeCtl(b)}${menu}</div>`;
@@ -252,9 +252,13 @@ function ajouter(t,cle){
 let pick={q:'',cat:'',cb:null,info:null};
 function choisirExo(idBloc,cb){
   pick={q:'',cat:pick.cat||'',cb:cb||(e=>{const x=trouverBloc(idBloc);if(!x)return;x.b.exo=S.refExo(e);if(!x.b.d&&!x.b.reps)x.b.d=45;modifie()}),info:null};
+  afficherPick();
+}
+function afficherPick(){
   sheet(`<div class="mn-sh-h"><h3>Bibliothèque</h3><button class="btn ghost small" type="button" data-mn="fermer">Fermer</button></div>
     <input type="search" id="mnPickQ" placeholder="Chercher : pompes, abdos, sac, épaules…" autofocus aria-label="Chercher un exercice">
     <div class="chips mn-pick-cats" id="mnPickCats"></div><div class="mn-pick-l" id="mnPickL"></div>`);
+  const q=$$('#mnPickQ');if(q&&pick.q)q.value=pick.q;
   majPick();
 }
 function majPick(){
@@ -267,12 +271,37 @@ function majPick(){
   $$('#mnPickL').innerHTML=(q&&!exact?`<button type="button" class="mn-pick perso" data-mn="pickPerso"><b>+ Créer l’exercice « ${E(q)} »</b><small>ajouté à « Mes exercices »${pick.cat&&S.CAT[pick.cat]?', catégorie '+E(S.CAT[pick.cat]):''}</small></button>`:'')
     +l.slice(0,150).map(e=>{const f=S.fav.exos.includes(e.id),open=pick.info===e.id;
       return `<div class="mn-ex${open?' open':''}"><button type="button" class="mn-star" data-mn="favExo" data-id="${e.id}" aria-pressed="${f}" aria-label="Favori">${f?'★':'☆'}</button>
-      <button type="button" class="mn-ex-n" data-mn="pickExo" data-id="${e.id}"><b>${E(e.nom)}</b><small>${E(S.CAT[e.cat]||'')}${(e.mp||[]).length?' · '+E(e.mp.map(m=>L.muscles[m]).join(', ')):''}${e.mat?' · '+E(L.materiel[e.mat]):''} · ${'●'.repeat(e.niv)}${'○'.repeat(3-e.niv)}</small></button>
-      <button type="button" class="mn-ex-i" data-mn="pickInfo" data-id="${e.id}" aria-expanded="${open}" aria-label="Détails">i</button>
+      <button type="button" class="mn-ex-n" data-mn="pickExo" data-id="${e.id}">${imgMini(e.id)}<span><b>${E(e.nom)}</b><small>${E(S.CAT[e.cat]||'')}${(e.mp||[]).length?' · '+E(e.mp.map(m=>L.muscles[m]).join(', ')):''}${e.mat?' · '+E(L.materiel[e.mat]):''} · ${'●'.repeat(e.niv)}${'○'.repeat(3-e.niv)}</small></span></button>
+      <button type="button" class="mn-ex-i" data-mn="ficheExo" data-id="${e.id}" data-pick="1" aria-label="Fiche illustrée de ${E(e.nom)}">i</button>
       ${open?`<div class="mn-ex-d"><p>${E(e.instr)}</p>${e.facile?`<p><b>Plus facile :</b> ${E(e.facile)}</p>`:''}${e.difficile?`<p><b>Plus difficile :</b> ${E(e.difficile)}</p>`:''}
         <p class="hint">${e.pos==='d'?'Debout':e.pos==='s'?'Au sol':'Debout et sol'} · ${e.esp==='p'?'sur place':'un peu d’espace'} · cardio ${'●'.repeat(e.cardio)} · impact ${'●'.repeat(e.impact)}${(e.ms||[]).length?' · aussi : '+E(e.ms.map(m=>L.muscles[m]).join(', ')):''}</p>
         ${e.perso?`<button class="btn ghost small" type="button" data-mn="delPerso" data-id="${e.id}">${ui.armed==='p'+e.id?'Confirmer ?':'Supprimer cet exercice'}</button>`:''}</div>`:''}</div>`}).join('')
     +(l.length?'':'<div class="empty">Aucun exercice trouvé.</div>');
+}
+
+/* ---------- fiches illustrées ---------- */
+function imgMini(id,cls){const v=id&&S.visuel(id);return v?`<img class="${cls||'mn-mini'}" src="${E(v.mini)}" alt="" loading="lazy" decoding="async">`:''}
+let ficheCtx=null;
+function ouvrirFiche(id,o){
+  o=o||{};const e=S.exo(id);if(!e)return;ficheCtx={id,o};const v=S.visuel(id);
+  const corps=f=>{
+    const et=f&&f.etapes&&v?f.etapes.map((x,i)=>`<li><img src="${E(v.dossier+x.image)}" alt="Étape ${i+1}" loading="lazy"><span><b>${i+1}.</b> ${E(x.texte)}</span></li>`).join(''):'';
+    const varH=(lab,t,ex)=>t?`<p><b>${lab} :</b> ${E(t)}${ex&&S.exo(ex)?` <button type="button" class="mn-lien" data-mn="ficheExo" data-id="${E(ex)}"${o.pick?' data-pick="1"':''}>→ ${E(S.exo(ex).nom)}</button>`:''}</p>`:'';
+    return `${v?`<div class="mn-fi-anim"><img src="${E(v.anim||v.mini)}" alt="Démonstration : ${E(e.nom)}"></div>`:''}
+      <p class="hint" style="margin:0">${E((e.cats||[]).map(c=>S.CAT[c]).join(' · '))}${(e.mp||[]).length?' — '+E(e.mp.map(m=>L.muscles[m]).join(', ')):''}</p>
+      ${et?`<ol class="mn-fi-etapes">${et}</ol>`:(f===undefined?'<p class="hint">Chargement des étapes…</p>':'')}
+      <p><b>Consigne :</b> ${E((f&&f.instructions)||e.instr)}</p>
+      ${f&&f.erreur?`<p class="mn-fi-err"><b>Erreur à éviter :</b> ${E(f.erreur)}</p>`:''}
+      ${varH('Plus facile',e.facile,f&&f.variantes&&f.variantes.facile.exercice)}${varH('Plus difficile',e.difficile,f&&f.variantes&&f.variantes.difficile.exercice)}
+      <p class="hint">${e.pos==='d'?'Debout':e.pos==='s'?'Au sol':'Debout et au sol'} · ${e.esp==='p'?'sur place':'un peu d’espace'} · niveau ${'●'.repeat(e.niv)}${'○'.repeat(3-e.niv)} · cardio ${'●'.repeat(e.cardio)} · impact ${'●'.repeat(e.impact)}${e.mat?' · '+E(L.materiel[e.mat]):''}</p>
+      ${f&&f.controle&&f.controle.statut!=='vérifié'?`<p class="hint">Illustration simplifiée : ${E(f.controle.note)}</p>`:''}`;
+  };
+  const html=f=>`<div class="mn-sh-h"><h3>${E(e.nom)}</h3><button class="btn ghost small" type="button" data-mn="fermer">Fermer</button></div>
+    ${o.pick?`<button type="button" class="mn-lien" data-mn="ficheRetour">← Retour à la bibliothèque</button>`:''}
+    <div id="mnFiche">${corps(f)}</div>
+    ${o.pick&&pick.cb?`<button class="btn mn-go" type="button" data-mn="pickExo" data-id="${E(id)}">Choisir cet exercice</button>`:''}`;
+  sheet(html(undefined));
+  S.fiche(id).then(f=>{if(ficheCtx&&ficheCtx.id===id&&$$('#mnFiche'))$$('#mnFiche').innerHTML=corps(f||null)});
 }
 
 /* ---------- actions sur un bloc ---------- */
@@ -432,6 +461,9 @@ function peindre(now){
   txt('#mrPh',pause?'En pause':lab);
   const r=st.rounds||[];txt('#mrRd',(r.length?`Round ${r[0].i} / ${r[0].n}`:'')+(r.length>1?` · Série ${r[r.length-1].i} / ${r[r.length-1].n}`:'')+(st.combo?(r.length?' · ':'')+st.combo.nom+(st.combo.tours>1?' '+st.combo.tour+'/'+st.combo.tours:''):'')||`Étape ${c.i+1} / ${c.steps.length}`);
   txt('#mrExo',st.k==='act'?st.nom:st.k==='prep'?'Prêt ?':lab);
+  {const v=st.k==='act'&&st.exo&&st.exo.id?S.visuel(st.exo.id):null,im=$$('#mrVis'),src=v?(v.anim||v.mini):'';
+   if(im.dataset.src!==src){im.dataset.src=src;if(src)im.src=src;else im.removeAttribute('src')}im.hidden=!src;
+   const cible=st.k==='act'?st:M.prochaineActivite(c.steps,c.i);$$('#mrInfo').hidden=!(cible&&cible.exo&&cible.exo.id&&S.exo(cible.exo.id))}
   txt('#mrVar',st.k==='act'?[st.variante,st.note,st.intensite?'Intensité '+['','légère','moyenne','maximale'][st.intensite]:'',run.combo].filter(Boolean).join(' · '):(st.note||''));
   txt('#mrClock',man?(st.reps+' rép.'):fClock(rem));
   $$('#mrClock').classList.toggle('reps',man);
@@ -439,9 +471,10 @@ function peindre(now){
   $$('#mrBarPh').style.width=(man?100:Math.max(0,Math.min(100,100*ms/(st.d*1000)))).toFixed(2)+'%';
   /* prochain exercice : pendant l'activité en petit, pendant le repos en grand (et encore plus dans les 10 dernières s) */
   const a=M.annonce(c.steps,c.i);let nx='';
+  const vn=a&&a.etape&&a.etape.exo&&a.etape.exo.id&&st.k!=='act'?S.visuel(a.etape.exo.id):null,imN=vn?`<img class="mr-next-img" src="${E(vn.anim||vn.mini)}" alt="">`:'';
   if(a){const d=a.combo?`${E(a.nom)} — ${fClock(a.d)}<span class="mr-cb">${E(a.combo.join(' + '))}</span>`:`${E(a.nom)} — ${a.reps?a.reps+' rép.':fClock(a.d)}`;
-    nx=st.k==='act'&&!(st.combo&&a.etape.combo&&a.etape.combo.id===st.combo.id&&a.etape.combo.tour===st.combo.tour)?`<small>Ensuite</small>${d}`:`<small>Prochain exercice</small>${d}`}
-  else nx=c.i+1>=c.steps.length?'<small>Ensuite</small>Fin de la séance':'';
+    nx=st.k==='act'&&!(st.combo&&a.etape.combo&&a.etape.combo.id===st.combo.id&&a.etape.combo.tour===st.combo.tour)?`<div><small>Ensuite</small>${d}</div>`:`${imN}<div><small>Prochain exercice</small>${d}</div>`}
+  else nx=c.i+1>=c.steps.length?'<div><small>Ensuite</small>Fin de la séance</div>':'';
   const ne=$$('#mrNext');if(ne.dataset.h!==nx){ne.innerHTML=nx;ne.dataset.h=nx}
   ne.classList.toggle('grand',st.k!=='act');ne.classList.toggle('imminent',st.k!=='act'&&!man&&ms<=10000);
   const p=M.progression(c,now),reel=(now-c.demarre-run.pauseTotal-(run.pauseA?now-run.pauseA:0))/1000;
@@ -592,6 +625,10 @@ root.addEventListener('click',e=>{
     case 'pickCat':pick.cat=b.dataset.k;majPick();break;
     case 'pickExo':{const e2=S.exo(id);if(e2&&pick.cb){const cb=pick.cb;fermer();cb(e2)}break}
     case 'pickInfo':pick.info=pick.info===id?null:id;majPick();break;
+    case 'ficheExo':ouvrirFiche(id,{pick:!!b.dataset.pick});break;
+    case 'ficheRetour':afficherPick();break;
+    case 'infoRun':{if(!run)break;const st=run.c.steps[run.c.i];const cible=st&&st.k==='act'?st:M.prochaineActivite(run.c.steps,run.c.i);
+      if(cible&&cible.exo&&cible.exo.id&&S.exo(cible.exo.id))ouvrirFiche(cible.exo.id);else say('Pas de fiche pour cet exercice.');break}
     case 'pickPerso':{const e2=S.ajouterPerso(pick.q,S.CAT[pick.cat]?pick.cat:'cardio');if(e2&&pick.cb){const cb=pick.cb;fermer();cb(e2);say('« '+e2.nom+' » ajouté à tes exercices')}break}
     case 'favExo':S.basculerFav('exos',id);majPick();break;
     case 'delPerso':if(!arm('p'+id)){majPick();break}S.supprimerPerso(id);majPick();break;

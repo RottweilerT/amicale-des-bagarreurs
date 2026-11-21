@@ -1,0 +1,42 @@
+{
+ "id": "pompe-squat",
+ "nom": "Alternance pompe-squat",
+ "categories": [
+  "Conditionnement traditionnel"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Une pompe."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Relève-toi."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Un squat, puis recommence."
+  }
+ ],
+ "instructions": "Une pompe, debout, un squat, et ainsi de suite.",
+ "erreur": "Bâcler la pompe ou le squat.",
+ "variantes": {
+  "facile": {
+   "texte": "Pompes sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Avec saut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

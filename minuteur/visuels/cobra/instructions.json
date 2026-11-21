@@ -1,0 +1,35 @@
+{
+ "id": "cobra",
+ "nom": "Cobra dynamique contrôlé",
+ "categories": [
+  "Dos et posture",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À plat ventre, mains sous les épaules."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pousse sur les mains pour lever la poitrine, bassin au sol."
+  }
+ ],
+ "instructions": "À plat ventre, pousse sur les mains pour lever la poitrine.",
+ "erreur": "Hausser les épaules.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les avant-bras.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Maintien en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

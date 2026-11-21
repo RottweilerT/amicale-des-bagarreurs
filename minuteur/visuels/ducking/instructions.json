@@ -1,0 +1,39 @@
+{
+ "id": "ducking",
+ "nom": "Ducking",
+ "categories": [
+  "Boxe et combat",
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Fléchis les jambes pour passer sous le coup, dos droit."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte en garde."
+  }
+ ],
+ "instructions": "Fléchis les jambes pour passer sous un coup, dos droit.",
+ "erreur": "Plonger la tête vers l’avant.",
+ "variantes": {
+  "facile": {
+   "texte": "Flexion partielle.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Ducking + uppercut en remontant.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

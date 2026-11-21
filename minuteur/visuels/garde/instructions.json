@@ -1,0 +1,31 @@
+{
+ "id": "garde",
+ "nom": "Travail de garde",
+ "categories": [
+  "Boxe et combat",
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains au menton, coudes serrés, menton bas, genoux souples."
+  }
+ ],
+ "instructions": "Garde haute tenue, coudes serrés, menton bas, petits mouvements.",
+ "erreur": "Laisser descendre les mains avec la fatigue.",
+ "variantes": {
+  "facile": {
+   "texte": "Pauses bras baissés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Garde tenue sans aucune pause.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

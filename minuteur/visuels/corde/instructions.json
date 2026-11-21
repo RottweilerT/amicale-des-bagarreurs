@@ -1,0 +1,35 @@
+{
+ "id": "corde",
+ "nom": "Corde à sauter",
+ "categories": [
+  "Cardio sur place",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : corde au-dessus de la tête, poignets actifs."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits sauts sur les pointes, la corde passe sous les pieds."
+  }
+ ],
+ "instructions": "Sauts réguliers sur les pointes, poignets actifs.",
+ "erreur": "Sauter trop haut ou tourner avec les bras.",
+ "variantes": {
+  "facile": {
+   "texte": "Sauts lents.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Doubles sauts ou pas de boxeur.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

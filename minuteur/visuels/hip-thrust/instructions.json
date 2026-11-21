@@ -1,0 +1,34 @@
+{
+ "id": "hip-thrust",
+ "nom": "Hip thrust au sol",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Épaules au sol, pieds un peu plus loin."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pousse fort le bassin vers le haut."
+  }
+ ],
+ "instructions": "Épaules contre le sol, pieds éloignés, monte fort le bassin.",
+ "erreur": "Pousser avec le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

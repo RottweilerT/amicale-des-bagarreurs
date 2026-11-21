@@ -1,0 +1,34 @@
+{
+ "id": "mobilite-poignets",
+ "nom": "Mobilité des poignets",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À quatre pattes, doigts tournés vers les genoux."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Recule doucement le bassin pour étirer les poignets."
+  }
+ ],
+ "instructions": "Cercles et flexions des poignets, puis appui doux au sol.",
+ "erreur": "Forcer sur la douleur.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans appui.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus d'appui.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Les poignets sont trop petits pour montrer le détail."
+ }
+}

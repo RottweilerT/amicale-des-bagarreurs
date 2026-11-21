@@ -1,0 +1,34 @@
+{
+ "id": "pont-uni",
+ "nom": "Pont fessier unilatéral",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pont sur une jambe, l’autre tendue dans l’alignement."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends puis remonte sur la jambe d’appui."
+  }
+ ],
+ "instructions": "Pont sur une seule jambe, l'autre tendue.",
+ "erreur": "Laisser le bassin pencher d’un côté.",
+ "variantes": {
+  "facile": {
+   "texte": "Pont classique.",
+   "exercice": "pont"
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

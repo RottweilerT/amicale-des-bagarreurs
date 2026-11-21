@@ -1,0 +1,46 @@
+{
+ "id": "debout-sol",
+ "nom": "Enchaînement debout-sol-debout",
+ "categories": [
+  "Conditionnement traditionnel"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pose un genou, puis l’autre."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Allonge-toi sur le ventre."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Reviens à genoux."
+  },
+  {
+   "image": "step-05.svg",
+   "texte": "Relève-toi, sans les mains si possible."
+  }
+ ],
+ "instructions": "Allonge-toi sur le ventre puis relève-toi, sans les mains si possible.",
+ "erreur": "Se laisser tomber.",
+ "variantes": {
+  "facile": {
+   "texte": "Avec les mains.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

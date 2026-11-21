@@ -1,0 +1,34 @@
+{
+ "id": "frog-pumps",
+ "nom": "Frog pumps",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, plantes de pieds collées, genoux ouverts."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte le bassin en serrant les fessiers."
+  }
+ ],
+ "instructions": "Pont fessier plantes de pieds collées, genoux ouverts.",
+ "erreur": "Cambrer le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "L’ouverture des genoux ne se voit pas de profil."
+ }
+}

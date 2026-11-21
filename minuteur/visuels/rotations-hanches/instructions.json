@@ -1,0 +1,30 @@
+{
+ "id": "rotations-hanches",
+ "nom": "Rotations de hanches",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur une jambe, grands cercles avec le genou, puis change."
+  }
+ ],
+ "instructions": "Debout, grands cercles avec le genou.",
+ "erreur": "Se pencher sur le côté.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus petits.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus lents.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

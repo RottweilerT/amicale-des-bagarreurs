@@ -1,0 +1,31 @@
+{
+ "id": "equilibre-uni",
+ "nom": "Équilibre unipodal",
+ "categories": [
+  "Coordination et équilibre",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur un pied, genou levé ; change à mi-temps."
+  }
+ ],
+ "instructions": "Tiens sur un pied, change à mi-temps.",
+ "erreur": "Regarder ses pieds.",
+ "variantes": {
+  "facile": {
+   "texte": "Doigt sur un mur.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Yeux fermés.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

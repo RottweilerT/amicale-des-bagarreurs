@@ -1,0 +1,38 @@
+{
+ "id": "crochets",
+ "nom": "Enchaînements de crochets",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Crochet avant : rotation du buste, coude horizontal."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Crochet arrière, l’autre main reste au menton."
+  }
+ ],
+ "instructions": "Crochets gauche-droite, rotation du buste, coudes à l'horizontale.",
+ "erreur": "Ouvrir le bras en grand : le crochet reste court et serré.",
+ "variantes": {
+  "facile": {
+   "texte": "Crochets lents et amples.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Crochets haut-bas en alternance.",
+   "exercice": "sac-crochets"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

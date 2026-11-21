@@ -1,0 +1,31 @@
+{
+ "id": "bear-plank",
+ "nom": "Bear plank",
+ "categories": [
+  "Épaules et haut du corps",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À quatre pattes, genoux décollés de 3 cm, dos plat."
+  }
+ ],
+ "instructions": "À quatre pattes, genoux décollés de 3 cm.",
+ "erreur": "Remonter les fesses.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux posés entre les répétitions.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus long, dos parfaitement plat.",
+   "exercice": "bear-plank-ext"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

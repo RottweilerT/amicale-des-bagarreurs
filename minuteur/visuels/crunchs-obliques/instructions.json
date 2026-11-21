@@ -1,0 +1,34 @@
+{
+ "id": "crunchs-obliques",
+ "nom": "Crunchs obliques",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, mains derrière la tête."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Coude vers le genou opposé, puis change."
+  }
+ ],
+ "instructions": "Coude vers le genou opposé, en alternant.",
+ "erreur": "Tirer la tête avec les mains.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite amplitude.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en fin de mouvement.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "La rotation se lit mal de profil."
+ }
+}

@@ -1,0 +1,51 @@
+{
+ "id": "burpees-stricts",
+ "nom": "Burpees stricts",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Accroupis-toi, mains au sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Jette les pieds en arrière : planche."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Poitrine au sol, puis pousse pour revenir en planche."
+  },
+  {
+   "image": "step-05.svg",
+   "texte": "Ramène les pieds sous toi."
+  },
+  {
+   "image": "step-06.svg",
+   "texte": "Saute bras en l’air."
+  }
+ ],
+ "instructions": "Poitrine au sol à chaque répétition, saut bras tendus.",
+ "erreur": "Tricher sur l’amplitude.",
+ "variantes": {
+  "facile": {
+   "texte": "Burpees sans saut.",
+   "exercice": "burpees"
+  },
+  "difficile": {
+   "texte": "Saut groupé.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

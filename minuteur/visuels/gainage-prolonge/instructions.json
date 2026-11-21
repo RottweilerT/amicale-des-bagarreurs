@@ -1,0 +1,31 @@
+{
+ "id": "gainage-prolonge",
+ "nom": "Gainage prolongé",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche tenue toute la durée, respiration calme."
+  }
+ ],
+ "instructions": "Planche tenue toute la durée, respiration calme.",
+ "erreur": "Bloquer la respiration.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Une jambe levée.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

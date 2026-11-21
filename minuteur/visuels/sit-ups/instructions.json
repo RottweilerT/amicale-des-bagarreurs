@@ -1,0 +1,38 @@
+{
+ "id": "sit-ups",
+ "nom": "Sit-ups",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, genoux fléchis, mains derrière la tête."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Redresse tout le buste jusqu’aux genoux."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Redescends lentement."
+  }
+ ],
+ "instructions": "Redresse le buste entier jusqu'aux genoux.",
+ "erreur": "Tirer sur la nuque.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras vers l'avant.",
+   "exercice": "crunchs"
+  },
+  "difficile": {
+   "texte": "Mains derrière la tête.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

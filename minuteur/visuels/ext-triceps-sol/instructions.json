@@ -1,0 +1,38 @@
+{
+ "id": "ext-triceps-sol",
+ "nom": "Extensions de triceps au sol",
+ "categories": [
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En planche sur les avant-bras."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pousse sur les mains pour tendre les bras."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Redescends sur les avant-bras, sans bouger le bassin."
+  }
+ ],
+ "instructions": "En planche sur les avant-bras, pousse pour tendre les bras.",
+ "erreur": "Creuser le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Mains plus avancées.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

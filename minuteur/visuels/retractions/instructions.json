@@ -1,0 +1,34 @@
+{
+ "id": "retractions",
+ "nom": "Rétractions scapulaires",
+ "categories": [
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bras tendus devant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Tire les coudes en arrière et serre les omoplates 2 s."
+  }
+ ],
+ "instructions": "Serre les omoplates 2 s, relâche.",
+ "erreur": "Hausser les épaules.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus court.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras en croix.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "ytw",
+ "nom": "Y-T-W au sol",
+ "categories": [
+  "Épaules et haut du corps",
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus, à plat ventre : bras en Y."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Bras en T."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Bras en W, omoplates serrées."
+  }
+ ],
+ "instructions": "À plat ventre, forme un Y, puis un T, puis un W avec les bras.",
+ "erreur": "Décoller la poitrine en cambrant fort.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans décoller la poitrine.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Maintien 3 s par lettre.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

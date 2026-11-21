@@ -1,0 +1,38 @@
+{
+ "id": "crunchs",
+ "nom": "Crunchs",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, genoux fléchis, mains derrière la tête."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Expire et décolle les épaules, le bas du dos reste au sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Redescends sans reposer la tête."
+  }
+ ],
+ "instructions": "Décolle les épaules du sol en expirant, bas du dos au sol.",
+ "erreur": "Tirer sur la nuque avec les mains.",
+ "variantes": {
+  "facile": {
+   "texte": "Mains sur les cuisses.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras tendus derrière la tête.",
+   "exercice": "sit-ups"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

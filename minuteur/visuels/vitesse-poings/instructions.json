@@ -1,0 +1,39 @@
+{
+ "id": "vitesse-poings",
+ "nom": "Travail de vitesse des poings",
+ "categories": [
+  "Boxe et combat",
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute, épaules relâchées."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Coups courts et très rapides."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Alterne sans t’arrêter, retour immédiat."
+  }
+ ],
+ "instructions": "Coups courts et très rapides, relâchés.",
+ "erreur": "Se crisper : la vitesse vient du relâchement.",
+ "variantes": {
+  "facile": {
+   "texte": "Directs uniquement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Ajoute les crochets courts.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

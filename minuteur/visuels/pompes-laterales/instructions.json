@@ -1,0 +1,38 @@
+{
+ "id": "pompes-laterales",
+ "nom": "Pompes avec déplacement latéral",
+ "categories": [
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : une pompe."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Deux pas de mains sur le côté."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Une pompe, puis repars de l’autre côté."
+  }
+ ],
+ "instructions": "Une pompe, deux pas de mains sur le côté, une pompe.",
+ "erreur": "Laisser les hanches traîner derrière les mains.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans pompe, juste les pas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus de pas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Vue de dessus : le déplacement latéral reste discret."
+ }
+}

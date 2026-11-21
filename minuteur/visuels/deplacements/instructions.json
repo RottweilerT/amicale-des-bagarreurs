@@ -1,0 +1,39 @@
+{
+ "id": "deplacements",
+ "nom": "Déplacements courts sur place",
+ "categories": [
+  "Boxe et combat",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petit pas avant : le pied avant part en premier."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Petit pas arrière : le pied arrière part en premier."
+  }
+ ],
+ "instructions": "Petits pas avant, arrière et côtés, sans croiser les pieds.",
+ "erreur": "Croiser les pieds ou sauter.",
+ "variantes": {
+  "facile": {
+   "texte": "Pas lents.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pas rapides avec changements de direction.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

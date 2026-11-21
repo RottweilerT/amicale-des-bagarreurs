@@ -1,0 +1,30 @@
+{
+ "id": "squat-iso",
+ "nom": "Squats isométriques",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Immobile, cuisses parallèles au sol, dos droit."
+  }
+ ],
+ "instructions": "Reste immobile cuisses parallèles au sol.",
+ "erreur": "Remonter petit à petit.",
+ "variantes": {
+  "facile": {
+   "texte": "Moins bas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus longtemps.",
+   "exercice": "chaise"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

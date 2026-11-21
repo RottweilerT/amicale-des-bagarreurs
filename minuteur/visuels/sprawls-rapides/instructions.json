@@ -1,0 +1,39 @@
+{
+ "id": "sprawls-rapides",
+ "nom": "Sprawls rapides",
+ "categories": [
+  "Explosivité et puissance",
+  "Conditionnement traditionnel"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jette les jambes en arrière, hanches au sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens en garde aussitôt."
+  }
+ ],
+ "instructions": "Sprawls au rythme maximal.",
+ "erreur": "Hanches hautes en arrivant au sol.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": "sprawls"
+  },
+  "difficile": {
+   "texte": "Avec enchaînement de coups.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

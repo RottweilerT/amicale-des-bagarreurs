@@ -1,0 +1,35 @@
+{
+ "id": "skaters",
+ "nom": "Skaters sur place",
+ "categories": [
+  "Cardio sur place",
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : en appui sur une jambe, l’autre croisée derrière."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petit bond latéral sur l’autre jambe."
+  }
+ ],
+ "instructions": "Petits bonds latéraux d'une jambe à l'autre.",
+ "erreur": "Atterrir jambe tendue.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut, un pas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus grands bonds.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Jambe croisée derrière approximative en vue de face."
+ }
+}

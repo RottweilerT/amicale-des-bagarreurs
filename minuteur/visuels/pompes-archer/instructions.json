@@ -1,0 +1,39 @@
+{
+ "id": "pompes-archer",
+ "nom": "Pompes archer adaptées",
+ "categories": [
+  "Bras et triceps",
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : mains très écartées."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends vers une main ; l’autre bras reste tendu."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte puis descends de l’autre côté."
+  }
+ ],
+ "instructions": "Descends vers une main, l'autre bras s'allonge sur le côté.",
+ "erreur": "Laisser le bassin tourner.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": "pompes-larges"
+  },
+  "difficile": {
+   "texte": "Bras tendu complètement.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Vue de dessus : la profondeur de la descente ne se voit pas."
+ }
+}

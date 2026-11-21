@@ -1,0 +1,42 @@
+{
+ "id": "jab-cross-hook",
+ "nom": "Jab-cross-crochet",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jab."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Direct arrière."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Crochet avant : coude à hauteur du poing."
+  }
+ ],
+ "instructions": "Jab, direct, crochet avant coude à hauteur du poing.",
+ "erreur": "Armer le crochet en reculant le bras (le coup se voit venir).",
+ "variantes": {
+  "facile": {
+   "texte": "Marque une pause après chaque coup.",
+   "exercice": "jab-cross"
+  },
+  "difficile": {
+   "texte": "Double crochet à la fin.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "id": "shadow-cardio",
+ "nom": "Shadow boxing cardio",
+ "categories": [
+  "Cardio sur place",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde en sautillant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Boxe sans t’arrêter, rythme élevé."
+  }
+ ],
+ "instructions": "Boxe en sautillant sans arrêt, rythme élevé.",
+ "erreur": "Lâcher la garde.",
+ "variantes": {
+  "facile": {
+   "texte": "Rythme modéré.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rafales à fond.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

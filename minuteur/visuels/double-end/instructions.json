@@ -1,0 +1,39 @@
+{
+ "id": "double-end",
+ "nom": "Travail au double-end bag",
+ "categories": [
+  "Boxe et combat",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde face à la balle."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Touche la balle en rythme."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Esquive son retour."
+  }
+ ],
+ "instructions": "Touche la balle en rythme et esquive son retour.",
+ "erreur": "Frapper trop fort : la balle revient trop vite.",
+ "variantes": {
+  "facile": {
+   "texte": "Jabs seuls.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Enchaînements avec esquives.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "sauts-rotation",
+ "nom": "Sauts avec rotation contrôlée",
+ "categories": [
+  "Explosivité et puissance",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : demi-squat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en faisant un demi-tour."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Réception stable, genoux souples."
+  }
+ ],
+ "instructions": "Saut avec demi-tour, réception stable.",
+ "erreur": "Atterrir genoux rentrés.",
+ "variantes": {
+  "facile": {
+   "texte": "Quart de tour.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Tour complet.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "à revoir",
+  "note": "La rotation est suggérée par la flèche."
+ }
+}

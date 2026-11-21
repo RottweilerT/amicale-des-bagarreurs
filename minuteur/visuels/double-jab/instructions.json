@@ -1,0 +1,38 @@
+{
+ "id": "double-jab",
+ "nom": "Double jab",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Premier jab court."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Second jab plus long, avec un petit pas avant."
+  }
+ ],
+ "instructions": "Deux jabs rapides, le second plus loin.",
+ "erreur": "Revenir complètement en garde entre les deux jabs : le second doit partir aussitôt.",
+ "variantes": {
+  "facile": {
+   "texte": "Pause entre les doubles.",
+   "exercice": "jab"
+  },
+  "difficile": {
+   "texte": "Triple jab avec pas avant.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

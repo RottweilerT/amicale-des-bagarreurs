@@ -1,0 +1,36 @@
+{
+ "id": "pompes-cadence",
+ "nom": "Pompes en cadence",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Bras et triceps",
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Une pompe toutes les 2 secondes, sans t’arrêter."
+  }
+ ],
+ "instructions": "Une pompe toutes les 2 s, sans t'arrêter.",
+ "erreur": "Casser le rythme.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Une par seconde.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

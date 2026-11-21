@@ -1,0 +1,31 @@
+{
+ "id": "chevilles",
+ "nom": "Travail de cheville",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur une jambe : dessine des cercles avec la cheville, puis change."
+  }
+ ],
+ "instructions": "Cercles et flexions de chevilles, un pied après l'autre.",
+ "erreur": "Bouger toute la jambe.",
+ "variantes": {
+  "facile": {
+   "texte": "Assis.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Debout sans appui.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

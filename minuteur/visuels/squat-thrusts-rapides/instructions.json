@@ -1,0 +1,39 @@
+{
+ "id": "squat-thrusts-rapides",
+ "nom": "Squat thrusts rapides",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Accroupi, mains au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pieds en arrière : planche."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Ramène les pieds, recommence."
+  }
+ ],
+ "instructions": "Squat thrusts au rythme maximal.",
+ "erreur": "Perdre l’alignement en accélérant.",
+ "variantes": {
+  "facile": {
+   "texte": "Rythme modéré.",
+   "exercice": "squat-thrusts"
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

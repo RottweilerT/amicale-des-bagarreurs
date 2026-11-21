@@ -1,0 +1,47 @@
+{
+ "id": "burpees-explo",
+ "nom": "Burpees explosifs",
+ "categories": [
+  "Explosivité et puissance",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Accroupis-toi, mains au sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Jette les pieds en arrière : planche."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Ramène les pieds sous toi."
+  },
+  {
+   "image": "step-05.svg",
+   "texte": "Saut maximal."
+  }
+ ],
+ "instructions": "Burpee avec saut maximal à chaque fin.",
+ "erreur": "Atterrir lourdement.",
+ "variantes": {
+  "facile": {
+   "texte": "Burpee classique.",
+   "exercice": "burpees"
+  },
+  "difficile": {
+   "texte": "Saut groupé.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "id": "crunchs-inverses",
+ "nom": "Crunchs inversés",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, jambes en table, bras au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Ramène les genoux vers la poitrine : le bassin décolle."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Redescends lentement."
+  }
+ ],
+ "instructions": "Genoux vers la poitrine, décolle le bassin.",
+ "erreur": "Prendre de l’élan avec les jambes.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite amplitude.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Jambes tendues.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

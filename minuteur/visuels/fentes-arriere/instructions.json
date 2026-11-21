@@ -1,0 +1,39 @@
+{
+ "id": "fentes-arriere",
+ "nom": "Fentes arrière",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Grand pas arrière, buste droit."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens à la position de départ."
+  }
+ ],
+ "instructions": "Grand pas arrière, buste droit, reviens.",
+ "erreur": "Pencher le buste en avant.",
+ "variantes": {
+  "facile": {
+   "texte": "Appui sur un mur.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Tempo lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

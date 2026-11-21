@@ -1,0 +1,34 @@
+{
+ "id": "releves-genoux",
+ "nom": "Relevés de genoux",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Assis, appui sur les mains, jambes tendues décollées."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Ramène les genoux vers la poitrine, puis tends."
+  }
+ ],
+ "instructions": "Assis en appui sur les mains, ramène les genoux vers la poitrine.",
+ "erreur": "S’affaler en arrière.",
+ "variantes": {
+  "facile": {
+   "texte": "Pieds au sol entre chaque.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Sans appui.",
+   "exercice": "releves-jambes"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "id": "superman-alt",
+ "nom": "Superman alterné",
+ "categories": [
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À plat ventre."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Lève un bras et la jambe opposée."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Puis l’autre côté."
+  }
+ ],
+ "instructions": "À plat ventre, lève bras et jambe opposés.",
+ "erreur": "Lever trop haut en cambrant.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras seulement.",
+   "exercice": "bird-dog"
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

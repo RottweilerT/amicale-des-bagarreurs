@@ -1,0 +1,30 @@
+{
+ "id": "dorsal-iso",
+ "nom": "Maintien dorsal isométrique",
+ "categories": [
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus, à plat ventre : bras en W décollés, immobile."
+  }
+ ],
+ "instructions": "À plat ventre, bras en W décollés, immobile.",
+ "erreur": "Lever la tête.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras le long du corps.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras tendus devant.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

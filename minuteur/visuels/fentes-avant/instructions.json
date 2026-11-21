@@ -1,0 +1,39 @@
+{
+ "id": "fentes-avant",
+ "nom": "Fentes avant sur place",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout, mains sur les hanches."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Grand pas avant, genou arrière près du sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Pousse sur la jambe avant pour revenir."
+  }
+ ],
+ "instructions": "Grand pas avant, genou arrière près du sol, reviens.",
+ "erreur": "Genou avant qui dépasse largement la pointe du pied.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en bas.",
+   "exercice": "fentes-sautees"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

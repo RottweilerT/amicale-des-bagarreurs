@@ -1,0 +1,31 @@
+{
+ "id": "crab-hold",
+ "nom": "Crab hold",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains et pieds au sol, bassin décollé, immobile."
+  }
+ ],
+ "instructions": "Mains et pieds au sol, bassin décollé, immobile.",
+ "erreur": "Laisser le bassin toucher le sol.",
+ "variantes": {
+  "facile": {
+   "texte": "Bassin plus bas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Une jambe levée.",
+   "exercice": "crab-reach"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

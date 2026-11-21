@@ -1,0 +1,39 @@
+{
+ "id": "bird-dog",
+ "nom": "Bird dog",
+ "categories": [
+  "Gainage et stabilité",
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À quatre pattes, dos plat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Tends un bras et la jambe opposée, sans cambrer."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens et change de côté."
+  }
+ ],
+ "instructions": "À quatre pattes, tends bras et jambe opposés.",
+ "erreur": "Monter la jambe trop haut en cambrant.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras ou jambe seul.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Ajoute un crunch coude-genou.",
+   "exercice": "superman"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

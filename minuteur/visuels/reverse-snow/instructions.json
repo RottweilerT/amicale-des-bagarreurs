@@ -1,0 +1,39 @@
+{
+ "id": "reverse-snow",
+ "nom": "Reverse snow angels",
+ "categories": [
+  "Dos et posture",
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus, à plat ventre : bras décollés le long du corps."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Balaye les bras sur les côtés…"
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "… jusqu’au-dessus de la tête, lentement."
+  }
+ ],
+ "instructions": "À plat ventre, bras décollés, balaye des hanches à la tête.",
+ "erreur": "Poser les bras au sol.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras pliés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Tempo lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

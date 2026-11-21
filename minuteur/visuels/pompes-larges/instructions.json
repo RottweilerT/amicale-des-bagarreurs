@@ -1,0 +1,42 @@
+{
+ "id": "pompes-larges",
+ "nom": "Pompes larges",
+ "categories": [
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : mains bien plus larges que les épaules."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Descends poitrine entre les mains."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Pousse pour remonter, corps gainé."
+  }
+ ],
+ "instructions": "Mains bien plus larges que les épaules.",
+ "erreur": "Mains trop larges : les épaules souffrent.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Pause basse.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

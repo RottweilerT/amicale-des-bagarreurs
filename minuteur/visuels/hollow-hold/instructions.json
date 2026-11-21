@@ -1,0 +1,31 @@
+{
+ "id": "hollow-hold",
+ "nom": "Hollow body hold",
+ "categories": [
+  "Abdominaux",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bas du dos plaqué, bras et jambes tendus décollés du sol."
+  }
+ ],
+ "instructions": "Bas du dos plaqué, bras et jambes tendus décollés.",
+ "erreur": "Cambrer : le bas du dos se décolle.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux fléchis.",
+   "exercice": "dead-bug"
+  },
+  "difficile": {
+   "texte": "Bras derrière la tête.",
+   "exercice": "hollow-rocks"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

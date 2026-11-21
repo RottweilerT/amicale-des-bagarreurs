@@ -1,0 +1,30 @@
+{
+ "id": "pont-maintien",
+ "nom": "Pont fessier avec maintien",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bassin en haut, immobile, fessiers serrés."
+  }
+ ],
+ "instructions": "Bassin en haut, immobile, fessiers serrés.",
+ "erreur": "Laisser le bassin descendre.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus court.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Une jambe.",
+   "exercice": "pont-uni"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

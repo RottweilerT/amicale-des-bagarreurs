@@ -1,0 +1,38 @@
+{
+ "id": "pont",
+ "nom": "Pont fessier",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, pieds au sol près des fesses."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte le bassin en serrant les fessiers."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Redescends lentement."
+  }
+ ],
+ "instructions": "Sur le dos, pieds au sol, monte le bassin en serrant les fessiers.",
+ "erreur": "Cambrer le bas du dos au lieu de serrer les fessiers.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": "pont-uni"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

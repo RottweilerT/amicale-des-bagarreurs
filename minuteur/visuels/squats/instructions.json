@@ -1,0 +1,42 @@
+{
+ "id": "squats",
+ "nom": "Squats classiques",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pieds largeur d’épaules, pointes légèrement ouvertes."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Fesses vers l’arrière, genoux dans l’axe des pieds."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Cuisses parallèles au sol, dos droit, talons au sol."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Pousse dans les talons pour remonter."
+  }
+ ],
+ "instructions": "Pieds largeur d'épaules, fesses en arrière, genoux vers l'extérieur.",
+ "erreur": "Laisser les genoux rentrer vers l’intérieur.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Squats sautés.",
+   "exercice": "squats-sautes"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

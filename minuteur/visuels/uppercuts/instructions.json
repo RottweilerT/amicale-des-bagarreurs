@@ -1,0 +1,38 @@
+{
+ "id": "uppercuts",
+ "nom": "Enchaînements d'uppercuts",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute, genoux souples."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Uppercut avant : fléchis puis pousse sur les jambes."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Uppercut arrière, garde haute de l’autre main."
+  }
+ ],
+ "instructions": "Uppercuts alternés, les jambes poussent, la garde reste haute.",
+ "erreur": "Frapper seulement avec le bras, sans les jambes.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite amplitude, lentement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rafales en restant fléchi.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

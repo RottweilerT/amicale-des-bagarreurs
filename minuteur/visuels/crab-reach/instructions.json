@@ -1,0 +1,35 @@
+{
+ "id": "crab-reach",
+ "nom": "Crab reach",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En position du crabe."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte le bassin et tends un bras par-dessus."
+  }
+ ],
+ "instructions": "En crab, monte le bassin et tends un bras par-dessus.",
+ "erreur": "Forcer sur l’épaule d’appui.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite amplitude.",
+   "exercice": "crab-hold"
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

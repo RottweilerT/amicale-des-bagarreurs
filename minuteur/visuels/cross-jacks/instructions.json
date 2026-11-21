@@ -1,0 +1,35 @@
+{
+ "id": "cross-jacks",
+ "nom": "Cross jacks",
+ "categories": [
+  "Cardio sur place",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : bras et jambes écartés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en croisant bras et jambes devant toi."
+  }
+ ],
+ "instructions": "En sautant, croise bras et jambes devant toi.",
+ "erreur": "Croiser trop fort et perdre l’équilibre.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans saut.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "id": "squats-sumo",
+ "nom": "Squats sumo",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : pieds très écartés, pointes vers l’extérieur."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends genoux ouverts, buste droit."
+  }
+ ],
+ "instructions": "Pieds très écartés, pointes vers l'extérieur.",
+ "erreur": "Genoux qui rentrent.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en bas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

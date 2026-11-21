@@ -1,0 +1,39 @@
+{
+ "id": "shadow-tech",
+ "nom": "Shadow boxing technique",
+ "categories": [
+  "Boxe et combat",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute, appuis stables."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Un coup lent et précis, rotation du pied et de la hanche."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Retour en garde par le même chemin."
+  }
+ ],
+ "instructions": "Coups lents et parfaits : appuis, rotation, retour en garde.",
+ "erreur": "Aller trop vite et perdre la technique.",
+ "variantes": {
+  "facile": {
+   "texte": "Un seul coup à la fois.",
+   "exercice": "jab"
+  },
+  "difficile": {
+   "texte": "Ajoute esquives et pivots.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

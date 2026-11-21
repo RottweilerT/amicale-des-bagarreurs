@@ -1,0 +1,35 @@
+{
+ "id": "marche-sur-place",
+ "nom": "Marche sur place",
+ "categories": [
+  "Mobilité et récupération",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Marche calmement sur place."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Respire profondément."
+  }
+ ],
+ "instructions": "Marche calmement sur place en respirant.",
+ "erreur": "Se voûter.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Montées de genoux.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "id": "flutter-kicks",
+ "nom": "Flutter kicks",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Jambes tendues, bas du dos au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits battements rapides de haut en bas."
+  }
+ ],
+ "instructions": "Jambes tendues, petits battements rapides.",
+ "erreur": "Cambrer le bas du dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Jambes plus hautes.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Jambes au ras du sol.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "id": "cercles-bras-inv",
+ "nom": "Cercles de bras inversés",
+ "categories": [
+  "Épaules et haut du corps",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bras à l’horizontale : petits cercles vers l’arrière."
+  }
+ ],
+ "instructions": "Même mouvement, cercles vers l'arrière.",
+ "erreur": "Laisser les bras descendre.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras plus bas.",
+   "exercice": "cercles-bras"
+  },
+  "difficile": {
+   "texte": "Cercles plus grands.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "id": "cercles-bras",
+ "nom": "Cercles de bras",
+ "categories": [
+  "Épaules et haut du corps",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "De face, bras tendus à l’horizontale : petits cercles vers l’avant."
+  }
+ ],
+ "instructions": "Bras tendus sur les côtés, petits cercles vers l'avant.",
+ "erreur": "Hausser les épaules vers les oreilles.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras plus bas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Cercles plus grands et rapides.",
+   "exercice": "cercles-bras-inv"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

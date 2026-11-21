@@ -1,0 +1,43 @@
+{
+ "id": "pompes-decalees",
+ "nom": "Pompes décalées",
+ "categories": [
+  "Bras et triceps",
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : une main plus avancée que l’autre."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Poitrine juste au-dessus du sol."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Remonte ; change de main avancée à chaque série."
+  }
+ ],
+ "instructions": "Une main plus avancée que l'autre ; change à chaque série.",
+ "erreur": "Tourner le buste vers la main avancée.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Décalage plus grand.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

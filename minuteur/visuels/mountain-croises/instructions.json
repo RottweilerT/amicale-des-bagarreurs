@@ -1,0 +1,35 @@
+{
+ "id": "mountain-croises",
+ "nom": "Mountain climbers croisés",
+ "categories": [
+  "Abdominaux",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : un genou vers le coude opposé."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Puis l’autre, en rythme."
+  }
+ ],
+ "instructions": "Genou vers le coude opposé.",
+ "erreur": "Lever le bassin.",
+ "variantes": {
+  "facile": {
+   "texte": "Lentement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Vue de dessus : la flexion du genou se lit peu."
+ }
+}

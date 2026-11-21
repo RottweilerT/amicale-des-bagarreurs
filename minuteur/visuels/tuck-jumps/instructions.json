@@ -1,0 +1,38 @@
+{
+ "id": "tuck-jumps",
+ "nom": "Tuck jumps",
+ "categories": [
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Demi-squat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en ramenant les genoux le plus haut possible."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Réception souple, enchaîne."
+  }
+ ],
+ "instructions": "Saute en ramenant les genoux le plus haut possible.",
+ "erreur": "Atterrir sur les talons.",
+ "variantes": {
+  "facile": {
+   "texte": "Saut simple.",
+   "exercice": "sauts-groupes"
+  },
+  "difficile": {
+   "texte": "Enchaînés.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

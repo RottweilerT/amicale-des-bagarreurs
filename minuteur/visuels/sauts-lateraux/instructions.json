@@ -1,0 +1,36 @@
+{
+ "id": "sauts-lateraux",
+ "nom": "Sauts latéraux courts",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Cardio sur place",
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face, pieds joints."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute de gauche à droite, pieds joints."
+  }
+ ],
+ "instructions": "Sauts pieds joints de gauche à droite.",
+ "erreur": "Atterrir lourdement.",
+ "variantes": {
+  "facile": {
+   "texte": "Petits sauts.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Sur un pied.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

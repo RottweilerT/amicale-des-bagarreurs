@@ -1,0 +1,39 @@
+{
+ "id": "pivots",
+ "nom": "Pivots",
+ "categories": [
+  "Boxe et combat",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde, poids sur le pied avant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pivote sur le pied avant : le pied arrière tourne autour."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Tu fais face à un nouvel angle, garde haute."
+  }
+ ],
+ "instructions": "Pivote sur le pied avant pour changer d'angle.",
+ "erreur": "Croiser les pieds pendant le pivot.",
+ "variantes": {
+  "facile": {
+   "texte": "Pivots lents d'un quart de tour.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pivot puis enchaînement.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Le quart de tour se lit mal de profil : la flèche indique le balayage du pied arrière."
+ }
+}

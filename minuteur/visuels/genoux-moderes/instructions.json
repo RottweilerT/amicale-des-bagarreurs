@@ -1,0 +1,34 @@
+{
+ "id": "genoux-moderes",
+ "nom": "Montées de genoux modérées",
+ "categories": [
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Genou à mi-hauteur."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Alterne à rythme régulier."
+  }
+ ],
+ "instructions": "Genoux à mi-hauteur, rythme régulier.",
+ "erreur": "Taper du pied.",
+ "variantes": {
+  "facile": {
+   "texte": "Marche sur place.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "High knees.",
+   "exercice": "high-knees"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

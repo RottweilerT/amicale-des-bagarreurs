@@ -1,0 +1,34 @@
+{
+ "id": "respiration-diaph",
+ "nom": "Respiration diaphragmatique",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Main sur le ventre : inspire 4 s par le nez, le ventre se soulève."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Expire 6 s, le ventre redescend."
+  }
+ ],
+ "instructions": "Main sur le ventre : inspire 4 s par le nez, expire 6 s.",
+ "erreur": "Gonfler la poitrine au lieu du ventre.",
+ "variantes": {
+  "facile": {
+   "texte": "Allongé.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Expiration plus longue.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

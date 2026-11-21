@@ -1,0 +1,38 @@
+{
+ "id": "v-ups",
+ "nom": "V-ups",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Allongé, bras tendus derrière la tête."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte bras et jambes tendus : les mains rejoignent les pieds."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Redescends en contrôlant."
+  }
+ ],
+ "instructions": "Mains et pieds se rejoignent au-dessus du bassin.",
+ "erreur": "Retomber lourdement au sol.",
+ "variantes": {
+  "facile": {
+   "texte": "Un genou fléchi.",
+   "exercice": "crunchs"
+  },
+  "difficile": {
+   "texte": "Sans poser.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

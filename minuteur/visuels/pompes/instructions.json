@@ -1,0 +1,43 @@
+{
+ "id": "pompes",
+ "nom": "Pompes classiques",
+ "categories": [
+  "Bras et triceps",
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends en contrôlant, coudes vers l’arrière."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Poitrine juste au-dessus du sol."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Pousse pour remonter, corps gainé."
+  }
+ ],
+ "instructions": "Mains sous les épaules, corps gainé, poitrine au ras du sol.",
+ "erreur": "Laisser le bassin s’affaisser.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Pompes tempo ou pause basse.",
+   "exercice": "pompes-explo"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

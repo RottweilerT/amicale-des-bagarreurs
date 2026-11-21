@@ -1,0 +1,35 @@
+{
+ "id": "scap-pushups",
+ "nom": "Pompes scapulaires",
+ "categories": [
+  "Épaules et haut du corps",
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bras tendus : rapproche les omoplates, la poitrine descend un peu."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Écarte les omoplates en poussant le sol."
+  }
+ ],
+ "instructions": "Bras tendus, rapproche puis écarte les omoplates.",
+ "erreur": "Plier les coudes : seules les omoplates bougent.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en fin de mouvement.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Mouvement de faible amplitude, peu visible de profil."
+ }
+}

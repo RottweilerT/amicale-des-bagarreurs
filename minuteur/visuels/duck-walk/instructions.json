@@ -1,0 +1,35 @@
+{
+ "id": "duck-walk",
+ "nom": "Duck walk stationnaire",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En squat bas, buste droit."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits pas sur place sans te relever."
+  }
+ ],
+ "instructions": "En squat bas, petits pas sur place.",
+ "erreur": "Se redresser entre les pas.",
+ "variantes": {
+  "facile": {
+   "texte": "Moins bas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus longtemps.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

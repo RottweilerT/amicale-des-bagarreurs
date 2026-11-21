@@ -1,0 +1,30 @@
+{
+ "id": "pulsations-bras",
+ "nom": "Pulsations bras tendus",
+ "categories": [
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bras tendus : petits mouvements rapides de haut en bas."
+  }
+ ],
+ "instructions": "Bras tendus, petits mouvements rapides de haut en bas.",
+ "erreur": "Plier les coudes.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras au-dessus de la tête.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "id": "pompes-tempo",
+ "nom": "Pompes tempo lent",
+ "categories": [
+  "Bras et triceps",
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains sous les épaules, corps aligné de la tête aux talons."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "3 secondes pour descendre."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Poitrine juste au-dessus du sol."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "1 seconde pour remonter."
+  }
+ ],
+ "instructions": "3 s pour descendre, 1 s pour remonter.",
+ "erreur": "Accélérer en fin de descente.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "5 s de descente.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "shadow-contraintes",
+ "nom": "Shadow boxing avec contraintes techniques",
+ "categories": [
+  "Coordination et équilibre",
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Combinaison…"
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "… qui finit toujours par une esquive (ou ta contrainte)."
+  }
+ ],
+ "instructions": "Ex. : chaque combinaison finit par une esquive.",
+ "erreur": "Oublier la contrainte quand la fatigue arrive.",
+ "variantes": {
+  "facile": {
+   "texte": "Une contrainte simple.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Deux contraintes à la fois.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

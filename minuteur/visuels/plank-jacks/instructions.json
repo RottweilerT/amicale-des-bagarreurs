@@ -1,0 +1,35 @@
+{
+ "id": "plank-jacks",
+ "nom": "Plank jacks",
+ "categories": [
+  "Cardio sur place",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : planche haute, pieds joints."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Écarte et rapproche les pieds en sautant."
+  }
+ ],
+ "instructions": "En planche haute, écarte et rapproche les pieds en sautant.",
+ "erreur": "Lever les fesses.",
+ "variantes": {
+  "facile": {
+   "texte": "Un pied après l'autre.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "id": "rebonds",
+ "nom": "Petits rebonds verticaux",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur la pointe des pieds."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits sauts réguliers."
+  }
+ ],
+ "instructions": "Petits sauts sur les pointes, très réguliers.",
+ "erreur": "Atterrir sur les talons.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans décoller.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus haut.",
+   "exercice": "pogo"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

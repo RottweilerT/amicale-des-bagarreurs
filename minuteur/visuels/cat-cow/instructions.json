@@ -1,0 +1,35 @@
+{
+ "id": "cat-cow",
+ "nom": "Cat-cow",
+ "categories": [
+  "Mobilité et récupération",
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Dos rond, menton vers la poitrine."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Dos creux, regard vers l’avant."
+  }
+ ],
+ "instructions": "À quatre pattes, arrondis puis creuse le dos.",
+ "erreur": "Aller trop vite.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus petit.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "La courbure du dos ne peut pas être dessinée : seule la tête et le buste bougent."
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "sdt-uni",
+ "nom": "Soulevé de terre unilatéral",
+ "categories": [
+  "Fessiers et chaîne postérieure",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur une jambe, genou légèrement fléchi."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Penche le buste, l’autre jambe part en arrière, dos plat."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens debout."
+  }
+ ],
+ "instructions": "Sur une jambe, penche le buste, l'autre jambe part en arrière.",
+ "erreur": "Tourner le bassin vers le haut.",
+ "variantes": {
+  "facile": {
+   "texte": "Pointe du pied posée.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras tendus devant.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

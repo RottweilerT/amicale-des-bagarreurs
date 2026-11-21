@@ -1,0 +1,40 @@
+{
+ "id": "shoulder-taps",
+ "nom": "Planche avec touches d'épaules",
+ "categories": [
+  "Épaules et haut du corps",
+  "Gainage et stabilité",
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus : planche haute, pieds écartés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Touche l’épaule opposée sans bouger le bassin."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Repose, puis change de main."
+  }
+ ],
+ "instructions": "En planche haute, touche l'épaule opposée sans bouger le bassin.",
+ "erreur": "Balancer le bassin à chaque touche.",
+ "variantes": {
+  "facile": {
+   "texte": "Pieds écartés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pieds serrés, lentement.",
+   "exercice": "planche-bras"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Vue de dessus : le geste de la main vers l’épaule est petit."
+ }
+}

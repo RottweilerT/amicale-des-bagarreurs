@@ -1,0 +1,30 @@
+{
+ "id": "pointes-maintien",
+ "nom": "Maintien sur pointes",
+ "categories": [
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Reste en haut, sur la pointe des pieds, immobile."
+  }
+ ],
+ "instructions": "Reste en haut sur les pointes, immobile.",
+ "erreur": "Laisser les chevilles s’affaisser vers l’extérieur.",
+ "variantes": {
+  "facile": {
+   "texte": "Appui sur un mur.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Sur un pied.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

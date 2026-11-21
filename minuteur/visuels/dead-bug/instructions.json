@@ -1,0 +1,39 @@
+{
+ "id": "dead-bug",
+ "nom": "Dead bug",
+ "categories": [
+  "Abdominaux",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, bras vers le plafond, jambes en table."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Tends un bras et la jambe opposée sans cambrer."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens et change de côté."
+  }
+ ],
+ "instructions": "Sur le dos, tends bras et jambe opposés sans cambrer.",
+ "erreur": "Décoller le bas du dos du sol.",
+ "variantes": {
+  "facile": {
+   "texte": "Seulement les jambes.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus lent avec pause.",
+   "exercice": "hollow-hold"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

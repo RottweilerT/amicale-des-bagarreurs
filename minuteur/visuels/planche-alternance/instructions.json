@@ -1,0 +1,38 @@
+{
+ "id": "planche-alternance",
+ "nom": "Planche avec alternance des appuis",
+ "categories": [
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Décolle un bras…"
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "… puis une jambe, sans bouger le bassin."
+  }
+ ],
+ "instructions": "Décolle un appui à tour de rôle sans bouger le bassin.",
+ "erreur": "Tourner le bassin.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras seulement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras et jambe opposés.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

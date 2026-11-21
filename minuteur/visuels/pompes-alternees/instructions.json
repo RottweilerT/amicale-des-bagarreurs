@@ -1,0 +1,39 @@
+{
+ "id": "pompes-alternees",
+ "nom": "Pompes alternées",
+ "categories": [
+  "Pectoraux",
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pompe normale."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Puis pompe large."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Puis pompe serrée, et recommence."
+  }
+ ],
+ "instructions": "Alterne pompe normale, pompe large et pompe serrée.",
+ "erreur": "Perdre l’alignement du corps en changeant de position.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Ajoute une pompe diamant.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Vues de dessus seulement : la descente est celle des pompes classiques."
+ }
+}

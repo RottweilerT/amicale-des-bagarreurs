@@ -1,0 +1,34 @@
+{
+ "id": "gainage-rotations",
+ "nom": "Gainage avec rotations",
+ "categories": [
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Vue de face : pivote en planche latérale, bras tendu vers le ciel, puis change de côté."
+  }
+ ],
+ "instructions": "De la planche haute, pivote en planche latérale bras levé.",
+ "erreur": "Laisser le bassin descendre pendant la rotation.",
+ "variantes": {
+  "facile": {
+   "texte": "Lentement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "à revoir",
+  "note": "Deux points de vue différents (profil, puis face)."
+ }
+}

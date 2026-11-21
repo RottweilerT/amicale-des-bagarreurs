@@ -1,0 +1,39 @@
+{
+ "id": "bear-plank-ext",
+ "nom": "Bear plank avec extensions",
+ "categories": [
+  "Épaules et haut du corps",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Genoux décollés, dos plat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Tends un bras devant sans bouger le dos."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Puis une jambe vers l’arrière."
+  }
+ ],
+ "instructions": "En bear plank, tends un bras ou une jambe sans bouger le dos.",
+ "erreur": "Tourner le bassin quand un appui se lève.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux posés.",
+   "exercice": "bear-plank"
+  },
+  "difficile": {
+   "texte": "Bras et jambe opposés.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

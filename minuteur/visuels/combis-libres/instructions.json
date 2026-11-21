@@ -1,0 +1,46 @@
+{
+ "id": "combis-libres",
+ "nom": "Combinaisons libres",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jab."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Direct arrière."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Crochet."
+  },
+  {
+   "image": "step-05.svg",
+   "texte": "Uppercut : invente tes enchaînements de 3 à 5 coups."
+  }
+ ],
+ "instructions": "Invente tes enchaînements de 3 à 5 coups.",
+ "erreur": "Enchaîner sans revenir en garde à la fin.",
+ "variantes": {
+  "facile": {
+   "texte": "Combinaisons de 2 coups.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Combinaisons de 6 coups et plus.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

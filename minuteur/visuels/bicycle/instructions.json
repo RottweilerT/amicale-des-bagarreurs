@@ -1,0 +1,34 @@
+{
+ "id": "bicycle",
+ "nom": "Bicycle crunches",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Épaules décollées : genou vers la poitrine, l’autre jambe tendue."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Coude vers le genou opposé, puis change en pédalant."
+  }
+ ],
+ "instructions": "Coude vers le genou opposé, jambes en pédalage.",
+ "erreur": "Tirer sur la nuque.",
+ "variantes": {
+  "facile": {
+   "texte": "Pieds plus hauts.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Lentement avec pause.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "La rotation du buste se lit mal de profil."
+ }
+}

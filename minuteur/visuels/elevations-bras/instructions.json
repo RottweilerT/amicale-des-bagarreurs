@@ -1,0 +1,34 @@
+{
+ "id": "elevations-bras",
+ "nom": "Élévations de bras sans charge",
+ "categories": [
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "De face, bras le long du corps."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte les bras tendus jusqu’à l’horizontale, lentement."
+  }
+ ],
+ "instructions": "Monte les bras tendus jusqu'à l'horizontale, lentement.",
+ "erreur": "Monter les bras au-dessus des épaules en haussant les épaules.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Maintien en haut 2 s.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "id": "planche-haute",
+ "nom": "Planche haute",
+ "categories": [
+  "Épaules et haut du corps",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bras tendus, corps aligné de la tête aux talons."
+  }
+ ],
+ "instructions": "Bras tendus, corps aligné de la tête aux talons.",
+ "erreur": "Bassin trop haut ou trop bas.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Une jambe levée.",
+   "exercice": "planche-bras"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

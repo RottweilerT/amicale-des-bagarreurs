@@ -1,0 +1,34 @@
+{
+ "id": "donkey-kicks",
+ "nom": "Donkey kicks",
+ "categories": [
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À quatre pattes."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pousse un talon vers le plafond, genou plié à 90°."
+  }
+ ],
+ "instructions": "À quatre pattes, pousse un talon vers le plafond.",
+ "erreur": "Cambrer le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite amplitude.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

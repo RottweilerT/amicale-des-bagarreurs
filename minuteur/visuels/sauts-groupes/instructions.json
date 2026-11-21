@@ -1,0 +1,39 @@
+{
+ "id": "sauts-groupes",
+ "nom": "Sauts groupés",
+ "categories": [
+  "Cardio sur place",
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Demi-squat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute en ramenant les genoux à la poitrine."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Réception souple."
+  }
+ ],
+ "instructions": "Saute en ramenant les genoux à la poitrine.",
+ "erreur": "Atterrir jambes tendues.",
+ "variantes": {
+  "facile": {
+   "texte": "Saut simple.",
+   "exercice": "sauts-verticaux"
+  },
+  "difficile": {
+   "texte": "Plus haut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

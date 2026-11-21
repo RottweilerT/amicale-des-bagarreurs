@@ -1,0 +1,40 @@
+{
+ "id": "sprawls",
+ "nom": "Sprawls",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Boxe et combat",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Jette les jambes en arrière, hanches au sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Reviens en garde aussitôt."
+  }
+ ],
+ "instructions": "Jette les jambes en arrière, hanches au sol, reviens en garde.",
+ "erreur": "Garder les hanches hautes.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Enchaîné avec deux coups.",
+   "exercice": "sprawls-rapides"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

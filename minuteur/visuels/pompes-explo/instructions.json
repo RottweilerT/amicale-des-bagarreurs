@@ -1,0 +1,40 @@
+{
+ "id": "pompes-explo",
+ "nom": "Pompes explosives",
+ "categories": [
+  "Explosivité et puissance",
+  "Pectoraux",
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En bas de la pompe."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pousse fort : les mains décollent."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Réception mains souples, enchaîne."
+  }
+ ],
+ "instructions": "Pousse fort pour décoller les mains du sol.",
+ "erreur": "Atterrir bras tendus et coudes bloqués.",
+ "variantes": {
+  "facile": {
+   "texte": "Mains surélevées.",
+   "exercice": "pompes"
+  },
+  "difficile": {
+   "texte": "Avec claquement de mains.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "id": "contraction-relache",
+ "nom": "Alternance contraction-relâchement",
+ "categories": [
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Contracte tout le corps 3 s, poings serrés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Relâche complètement."
+  }
+ ],
+ "instructions": "Contracte tout le corps 3 s puis relâche complètement.",
+ "erreur": "Bloquer la respiration en contractant.",
+ "variantes": {
+  "facile": {
+   "texte": "Contraction partielle.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus long.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "frappes-explo",
+ "nom": "Frappes explosives dans le vide",
+ "categories": [
+  "Boxe et combat",
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde, relâché."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Coup sec et puissant."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Retour en garde immédiat."
+  }
+ ],
+ "instructions": "Coups puissants et secs, retour en garde immédiat.",
+ "erreur": "Rester bloqué bras tendu.",
+ "variantes": {
+  "facile": {
+   "texte": "Directs uniquement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rafales de 10 coups maximum.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

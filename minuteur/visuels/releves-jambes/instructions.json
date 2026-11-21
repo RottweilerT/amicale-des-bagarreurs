@@ -1,0 +1,38 @@
+{
+ "id": "releves-jambes",
+ "nom": "Relevés de jambes",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, jambes tendues à la verticale."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends les jambes tendues jusqu’au ras du sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte sans cambrer."
+  }
+ ],
+ "instructions": "Jambes tendues de la verticale jusqu'au ras du sol.",
+ "erreur": "Décoller le bas du dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux fléchis.",
+   "exercice": "releves-genoux"
+  },
+  "difficile": {
+   "texte": "Sans poser les talons.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

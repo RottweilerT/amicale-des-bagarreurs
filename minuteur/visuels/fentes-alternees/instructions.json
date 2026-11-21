@@ -1,0 +1,38 @@
+{
+ "id": "fentes-alternees",
+ "nom": "Fentes alternées",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Fente, jambe droite devant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Reviens debout."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Fente de l’autre jambe."
+  }
+ ],
+ "instructions": "Alterne jambe droite et gauche à chaque fente.",
+ "erreur": "Poser le genou au sol brutalement.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

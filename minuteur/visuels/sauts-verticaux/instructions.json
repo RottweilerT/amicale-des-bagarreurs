@@ -1,0 +1,39 @@
+{
+ "id": "sauts-verticaux",
+ "nom": "Sauts verticaux",
+ "categories": [
+  "Cardio sur place",
+  "Explosivité et puissance"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Demi-squat, bras en arrière."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute le plus haut possible, bras vers le ciel."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Réception souple."
+  }
+ ],
+ "instructions": "Saut vertical maximal, réception souple.",
+ "erreur": "Atterrir genoux rentrés.",
+ "variantes": {
+  "facile": {
+   "texte": "Petits sauts.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Enchaînés sans pause.",
+   "exercice": "sauts-groupes"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

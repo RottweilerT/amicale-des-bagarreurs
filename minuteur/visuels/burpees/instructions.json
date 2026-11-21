@@ -1,0 +1,51 @@
+{
+ "id": "burpees",
+ "nom": "Burpees",
+ "categories": [
+  "Cardio sur place",
+  "Conditionnement traditionnel"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Accroupis-toi, mains au sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Jette les pieds en arrière : planche."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "Une pompe, poitrine près du sol."
+  },
+  {
+   "image": "step-05.svg",
+   "texte": "Ramène les pieds sous toi."
+  },
+  {
+   "image": "step-06.svg",
+   "texte": "Saute bras en l’air."
+  }
+ ],
+ "instructions": "Accroupi, pieds en arrière, pompe, retour, saut.",
+ "erreur": "Laisser le bassin s’affaisser en planche.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans pompe ni saut.",
+   "exercice": "burpees-sans-saut"
+  },
+  "difficile": {
+   "texte": "Avec saut groupé.",
+   "exercice": "burpees-explo"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

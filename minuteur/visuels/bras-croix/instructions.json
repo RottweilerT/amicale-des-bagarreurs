@@ -1,0 +1,30 @@
+{
+ "id": "bras-croix",
+ "nom": "Maintien des bras en croix",
+ "categories": [
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Bras tendus en croix, immobiles, épaules basses."
+  }
+ ],
+ "instructions": "Bras tendus à l'horizontale, immobiles.",
+ "erreur": "Laisser les bras descendre petit à petit.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras pliés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Paumes vers le ciel, plus longtemps.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

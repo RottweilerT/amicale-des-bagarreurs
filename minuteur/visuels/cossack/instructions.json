@@ -1,0 +1,39 @@
+{
+ "id": "cossack",
+ "nom": "Cossack squats",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : pieds très écartés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends d’un côté, l’autre jambe tendue."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Puis de l’autre côté."
+  }
+ ],
+ "instructions": "Pieds très écartés, descends d'un côté, l'autre jambe tendue.",
+ "erreur": "Décoller le talon de la jambe fléchie.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus bas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Position des pieds approximative."
+ }
+}

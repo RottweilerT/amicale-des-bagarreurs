@@ -1,0 +1,31 @@
+{
+ "id": "equilibre-pied",
+ "nom": "Équilibre sur un pied",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur un pied, genou légèrement fléchi, regard droit."
+  }
+ ],
+ "instructions": "Tiens sur un pied, genou légèrement fléchi.",
+ "erreur": "Bloquer la respiration.",
+ "variantes": {
+  "facile": {
+   "texte": "Doigt sur un mur.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Yeux fermés.",
+   "exercice": "equilibre-dyn"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

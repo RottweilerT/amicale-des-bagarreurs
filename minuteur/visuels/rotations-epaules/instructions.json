@@ -1,0 +1,31 @@
+{
+ "id": "rotations-epaules",
+ "nom": "Rotations contrôlées des épaules",
+ "categories": [
+  "Épaules et haut du corps",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Roule les épaules lentement vers l’arrière, puis vers l’avant."
+  }
+ ],
+ "instructions": "Roule les épaules lentement, vers l'arrière puis l'avant.",
+ "erreur": "Aller trop vite.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus petit.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras tendus.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

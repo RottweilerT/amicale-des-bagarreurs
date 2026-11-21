@@ -1,0 +1,35 @@
+{
+ "id": "reverse-plank",
+ "nom": "Planche inversée",
+ "categories": [
+  "Gainage et stabilité",
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Assis, mains derrière toi, doigts vers les pieds."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Monte le bassin : corps aligné des épaules aux talons."
+  }
+ ],
+ "instructions": "Assis, mains derrière, monte le bassin, corps aligné.",
+ "erreur": "Laisser le bassin tomber.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux fléchis.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Une jambe levée.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "id": "ouvertures-hanches",
+ "nom": "Ouvertures de hanches",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : lève le genou et ouvre-le vers l’extérieur."
+  }
+ ],
+ "instructions": "Lève le genou et ouvre-le vers l'extérieur.",
+ "erreur": "Basculer le bassin.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus petit.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

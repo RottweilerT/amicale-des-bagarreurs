@@ -1,0 +1,34 @@
+{
+ "id": "rotations-cervicales",
+ "nom": "Rotations cervicales contrôlées",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : penche lentement la tête d’un côté…"
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "… puis de l’autre, sans forcer."
+  }
+ ],
+ "instructions": "Tourne lentement la tête d'un côté à l'autre, sans forcer.",
+ "erreur": "Faire de grands cercles rapides avec la tête.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite amplitude.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "id": "respiration-recup",
+ "nom": "Respiration de récupération",
+ "categories": [
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Mains sur les cuisses : inspire 4 s, bloque 4 s, expire 4 s, bloque 4 s."
+  }
+ ],
+ "instructions": "Inspire 4 s, bloque 4 s, expire 4 s, bloque 4 s.",
+ "erreur": "Respirer trop vite.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans blocage.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Cycles plus longs.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

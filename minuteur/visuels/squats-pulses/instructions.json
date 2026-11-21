@@ -1,0 +1,34 @@
+{
+ "id": "squats-pulses",
+ "nom": "Squats pulsés",
+ "categories": [
+  "Cuisses et quadriceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En bas du squat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petites remontées rapides, sans te relever."
+  }
+ ],
+ "instructions": "En bas du squat, petites remontées rapides.",
+ "erreur": "Remonter trop haut.",
+ "variantes": {
+  "facile": {
+   "texte": "Moins bas.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus bas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

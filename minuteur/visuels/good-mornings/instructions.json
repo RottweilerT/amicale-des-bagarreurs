@@ -1,0 +1,39 @@
+{
+ "id": "good-mornings",
+ "nom": "Good mornings",
+ "categories": [
+  "Fessiers et chaîne postérieure",
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Debout, mains derrière la tête."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Penche le buste dos plat en reculant les fesses."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Remonte en serrant les fessiers."
+  }
+ ],
+ "instructions": "Mains derrière la tête, penche le buste dos droit.",
+ "erreur": "Arrondir le dos.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Tempo lent.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "id": "sac-crochets",
+ "nom": "Sac : crochets et uppercuts",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Proche du sac, en garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Crochet court."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Uppercut court, au corps et à la tête."
+  }
+ ],
+ "instructions": "Crochets et uppercuts courts au sac, collé à la cible.",
+ "erreur": "Se tenir trop loin : les crochets se donnent de près.",
+ "variantes": {
+  "facile": {
+   "texte": "Coups isolés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Rafales au corps et à la tête.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

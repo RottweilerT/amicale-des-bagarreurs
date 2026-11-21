@@ -1,0 +1,39 @@
+{
+ "id": "feintes",
+ "nom": "Feintes",
+ "categories": [
+  "Boxe et combat",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Feinte : amorce le jab sans le lancer."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Frappe vraiment avec l’autre main."
+  }
+ ],
+ "instructions": "Fais semblant de frapper pour ouvrir, puis frappe vraiment.",
+ "erreur": "Feinter trop lentement : elle doit être crédible.",
+ "variantes": {
+  "facile": {
+   "texte": "Feinte simple + direct.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Double feinte + enchaînement.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

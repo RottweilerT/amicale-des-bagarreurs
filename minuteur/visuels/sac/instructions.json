@@ -1,0 +1,38 @@
+{
+ "id": "sac",
+ "nom": "Travail au sac de frappe",
+ "categories": [
+  "Boxe et combat"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En garde face au sac, à distance de bras."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Frappe le sac."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Enchaîne et tourne autour du sac."
+  }
+ ],
+ "instructions": "Frappe le sac en tournant autour, garde haute.",
+ "erreur": "Pousser le sac au lieu de frapper sec.",
+ "variantes": {
+  "facile": {
+   "texte": "Directs uniquement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Enchaînements puissants à 4 coups et plus.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

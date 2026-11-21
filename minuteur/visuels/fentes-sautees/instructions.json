@@ -1,0 +1,40 @@
+{
+ "id": "fentes-sautees",
+ "nom": "Fentes sautées",
+ "categories": [
+  "Cuisses et quadriceps",
+  "Explosivité et puissance",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En fente."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Saute et change de jambe en l’air."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Réception souple en fente inversée."
+  }
+ ],
+ "instructions": "Change de jambe en l'air, réception amortie.",
+ "erreur": "Atterrir sur les talons, jambes raides.",
+ "variantes": {
+  "facile": {
+   "texte": "Fentes alternées sans saut.",
+   "exercice": "fentes-alternees"
+  },
+  "difficile": {
+   "texte": "Sauts plus hauts.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

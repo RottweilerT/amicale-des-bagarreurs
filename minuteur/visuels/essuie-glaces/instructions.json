@@ -1,0 +1,34 @@
+{
+ "id": "essuie-glaces",
+ "nom": "Essuie-glaces au sol",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur le dos, bras écartés, jambes à la verticale."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Bascule les jambes d’un côté, épaules au sol, puis de l’autre."
+  }
+ ],
+ "instructions": "Jambes verticales, bascule-les d'un côté à l'autre.",
+ "erreur": "Décoller les épaules.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux fléchis.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Jambes tendues, plus bas.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Mouvement latéral : visible seulement de face, ici approché de profil."
+ }
+}

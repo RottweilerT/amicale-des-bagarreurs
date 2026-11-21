@@ -1,0 +1,34 @@
+{
+ "id": "hollow-rocks",
+ "nom": "Hollow rocks",
+ "categories": [
+  "Abdominaux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "En position creuse, bascule vers les épaules…"
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "… puis vers les fesses, sans casser la forme."
+  }
+ ],
+ "instructions": "En position hollow, bascule d'avant en arrière.",
+ "erreur": "Plier les jambes pour s’aider.",
+ "variantes": {
+  "facile": {
+   "texte": "Petite bascule.",
+   "exercice": "hollow-hold"
+  },
+  "difficile": {
+   "texte": "Plus ample.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

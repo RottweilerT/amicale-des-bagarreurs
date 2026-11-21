@@ -1,0 +1,39 @@
+{
+ "id": "planche-commando",
+ "nom": "Planche commando",
+ "categories": [
+  "Gainage et stabilité",
+  "Bras et triceps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur les avant-bras."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Pousse sur une main, puis l’autre."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Bras tendus, puis redescends en alternant le bras de départ."
+  }
+ ],
+ "instructions": "Passe des avant-bras aux mains en alternant le bras de départ.",
+ "erreur": "Balancer les hanches.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

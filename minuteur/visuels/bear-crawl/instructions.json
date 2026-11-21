@@ -1,0 +1,35 @@
+{
+ "id": "bear-crawl",
+ "nom": "Bear crawl stationnaire",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Position de l’ours, genoux décollés."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits pas des mains et des pieds sur place."
+  }
+ ],
+ "instructions": "En bear plank, petits pas des mains et des pieds sur place.",
+ "erreur": "Remonter les fesses.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

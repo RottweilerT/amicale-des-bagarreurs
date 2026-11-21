@@ -1,0 +1,31 @@
+{
+ "id": "squat-profond-hold",
+ "nom": "Maintien en squat profond",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Accroupi au plus bas, talons au sol, coudes contre les genoux."
+  }
+ ],
+ "instructions": "Accroupi au plus bas, talons au sol, coudes entre les genoux.",
+ "erreur": "Décoller les talons.",
+ "variantes": {
+  "facile": {
+   "texte": "Talons surélevés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus longtemps.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

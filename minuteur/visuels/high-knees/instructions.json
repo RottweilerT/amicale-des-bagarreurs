@@ -1,0 +1,34 @@
+{
+ "id": "high-knees",
+ "nom": "High knees sur place",
+ "categories": [
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Genou à hauteur de hanche, sur l’avant du pied."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Change de jambe très vite, bras actifs."
+  }
+ ],
+ "instructions": "Genoux à hauteur de hanche, très rapide.",
+ "erreur": "Se pencher en arrière.",
+ "variantes": {
+  "facile": {
+   "texte": "Montées de genoux modérées.",
+   "exercice": "genoux-moderes"
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

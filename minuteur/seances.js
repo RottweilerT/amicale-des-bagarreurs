@@ -275,7 +275,25 @@ function stats(){
 /* ---------- séance en cours (reprise après fermeture) ---------- */
 const enCours={lire:()=>jget('adb-mn-encours',null),ecrire:v=>jset('adb-mn-encours',v),effacer:()=>{try{localStorage.removeItem('adb-mn-encours')}catch(e){}}};
 
-window.ADB_SEANCES={EX,CAT,L,exo,tousExos,chercher,fav,basculerFav,ajouterPerso,supprimerPerso,refExo,A,R,REC,REP,COMBO,
+
+/* ---------- bibliothèque visuelle (minuteur/visuels, générée par outils/visuels) ---------- */
+const BASE_V='minuteur/';let MANIF=null,manifP=null;const fiches=new Map();
+function chargerManifeste(){if(!manifP)manifP=fetch(BASE_V+'visuels/manifest.json').then(r=>r.ok?r.json():null).then(m=>{MANIF=m;return m}).catch(()=>{manifP=null;return null});return manifP}
+/* chemins des images d'un exercice (miniature, étapes, animation) ; null si pas d'illustration */
+function visuel(id){
+  const m=MANIF&&MANIF.exercices&&MANIF.exercices[id];
+  const d=m?BASE_V+m.dossier:(EX.has(id)?BASE_V+'visuels/'+id+'/':null);if(!d)return null;
+  return {mini:d+(m?m.miniature:'thumbnail.svg'),etapes:m?m.etapes.map(f=>d+f):null,anim:m?(m.animation?d+m.animation:null):d+'animation.svg',statut:m?m.statut:'',dossier:d};
+}
+function fiche(id){
+  if(fiches.has(id))return fiches.get(id);
+  const v=visuel(id);if(!v)return Promise.resolve(null);
+  const p=fetch(v.dossier+'instructions.json').then(r=>r.ok?r.json():null).catch(()=>null);fiches.set(id,p);
+  p.then(x=>{if(!x)fiches.delete(id)});return p;
+}
+chargerManifeste();
+
+window.ADB_SEANCES={visuel,fiche,chargerManifeste,EX,CAT,L,exo,tousExos,chercher,fav,basculerFav,ajouterPerso,supprimerPerso,refExo,A,R,REC,REP,COMBO,
   resume,toutes,trouver,enregistrer,supprimer,dupliquer,marquerUtilisee,depuisAncien,
   tousCombos,enregistrerCombo,supprimerCombo,blocDeCombo,MODELES,depuisModele,simple,
   ZONES,ZONES_NOM,pool,generer,remplacant,hist:()=>hist,noterSeance,effacerHist,stats,enCours};

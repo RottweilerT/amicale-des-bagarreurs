@@ -1,0 +1,35 @@
+{
+ "id": "superman",
+ "nom": "Superman",
+ "categories": [
+  "Dos et posture",
+  "Fessiers et chaîne postérieure"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "À plat ventre, bras tendus devant."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Décolle bras et jambes, puis repose."
+  }
+ ],
+ "instructions": "À plat ventre, décolle bras et jambes puis repose.",
+ "erreur": "Lever la tête en cassant la nuque.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras seulement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pause en haut.",
+   "exercice": "superman-hold"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

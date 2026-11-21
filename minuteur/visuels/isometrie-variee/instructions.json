@@ -1,0 +1,43 @@
+{
+ "id": "isometrie-variee",
+ "nom": "Isométrie en positions variées",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "10 s en squat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "10 s en fente."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "10 s en planche."
+  },
+  {
+   "image": "step-04.svg",
+   "texte": "10 s en bas de pompe."
+  }
+ ],
+ "instructions": "Tiens 10 s chaque position : squat, fente, planche, pompe basse.",
+ "erreur": "Se relâcher entre deux positions.",
+ "variantes": {
+  "facile": {
+   "texte": "Positions plus hautes.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "20 s par position.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "defense",
+ "nom": "Défense et esquives",
+ "categories": [
+  "Boxe et combat",
+  "Coordination et équilibre"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Garde haute."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Parade : dévie le coup avec la main."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Esquive : le buste sort de la ligne, puis retour en garde."
+  }
+ ],
+ "instructions": "Enchaîne parades, esquives et retours en garde.",
+ "erreur": "Fermer les yeux ou tourner la tête au moment du coup.",
+ "variantes": {
+  "facile": {
+   "texte": "Parades seulement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Esquive puis contre immédiat.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

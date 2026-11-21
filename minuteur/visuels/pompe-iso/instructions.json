@@ -1,0 +1,32 @@
+{
+ "id": "pompe-iso",
+ "nom": "Maintien en position basse de pompe",
+ "categories": [
+  "Bras et triceps",
+  "Pectoraux",
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Poitrine à quelques centimètres du sol, immobile, corps gainé."
+  }
+ ],
+ "instructions": "Reste immobile, poitrine à 5 cm du sol.",
+ "erreur": "Laisser les hanches toucher le sol.",
+ "variantes": {
+  "facile": {
+   "texte": "Sur les genoux.",
+   "exercice": "pompes-genoux"
+  },
+  "difficile": {
+   "texte": "Maintien plus long.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

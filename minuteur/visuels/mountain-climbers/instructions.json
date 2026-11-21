@@ -1,0 +1,35 @@
+{
+ "id": "mountain-climbers",
+ "nom": "Mountain climbers",
+ "categories": [
+  "Abdominaux",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Planche haute : un genou vers la poitrine."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Change de jambe rapidement, bassin bas."
+  }
+ ],
+ "instructions": "En planche haute, ramène les genoux vite à tour de rôle.",
+ "erreur": "Monter les fesses.",
+ "variantes": {
+  "facile": {
+   "texte": "Lentement.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": "mountain-croises"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

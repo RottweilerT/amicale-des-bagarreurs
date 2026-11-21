@@ -1,0 +1,35 @@
+{
+ "id": "sauts-av-ar",
+ "nom": "Sauts avant-arrière courts",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Pieds joints."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Petits sauts d’avant en arrière."
+  }
+ ],
+ "instructions": "Sauts pieds joints d'avant en arrière.",
+ "erreur": "Faire de grands sauts.",
+ "variantes": {
+  "facile": {
+   "texte": "Petits sauts.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "id": "pompes-genoux",
+ "nom": "Pompes sur les genoux",
+ "categories": [
+  "Bras et triceps",
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Genoux au sol, corps aligné des genoux à la tête."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Descends la poitrine vers le sol."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Pousse pour remonter."
+  }
+ ],
+ "instructions": "Pompes avec appui sur les genoux, corps aligné.",
+ "erreur": "Fesses en l’air : le bassin reste aligné.",
+ "variantes": {
+  "facile": {
+   "texte": "Amplitude réduite.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Pompes classiques.",
+   "exercice": "pompes"
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

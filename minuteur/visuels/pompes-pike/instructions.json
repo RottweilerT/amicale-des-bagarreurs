@@ -1,0 +1,39 @@
+{
+ "id": "pompes-pike",
+ "nom": "Pompes pike",
+ "categories": [
+  "Bras et triceps",
+  "Épaules et haut du corps"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Fesses hautes en V inversé."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Fléchis les bras : la tête descend entre les mains."
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "Pousse pour remonter."
+  }
+ ],
+ "instructions": "Fesses hautes en V inversé, tête vers le sol entre les mains.",
+ "erreur": "Descendre la poitrine au lieu du haut de la tête.",
+ "variantes": {
+  "facile": {
+   "texte": "Pieds plus loin.",
+   "exercice": "pompes"
+  },
+  "difficile": {
+   "texte": "Pieds surélevés.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "à revoir",
+  "note": "Position des mains à vérifier sur la 2e étape."
+ }
+}

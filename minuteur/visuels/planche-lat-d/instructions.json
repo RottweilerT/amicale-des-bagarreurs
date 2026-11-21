@@ -1,0 +1,30 @@
+{
+ "id": "planche-lat-d",
+ "nom": "Planche latérale droite",
+ "categories": [
+  "Gainage et stabilité"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de face : sur l’avant-bras droit, bassin haut et aligné."
+  }
+ ],
+ "instructions": "Sur l'avant-bras droit, bassin haut et aligné.",
+ "erreur": "Laisser tomber le bassin.",
+ "variantes": {
+  "facile": {
+   "texte": "Genoux au sol.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Jambe du dessus levée.",
+   "exercice": "planche-lat-g"
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

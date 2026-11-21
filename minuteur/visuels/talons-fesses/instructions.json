@@ -1,0 +1,34 @@
+{
+ "id": "talons-fesses",
+ "nom": "Talons-fesses",
+ "categories": [
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Le talon monte vers la fesse."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Change de jambe, rythme rapide."
+  }
+ ],
+ "instructions": "Talons qui touchent les fesses, rythme rapide.",
+ "erreur": "Lever les genoux vers l’avant.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus vite.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

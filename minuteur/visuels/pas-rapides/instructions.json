@@ -1,0 +1,35 @@
+{
+ "id": "pas-rapides",
+ "nom": "Pas rapides sur place",
+ "categories": [
+  "Mollets, chevilles et pieds",
+  "Cardio sur place"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Sur l’avant des pieds."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Piétine très vite sur place."
+  }
+ ],
+ "instructions": "Piétinement très rapide sur les pointes.",
+ "erreur": "Lever les genoux trop haut.",
+ "variantes": {
+  "facile": {
+   "texte": "Plus lent.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Avec bras actifs.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

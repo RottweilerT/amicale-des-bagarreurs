@@ -1,0 +1,35 @@
+{
+ "id": "mobilite-chevilles",
+ "nom": "Mobilité des chevilles",
+ "categories": [
+  "Mobilité et récupération",
+  "Mollets, chevilles et pieds"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Un genou au sol, pied avant à plat."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Avance le genou au-dessus des orteils, talon au sol."
+  }
+ ],
+ "instructions": "Genou vers l'avant au-dessus des orteils, talon au sol.",
+ "erreur": "Décoller le talon.",
+ "variantes": {
+  "facile": {
+   "texte": "Appui sur un mur.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus loin.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

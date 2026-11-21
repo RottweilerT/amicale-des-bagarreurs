@@ -1,0 +1,39 @@
+{
+ "id": "anges-inverses",
+ "nom": "Anges inversés au sol",
+ "categories": [
+  "Épaules et haut du corps",
+  "Dos et posture"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Vue de dessus, à plat ventre : bras décollés le long du corps."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Balaye les bras sur les côtés…"
+  },
+  {
+   "image": "step-03.svg",
+   "texte": "… jusqu’au-dessus de la tête, sans toucher le sol."
+  }
+ ],
+ "instructions": "À plat ventre, bras décollés, balaye du bassin au-dessus de la tête.",
+ "erreur": "Poser les bras pour se reposer.",
+ "variantes": {
+  "facile": {
+   "texte": "Bras pliés.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Plus lent avec maintien.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

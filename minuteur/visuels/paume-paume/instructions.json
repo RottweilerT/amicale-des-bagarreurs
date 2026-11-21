@@ -1,0 +1,30 @@
+{
+ "id": "paume-paume",
+ "nom": "Pression paume contre paume",
+ "categories": [
+  "Pectoraux"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Paumes collées devant la poitrine : pousse fort l’une contre l’autre."
+  }
+ ],
+ "instructions": "Paumes l'une contre l'autre devant la poitrine, pousse fort.",
+ "erreur": "Bloquer la respiration.",
+ "variantes": {
+  "facile": {
+   "texte": "Pression moyenne.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Bras tendus.",
+   "exercice": null
+  }
+ },
+ "animation": null,
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}

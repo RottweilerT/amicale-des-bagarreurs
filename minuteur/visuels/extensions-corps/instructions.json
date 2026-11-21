@@ -1,0 +1,35 @@
+{
+ "id": "extensions-corps",
+ "nom": "Extensions complètes du corps",
+ "categories": [
+  "Conditionnement traditionnel",
+  "Mobilité et récupération"
+ ],
+ "etapes": [
+  {
+   "image": "step-01.svg",
+   "texte": "Accroupi, mains au sol."
+  },
+  {
+   "image": "step-02.svg",
+   "texte": "Grand étirement debout, bras au ciel, sur les pointes."
+  }
+ ],
+ "instructions": "Accroupi, puis grand étirement debout bras au ciel sur les pointes.",
+ "erreur": "Se relever le dos rond.",
+ "variantes": {
+  "facile": {
+   "texte": "Sans les pointes.",
+   "exercice": null
+  },
+  "difficile": {
+   "texte": "Avec saut.",
+   "exercice": null
+  }
+ },
+ "animation": "animation.svg",
+ "controle": {
+  "statut": "vérifié",
+  "note": ""
+ }
+}
