@@ -1,8 +1,8 @@
 // Mode hors ligne : la page et ses ressources sont gardées sur l'appareil.
 // La page est toujours redemandée au réseau d'abord (pour avoir la dernière version),
 // et la copie locale ne sert que sans connexion. Les données Firebase ne passent pas par ici.
-const CACHE = 'adb-v18';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png', './config.js?v=1', './exercices.js?v=1', './app.css?v=17', './app.js?v=17', './onglets.js?v=17', './ergonomie.js?v=17', './splash.jpg', './icon-maskable-512.png', './apple-touch-icon.png'];
+const CACHE = 'adb-v19';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png', './config.js?v=1', './app.css?v=18', './app.js?v=18', './onglets.js?v=18', './ergonomie.js?v=18', './minuteur/exercices.js?v=1', './minuteur/moteur.js?v=1', './minuteur/sons.js?v=1', './minuteur/seances.js?v=1', './minuteur/ui.js?v=1', './splash.jpg', './icon-maskable-512.png', './apple-touch-icon.png'];
 // Moteur Firebase : mis en cache dès l'installation, pour que l'appli démarre sans réseau même juste après une mise à jour.
 const SDK = ['https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check-compat.js'];
 const EXTERNAL = ['fonts.googleapis.com', 'fonts.gstatic.com'];

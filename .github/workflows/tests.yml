@@ -6,7 +6,7 @@ name: Tests
 on:
   push:
     branches: [main, "audit-*"]
-    paths: ["index.html", "app.js", "app.css", "onglets.js", "ergonomie.js", "config.js", "sw.js", ".github/notifications.py", "firestore.rules.notifications", "tests/**", ".github/workflows/tests.yml"]
+    paths: ["index.html", "app.js", "app.css", "onglets.js", "ergonomie.js", "minuteur/**", "config.js", "sw.js", ".github/notifications.py", "firestore.rules.notifications", "tests/**", ".github/workflows/tests.yml"]
   workflow_dispatch:
 
 permissions:
@@ -21,6 +21,8 @@ jobs:
         run: |
           pip install -q playwright
           python3 -m playwright install --with-deps chromium > /dev/null
+      - name: Moteur du minuteur (scénarios A à H)
+        run: node tests/test_moteur.js
       - name: Cohérence de la configuration
         run: python3 tests/test_coherence.py
       - name: Serveur de notifications

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="app.css?v=17">
+<link rel="stylesheet" href="app.css?v=18">
 </head>
 <body>
 <div class="splash" id="splash" role="img" aria-label="Chargement de l’Amicale des Bagarreurs"></div>
@@ -296,72 +296,45 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
 
   <!-- MINUTEUR BOXE -->
   <section id="tab-minuteur" hidden>
-    <div class="tm-layout">
-      <div class="tm-screen" id="tmScreen" data-ph="idle">
-        <div class="tm-phase"><span class="tm-ph" id="tmPh">Prêt</span><span class="tm-rd num" id="tmRd"></span></div>
-        <div class="tm-clock" id="tmClock" role="timer">0:00</div>
-        <div class="tm-exo" id="tmExo" aria-live="polite"></div>
-        <div class="tm-combo" id="tmCombo" aria-live="polite"></div>
-        <div class="tm-bars">
-          <div class="tm-lbl"><span>Phase</span><span id="tmNext"></span></div>
-          <div class="tm-bar"><i id="tmBarPh"></i></div>
-          <div class="tm-lbl"><span>Séance</span><span class="num" id="tmLeft"></span></div>
-          <div class="tm-bar"><i id="tmBarAll"></i></div>
-        </div>
-        <div class="tm-ctrl">
-          <button class="btn" type="button" data-tm="start" id="tmStart">Démarrer</button>
-          <button class="btn ghost" type="button" data-tm="pause" id="tmPause">Pause</button>
-          <button class="btn ghost" type="button" data-tm="skip" id="tmSkip">Passer</button>
-          <button class="btn ghost" type="button" data-tm="stop" id="tmStop">Arrêter</button>
-        </div>
-        <p class="hint tm-note" id="tmNote">Le son s’active au premier appui sur Démarrer.</p>
+    <div class="mn" id="mn">
+      <div class="mn-nav" role="tablist" aria-label="Minuteur">
+        <button type="button" role="tab" data-mn="vue" data-v="liste" aria-selected="true">Séances</button>
+        <button type="button" role="tab" data-mn="vue" data-v="creer" aria-selected="false">Créer</button>
+        <button type="button" role="tab" data-mn="vue" data-v="historique" aria-selected="false">Historique</button>
+        <button type="button" role="tab" data-mn="vue" data-v="sons" aria-selected="false">Sons</button>
       </div>
-      <div style="display:grid;gap:16px;min-width:0">
-        <form class="panel" id="tmForm" autocomplete="off">
-          <fieldset id="tmSet" class="tm-fs">
-            <h3>Réglages</h3>
-            <div class="tm-presets chips" id="tmPresets"></div>
-            <label for="tmRounds">Nombre de rounds<input id="tmRounds" type="number" inputmode="numeric" min="1" max="50"></label>
-            <div class="tm-tl">Durée d’effort</div>
-            <div class="tm-time"><input id="tmWorkM" type="number" inputmode="numeric" min="0" max="60" aria-label="Effort, minutes"><span>min</span><input id="tmWorkS" type="number" inputmode="numeric" min="0" max="59" aria-label="Effort, secondes"><span>s</span></div>
-            <div class="tm-tl">Durée de repos</div>
-            <div class="tm-time"><input id="tmRestM" type="number" inputmode="numeric" min="0" max="30" aria-label="Repos, minutes"><span>min</span><input id="tmRestS" type="number" inputmode="numeric" min="0" max="59" aria-label="Repos, secondes"><span>s</span></div>
-            <label class="check"><input type="checkbox" id="tmWarmOn"> Échauffement</label>
-            <div class="tm-time" id="tmWarmT"><input id="tmWarmM" type="number" inputmode="numeric" min="0" max="60" aria-label="Échauffement, minutes"><span>min</span><input id="tmWarmS" type="number" inputmode="numeric" min="0" max="59" aria-label="Échauffement, secondes"><span>s</span></div>
-            <label class="check"><input type="checkbox" id="tmCoolOn"> Retour au calme</label>
-            <div class="tm-time" id="tmCoolT"><input id="tmCoolM" type="number" inputmode="numeric" min="0" max="60" aria-label="Retour au calme, minutes"><span>min</span><input id="tmCoolS" type="number" inputmode="numeric" min="0" max="59" aria-label="Retour au calme, secondes"><span>s</span></div>
-            <div class="tm-total"><span class="eyebrow">Durée totale</span><b class="num" id="tmTotal">0:00</b></div>
-            <div class="tm-tl">Exercice de chaque round <small class="hint">(affiché pendant l’effort, annoncé pendant le repos)</small></div>
-            <div class="tm-exos" id="tmExos"></div>
-            <div class="row tm-exo-tools">
-              <button class="btn ghost small" type="button" data-tm="exoAll">Le 1er partout</button>
-              <button class="btn ghost small" type="button" data-tm="exoRandom">Au hasard</button>
-              <button class="btn ghost small" type="button" data-tm="exoClear">Aucun</button>
-            </div>
-            <div class="row"><input id="tmExoNew" maxlength="40" placeholder="Ajouter un exercice à la liste" aria-label="Nouvel exercice"><button class="btn ghost small" type="button" data-tm="exoAdd" style="flex:0 0 auto">Ajouter</button></div>
-            <div class="tm-tl">Enregistrer ce cours</div>
-            <div class="row"><input id="tmName" maxlength="30" placeholder="Nom du cours (ex. Circuit du mercredi)" aria-label="Nom du cours"><button class="btn small" type="submit" style="flex:0 0 auto">Enregistrer</button></div>
-            <label class="check"><input type="checkbox" id="tmShare" checked> Partager avec tout le groupe (sinon, gardé sur ce téléphone)</label>
-          </fieldset>
-          <p class="hint" id="tmLocked" hidden style="margin:0">Réglages verrouillés pendant la séance.</p>
-        </form>
-        <div class="panel">
-          <h3>Sons et options</h3>
-          <p class="hint" style="margin:0">Les sons sont toujours joués au volume maximum que l’appli peut produire. Le niveau final dépend encore du volume « Multimédia » du téléphone : monte-le au maximum avant la séance.</p>
-          <div class="tm-tl">Un son pour chaque moment</div>
-          <div class="tm-snds" id="tmSnds"></div>
-          <button class="btn ghost small" type="button" data-tm="test" data-s="voice" id="tmTestVoice" style="justify-self:start">Tester la voix</button>
-          <label class="check"><input type="checkbox" id="tmVoice"> Annonces vocales en plus des sons (« Round 2 », « Repos »)</label>
-          <label class="check"><input type="checkbox" id="tmCoach"> Mode Coach : enchaînements annoncés pendant l’effort</label>
-          <label for="tmCoachEvery">Fréquence du coach<select id="tmCoachEvery"><option value="3">Toutes les 3 s</option><option value="4">Toutes les 4 s</option><option value="6">Toutes les 6 s</option><option value="8">Toutes les 8 s</option><option value="10">Toutes les 10 s</option><option value="15">Toutes les 15 s</option></select></label>
-          <label class="check"><input type="checkbox" id="tmVib"> Vibration à chaque changement de phase</label>
-          <p class="hint" id="tmSupport" style="margin:0"></p>
-        </div>
-        <div class="panel">
-          <div class="cal-head"><h3>Historique</h3><button class="btn ghost small" type="button" data-tm="clearHist" id="tmHistClear">Effacer</button></div>
-          <div id="tmHist" class="tm-hist"></div>
-        </div>
+      <div id="mnVue" class="mn-vue"></div>
+    </div>
+    <div class="mn-run" id="mnRun" hidden role="dialog" aria-modal="true" aria-label="Séance en cours" data-ph="prep">
+      <div class="mr-top">
+        <div class="mr-ph"><span id="mrPh">Préparation</span><small id="mrSeance"></small></div>
+        <div class="mr-rd num" id="mrRd"></div>
+        <button class="mr-fs" type="button" data-mn="plein" id="mrFs" aria-label="Plein écran">⛶</button>
       </div>
+      <div class="mr-main">
+        <div class="mr-exo" id="mrExo" aria-live="polite"></div>
+        <div class="mr-var" id="mrVar"></div>
+        <div class="mr-clock num" id="mrClock" role="timer">00:00</div>
+        <div class="mr-bar mr-bar-ph" aria-hidden="true"><i id="mrBarPh"></i></div>
+        <button class="btn mr-fait" type="button" data-mn="fait" id="mrFait" hidden>Fait ✓ — suivant</button>
+        <div class="mr-next" id="mrNext" aria-live="polite"></div>
+      </div>
+      <div class="mr-glob">
+        <div class="mr-bar mr-bar-all" aria-hidden="true"><i id="mrBarAll"></i></div>
+        <div class="mr-stats num" id="mrStats"></div>
+        <div class="mr-frise-w"><div class="mr-frise" id="mrFrise" aria-label="Frise de la séance"></div></div>
+      </div>
+      <div class="mr-ctrl">
+        <button class="btn ghost" type="button" data-mn="prec" aria-label="Étape précédente">⏮<span>Précédent</span></button>
+        <button class="btn mr-pause" type="button" data-mn="pause" id="mrPause">⏸<span>Pause</span></button>
+        <button class="btn ghost" type="button" data-mn="suiv" aria-label="Étape suivante">⏭<span>Suivant</span></button>
+        <button class="btn ghost mr-stop" type="button" data-mn="stop" id="mrStop">Arrêter</button>
+      </div>
+      <div class="mr-finale" id="mrFinale" hidden></div>
+    </div>
+    <div class="mn-sheet" id="mnSheet" hidden>
+      <div class="mn-sheet-bg" data-mn="fermer"></div>
+      <div class="mn-sheet-in" role="dialog" aria-modal="true" id="mnSheetIn"></div>
     </div>
   </section>
 
@@ -488,7 +461,6 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
 </section></div>
 
 <script src="config.js?v=1"></script>
-<script src="exercices.js?v=1"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js"></script>
@@ -509,9 +481,14 @@ const FIREBASE_CONFIG = {
 /* App Check (SEC-01) : clé de site reCAPTCHA v3 (publique). Vide = App Check inactif. Voir NOTIFICATIONS.md, « App Check ». */
 const APPCHECK_SITE_KEY = "";
 </script>
-<script src="app.js?v=17"></script>
-<script src="onglets.js?v=17"></script>
-<script src="ergonomie.js?v=17"></script>
+<script src="app.js?v=18"></script>
+<script src="onglets.js?v=18"></script>
+<script src="ergonomie.js?v=18"></script>
+<script src="minuteur/exercices.js?v=1"></script>
+<script src="minuteur/moteur.js?v=1"></script>
+<script src="minuteur/sons.js?v=1"></script>
+<script src="minuteur/seances.js?v=1"></script>
+<script src="minuteur/ui.js?v=1"></script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
 </body>
 </html>
