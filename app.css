@@ -354,6 +354,13 @@ button.chip{cursor:pointer;border-color:var(--line)}
 .tm-ph{font:900 clamp(1.8rem,7vw,2.8rem)/1 var(--f-display);text-transform:uppercase}
 .tm-rd{font:700 clamp(1.3rem,5vw,2rem)/1 var(--f-data)}
 .tm-clock{font:700 clamp(5.5rem,28vw,12rem)/.9 var(--f-data);font-variant-numeric:tabular-nums;text-align:center;letter-spacing:-.02em}
+.tm-exo{font:800 clamp(1.5rem,7vw,2.6rem)/1.1 var(--f-display,var(--f-data));text-align:center;text-transform:uppercase;letter-spacing:.02em;min-height:1.1em;overflow-wrap:anywhere}
+.tm-exo small{display:block;font:700 .8rem var(--f-data);letter-spacing:.14em;opacity:.8;margin-bottom:2px}
+.tm-exo[data-mode="next"]{font-size:clamp(1.2rem,5.5vw,2rem);opacity:.92}
+.tm-exos{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.tm-exo-row{display:grid!important;grid-template-columns:34px minmax(0,1fr);align-items:center;gap:6px}
+.tm-exo-row span{font-weight:700;color:var(--muted)}
+.tm-exo-tools .btn{flex:1 1 100px}
 .tm-combo{font:700 clamp(1.2rem,5vw,1.9rem)/1.15 var(--f-data);text-align:center;text-transform:uppercase;letter-spacing:.04em;min-height:1.15em}
 .tm-bars{display:grid;gap:6px}
 .tm-lbl{display:flex;justify-content:space-between;gap:10px;font:600 .8rem var(--f-data);letter-spacing:.1em;text-transform:uppercase;opacity:.8}

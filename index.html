@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="app.css?v=16">
+<link rel="stylesheet" href="app.css?v=17">
 </head>
 <body>
 <div class="splash" id="splash" role="img" aria-label="Chargement de l’Amicale des Bagarreurs"></div>
@@ -300,6 +300,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
       <div class="tm-screen" id="tmScreen" data-ph="idle">
         <div class="tm-phase"><span class="tm-ph" id="tmPh">Prêt</span><span class="tm-rd num" id="tmRd"></span></div>
         <div class="tm-clock" id="tmClock" role="timer">0:00</div>
+        <div class="tm-exo" id="tmExo" aria-live="polite"></div>
         <div class="tm-combo" id="tmCombo" aria-live="polite"></div>
         <div class="tm-bars">
           <div class="tm-lbl"><span>Phase</span><span id="tmNext"></span></div>
@@ -330,8 +331,17 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
             <label class="check"><input type="checkbox" id="tmCoolOn"> Retour au calme</label>
             <div class="tm-time" id="tmCoolT"><input id="tmCoolM" type="number" inputmode="numeric" min="0" max="60" aria-label="Retour au calme, minutes"><span>min</span><input id="tmCoolS" type="number" inputmode="numeric" min="0" max="59" aria-label="Retour au calme, secondes"><span>s</span></div>
             <div class="tm-total"><span class="eyebrow">Durée totale</span><b class="num" id="tmTotal">0:00</b></div>
-            <div class="tm-tl">Mes préréglages</div>
-            <div class="row"><input id="tmName" maxlength="30" placeholder="Nom du préréglage" aria-label="Nom du préréglage"><button class="btn small" type="submit" style="flex:0 0 auto">Enregistrer</button></div>
+            <div class="tm-tl">Exercice de chaque round <small class="hint">(affiché pendant l’effort, annoncé pendant le repos)</small></div>
+            <div class="tm-exos" id="tmExos"></div>
+            <div class="row tm-exo-tools">
+              <button class="btn ghost small" type="button" data-tm="exoAll">Le 1er partout</button>
+              <button class="btn ghost small" type="button" data-tm="exoRandom">Au hasard</button>
+              <button class="btn ghost small" type="button" data-tm="exoClear">Aucun</button>
+            </div>
+            <div class="row"><input id="tmExoNew" maxlength="40" placeholder="Ajouter un exercice à la liste" aria-label="Nouvel exercice"><button class="btn ghost small" type="button" data-tm="exoAdd" style="flex:0 0 auto">Ajouter</button></div>
+            <div class="tm-tl">Enregistrer ce cours</div>
+            <div class="row"><input id="tmName" maxlength="30" placeholder="Nom du cours (ex. Circuit du mercredi)" aria-label="Nom du cours"><button class="btn small" type="submit" style="flex:0 0 auto">Enregistrer</button></div>
+            <label class="check"><input type="checkbox" id="tmShare" checked> Partager avec tout le groupe (sinon, gardé sur ce téléphone)</label>
           </fieldset>
           <p class="hint" id="tmLocked" hidden style="margin:0">Réglages verrouillés pendant la séance.</p>
         </form>
@@ -478,6 +488,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
 </section></div>
 
 <script src="config.js?v=1"></script>
+<script src="exercices.js?v=1"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js"></script>
@@ -498,9 +509,9 @@ const FIREBASE_CONFIG = {
 /* App Check (SEC-01) : clé de site reCAPTCHA v3 (publique). Vide = App Check inactif. Voir NOTIFICATIONS.md, « App Check ». */
 const APPCHECK_SITE_KEY = "";
 </script>
-<script src="app.js?v=16"></script>
-<script src="onglets.js?v=16"></script>
-<script src="ergonomie.js?v=16"></script>
+<script src="app.js?v=17"></script>
+<script src="onglets.js?v=17"></script>
+<script src="ergonomie.js?v=17"></script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
 </body>
 </html>

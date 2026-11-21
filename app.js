@@ -17,6 +17,7 @@ const METHODS={PTS:'aux points',KO:'par KO',ARB:"par arrêt de l'arbitre",ABD:'p
 const S={members:new Map(),fights:new Map(),courses:new Map(),attendance:new Map()};
 const loaded={members:false,fights:false,courses:false,attendance:false};
 let NOTES=new Map();
+let SEANCES=new Map();  /* cours du Minuteur partagés avec le groupe (documents « courses » de kind « seance ») */
 const localF=new Map(), fTimer={}, Q={};
 let db=null, canWrite=true, connected=false;
 const today=ymd(new Date());
@@ -63,7 +64,7 @@ async function boot(){
     db.collection(col).onSnapshot(snap=>{
       const m=new Map();snap.docs.forEach(d=>m.set(d.id,d.data()));
       if(col==='fights'){for(const [id,l] of localF){const s=m.get(id);if(s&&s.rev===l.rev)localF.delete(id)}}
-      if(col==='courses'){const n=new Map(),sl=new Map();for(const [id,d] of m){if(d&&d.kind==='note')n.set(id,d);else if(d&&(d.kind==='salle'||d.kind==='salle-saison'))sl.set(id,d);else continue;m.delete(id)}NOTES=n;SALLE=sl}
+      if(col==='courses'){const n=new Map(),sl=new Map(),se=new Map();for(const [id,d] of m){if(d&&d.kind==='note')n.set(id,d);else if(d&&(d.kind==='salle'||d.kind==='salle-saison'))sl.set(id,d);else if(d&&d.kind==='seance')se.set(id,d);else continue;m.delete(id)}NOTES=n;SALLE=sl;SEANCES=se;if(window.tmRefresh)tmRefresh()}
       S[col]=m;loaded[col]=true;renderAll();if(col==='members'&&window.splashDone)splashDone();
     },handleErr);
   }
@@ -977,6 +978,14 @@ let cfg=Object.assign({},DEF,jget('adb-tm-cfg',{}));
 cfg.vol=100; // volume toujours au maximum à l'ouverture
 cfg.snd=Object.assign({},DEF.snd,cfg.snd||{});
 let mine=jget('adb-tm-presets',[]);if(!Array.isArray(mine))mine=[];
+/* Exercices par round : catalogue (exercices.js) + exercices ajoutés sur ce téléphone */
+const EXOS=window.ADB_EXOS||{};
+let perso=jget('adb-tm-exos-perso',[]);if(!Array.isArray(perso))perso=[];
+if(!Array.isArray(cfg.exos))cfg.exos=[];
+const exoAt=i=>(cfg.exos[i]||'');
+const exoOptions=v=>`<option value="">— Pas d’exercice —</option>`+Object.entries(EXOS).map(([g,l])=>`<optgroup label="${esc(g)}">${l.map(x=>`<option${x===v?' selected':''}>${esc(x)}</option>`).join('')}</optgroup>`).join('')
+  +(perso.length?`<optgroup label="Mes exercices">${perso.map(x=>`<option${x===v?' selected':''}>${esc(x)}</option>`).join('')}</optgroup>`:'')
+  +(v&&!Object.values(EXOS).flat().includes(v)&&!perso.includes(v)?`<option selected>${esc(v)}</option>`:'');
 let hist=jget('adb-tm-hist',[]);if(!Array.isArray(hist))hist=[];
 let run=null,armedDel=null,armedHist=false,lastCombo='';
 const saveCfg=()=>lsSet('adb-tm-cfg',JSON.stringify(cfg));
@@ -1098,7 +1107,7 @@ document.addEventListener('visibilitychange',()=>{if(run&&document.visibilitySta
 function plan(){
   const p=[{k:'prep',d:PREP}];
   if(cfg.warmOn)p.push({k:'warm',d:cfg.warm});
-  for(let i=1;i<=cfg.rounds;i++){p.push({k:'work',d:cfg.work,r:i});if(i<cfg.rounds&&cfg.rest>0)p.push({k:'rest',d:cfg.rest,r:i})}
+  for(let i=1;i<=cfg.rounds;i++){p.push({k:'work',d:cfg.work,r:i,exo:exoAt(i-1)});if(i<cfg.rounds&&cfg.rest>0)p.push({k:'rest',d:cfg.rest,r:i})}
   if(cfg.coolOn)p.push({k:'cool',d:cfg.cool});
   return p;
 }
@@ -1112,8 +1121,9 @@ function doneSec(now){
 function cueEnter(p){
   run.combo='';run.nextCombo=performance.now()+cfg.coachEvery*1000;
   const voiced=id=>cfg.snd[id]==='voice';
-  if(p.k==='work'){play('restEnd',p.r);if(!voiced('restEnd'))speak('Round '+p.r);vib([200,100,200])}
-  else if(p.k==='rest'){play('workEnd');if(!voiced('workEnd'))speak('Repos');vib([600])}
+  const nxw=run.phases.slice(run.i+1).find(x=>x.k==='work');
+  if(p.k==='work'){play('restEnd',p.r);if(!voiced('restEnd'))speak(p.exo||'Round '+p.r);else if(p.exo)setTimeout(()=>speak(p.exo),900);vib([200,100,200])}
+  else if(p.k==='rest'){play('workEnd');if(!voiced('workEnd'))speak(nxw&&nxw.exo?'Repos. Ensuite : '+nxw.exo:'Repos');vib([600])}
   else if(p.k==='warm'){speak('Échauffement');vib([300])}
   else if(p.k==='cool'){play('workEnd');speak('Retour au calme');vib([300])}
 }
@@ -1181,6 +1191,7 @@ function paint(now){
     scr.dataset.ph='idle';scr.classList.remove('on','warn');
     $('#tmPh').textContent='Prêt';$('#tmRd').textContent=cfg.rounds+' round'+(cfg.rounds>1?'s':'');
     $('#tmClock').textContent=fmtT(cfg.work);$('#tmCombo').textContent='';
+    $('#tmExo').innerHTML=exoAt(0)?`<small>1<sup>er</sup> exercice</small>${esc(exoAt(0))}`:'';
     $('#tmNext').textContent=cfg.preset||'Personnalisé';$('#tmLeft').textContent='Total '+fmtT(tot);
     $('#tmBarPh').style.width='0%';$('#tmBarAll').style.width='0%';
     $('#tmNote').textContent='Le son s’active au premier appui sur Démarrer.';
@@ -1194,6 +1205,9 @@ function paint(now){
   $('#tmRd').textContent=p.k==='work'?`Round ${p.r} / ${N}`:p.k==='rest'?`Round ${p.r+1} / ${N} ensuite`:p.k==='cool'?`${N} / ${N} terminés`:`Round 1 / ${N} ensuite`;
   $('#tmClock').textContent=fmtT(rem);
   $('#tmCombo').textContent=p.k==='work'?run.combo:'';
+  {const nxw=run.phases.slice(run.i+1).find(x=>x.k==='work');
+   $('#tmExo').innerHTML=p.k==='work'?(p.exo?esc(p.exo):''):(nxw&&nxw.exo?`<small>À suivre</small>${esc(nxw.exo)}`:'');
+   $('#tmExo').dataset.mode=p.k==='work'?'now':'next'}
   $('#tmNext').textContent=nx?'Ensuite : '+PH[nx.k].toLowerCase()+' '+fmtS(nx.d):'Dernière phase';
   const tot=totalOf(run.phases),dn=doneSec(now);
   $('#tmLeft').textContent='Reste '+fmtT(tot-dn);
@@ -1214,10 +1228,23 @@ function fillForm(){
 $('#tmVoice').checked=cfg.voice&&canSpeak;$('#tmVoice').disabled=!canSpeak;$('#tmTestVoice').disabled=!canSpeak;
   $('#tmCoach').checked=cfg.coach;$('#tmCoachEvery').value=String(cfg.coachEvery);$('#tmVib').checked=cfg.vib;
   $('#tmTotal').textContent=fmtT(totalOf(plan()));
+  renderExos();
 }
+function renderExos(){
+  const box=$('#tmExos');if(!box)return;
+  box.innerHTML=Array.from({length:cfg.rounds},(_,i)=>`<label class="tm-exo-row"><span class="num">R${i+1}</span><select data-exo="${i}" aria-label="Exercice du round ${i+1}">${exoOptions(exoAt(i))}</select></label>`).join('');
+}
+function readExos(){
+  const sel=[...document.querySelectorAll('#tmExos select[data-exo]')];
+  if(sel.length)sel.forEach(x=>{cfg.exos[Number(x.dataset.exo)]=x.value});
+  cfg.exos=Array.from({length:cfg.rounds},(_,i)=>cfg.exos[i]||'');
+}
+const sameExos=(a,b)=>JSON.stringify((a||[]).map(x=>x||''))===JSON.stringify((b||[]).map(x=>x||''));
+function sharedList(){return [...SEANCES.entries()].sort((a,b)=>(a[1].name||'').localeCompare(b[1].name||'','fr'))}
 function matchPreset(){
   const b=BUILTIN.find(p=>p.rounds===cfg.rounds&&p.work===cfg.work&&p.rest===cfg.rest);
-  const m=mine.find(p=>p.rounds===cfg.rounds&&p.work===cfg.work&&p.rest===cfg.rest&&p.warmOn===cfg.warmOn&&p.coolOn===cfg.coolOn&&(!p.warmOn||p.warm===cfg.warm)&&(!p.coolOn||p.cool===cfg.cool));
+  const same=p=>p.rounds===cfg.rounds&&p.work===cfg.work&&p.rest===cfg.rest&&p.warmOn===cfg.warmOn&&p.coolOn===cfg.coolOn&&(!p.warmOn||p.warm===cfg.warm)&&(!p.coolOn||p.cool===cfg.cool)&&sameExos(p.exos,cfg.exos);
+  const m=mine.find(same)||sharedList().map(x=>x[1]).find(same);
   if(cfg.preset&&m&&m.name===cfg.preset)return m.name;
   return (b&&b.name)||(m&&m.name)||'';
 }
@@ -1226,13 +1253,18 @@ function readForm(){
   cfg.work=getTime('tmWork',5,3600);cfg.rest=getTime('tmRest',0,1800);
   cfg.warmOn=$('#tmWarmOn').checked;cfg.warm=getTime('tmWarm',10,3600);
   cfg.coolOn=$('#tmCoolOn').checked;cfg.cool=getTime('tmCool',10,3600);
+  readExos();
   cfg.preset=matchPreset();saveCfg();
   $('#tmWarmT').hidden=!cfg.warmOn;$('#tmCoolT').hidden=!cfg.coolOn;
   $('#tmTotal').textContent=fmtT(totalOf(plan()));renderPresets();paint();
 }
 function renderPresets(){
   const chip=(p,src,i)=>`<button type="button" class="chip" data-tm="preset" data-src="${src}" data-i="${i}" aria-pressed="${cfg.preset===p.name}">${esc(p.name)}<small>${fmtS(p.work)} / ${fmtS(p.rest)} ×${p.rounds}</small></button>`;
-  $('#tmPresets').innerHTML=BUILTIN.map((p,i)=>chip(p,'b',i)).join('')+mine.map((p,i)=>chip(p,'m',i)+`<button type="button" class="chip del" data-tm="delPreset" data-i="${i}" aria-label="Supprimer le préréglage ${esc(p.name)}">${armedDel===i?'Supprimer ?':'✕'}</button>`).join('');
+  const nx=p=>(p.exos||[]).filter(Boolean).length?` · ${(p.exos||[]).filter(Boolean).length} exos`:'';
+  const chip2=(p,src,i,lab)=>`<button type="button" class="chip" data-tm="preset" data-src="${src}" data-i="${i}" aria-pressed="${cfg.preset===p.name}">${lab||''}${esc(p.name)}<small>${fmtS(p.work)} / ${fmtS(p.rest)} ×${p.rounds}${nx(p)}</small></button>`;
+  $('#tmPresets').innerHTML=BUILTIN.map((p,i)=>chip(p,'b',i)).join('')
+    +sharedList().map(([id,p])=>chip2(p,'g',id,'👥 ')+`<button type="button" class="chip del" data-tm="delPreset" data-src="g" data-i="${esc(id)}" aria-label="Supprimer le cours partagé ${esc(p.name)}">${armedDel==='g'+id?'Supprimer ?':'✕'}</button>`).join('')
+    +mine.map((p,i)=>chip2(p,'m',i)+`<button type="button" class="chip del" data-tm="delPreset" data-i="${i}" aria-label="Supprimer le préréglage ${esc(p.name)}">${armedDel===i?'Supprimer ?':'✕'}</button>`).join('');
 }
 function renderHist(){
   $('#tmHistClear').hidden=!hist.length;$('#tmHistClear').textContent=armedHist?'Confirmer ?':'Effacer';
@@ -1243,9 +1275,17 @@ $('#tmSet').addEventListener('input',readForm);
 $('#tmSet').addEventListener('change',()=>{readForm();fillForm()});
 $('#tmForm').addEventListener('submit',e=>{
   e.preventDefault();const name=$('#tmName').value.trim().slice(0,30);
-  if(!name){toast('Donne un nom à ton préréglage.');$('#tmName').focus();return}
+  if(!name){toast('Donne un nom à ton cours.');$('#tmName').focus();return}
   if(BUILTIN.some(b=>b.name.toLowerCase()===name.toLowerCase())){toast('Ce nom est déjà pris par un préréglage de base.');return}
-  const p={name,rounds:cfg.rounds,work:cfg.work,rest:cfg.rest,warmOn:cfg.warmOn,warm:cfg.warm,coolOn:cfg.coolOn,cool:cfg.cool};
+  readExos();
+  const p={name,rounds:cfg.rounds,work:cfg.work,rest:cfg.rest,warmOn:cfg.warmOn,warm:cfg.warm,coolOn:cfg.coolOn,cool:cfg.cool,exos:cfg.exos.slice()};
+  if($('#tmShare').checked){
+    if(!db){toast('Pas de connexion : enregistre-le sur ce téléphone (décoche « Partager »).');return}
+    const ex=sharedList().find(([,x])=>(x.name||'').toLowerCase()===name.toLowerCase()),mm=me&&member(me);
+    const id=ex?ex[0]:'t-'+rid();
+    setDoc('courses/'+id,Object.assign({},ex?ex[1]:{at:new Date().toISOString()},p,{kind:'seance',auteur:mm?mm.first+' '+mm.last:'',auteurId:mm?me:'',updated:new Date().toISOString()}));
+    cfg.preset=name;saveCfg();$('#tmName').value='';toast(ex?'Cours du groupe mis à jour':'Cours enregistré pour tout le groupe');renderPresets();paint();return;
+  }
   const i=mine.findIndex(x=>x.name.toLowerCase()===name.toLowerCase());
   if(i>=0)mine[i]=p;else mine.push(p);mine=mine.slice(-20);
   lsSet('adb-tm-presets',JSON.stringify(mine));cfg.preset=name;saveCfg();$('#tmName').value='';
@@ -1263,13 +1303,23 @@ $('#tab-minuteur').addEventListener('click',e=>{
     case 'skip':skip();break;
     case 'stop':stop();break;
     case 'test':{const s=b.dataset.s;audio();if(s==='voice')speak('Round 2. Repos. 10 secondes.',true);else play(s,s==='interval'?90:s==='count'?3:s==='restEnd'?2:undefined);break}
-    case 'preset':{if(run)break;const p=(b.dataset.src==='b'?BUILTIN:mine)[Number(b.dataset.i)];if(!p)break;
-      Object.assign(cfg,{rounds:p.rounds,work:p.work,rest:p.rest},b.dataset.src==='m'?{warmOn:p.warmOn,warm:p.warm,coolOn:p.coolOn,cool:p.cool}:{});
+    case 'preset':{if(run)break;const p=b.dataset.src==='g'?SEANCES.get(b.dataset.i):(b.dataset.src==='b'?BUILTIN:mine)[Number(b.dataset.i)];if(!p)break;
+      Object.assign(cfg,{rounds:p.rounds,work:p.work,rest:p.rest,exos:Array.isArray(p.exos)?p.exos.slice():[]},b.dataset.src!=='b'?{warmOn:!!p.warmOn,warm:p.warm||300,coolOn:!!p.coolOn,cool:p.cool||300}:{});
       cfg.preset=p.name;saveCfg();fillForm();renderPresets();paint();break}
-    case 'delPreset':{if(run)break;const i=Number(b.dataset.i);
+    case 'delPreset':{if(run)break;
+      if(b.dataset.src==='g'){const id=b.dataset.i,k='g'+id;if(armedDel!==k){armedDel=k;renderPresets();setTimeout(()=>{if(armedDel===k){armedDel=null;renderPresets()}},3000);break}
+        armedDel=null;delDoc('courses/'+id);toast('Cours du groupe supprimé');break}
+      const i=Number(b.dataset.i);
       if(armedDel!==i){armedDel=i;renderPresets();setTimeout(()=>{if(armedDel===i){armedDel=null;renderPresets()}},3000);break}
       armedDel=null;const p=mine[i];mine.splice(i,1);lsSet('adb-tm-presets',JSON.stringify(mine));
       if(p&&cfg.preset===p.name){cfg.preset=matchPreset();saveCfg()}toast('Préréglage supprimé');renderPresets();paint();break}
+    case 'exoAll':{if(run)break;readExos();const f=cfg.exos.find(Boolean);if(!f){toast('Choisis d’abord l’exercice du 1er round.');break}cfg.exos=cfg.exos.map(()=>f);saveCfg();fillForm();paint();break}
+    case 'exoRandom':{if(run)break;const pool=Object.entries(EXOS).filter(([g])=>g!=='Récupération').flatMap(([,l])=>l).concat(perso);let last='';
+      cfg.exos=Array.from({length:cfg.rounds},()=>{let x;do{x=pool[Math.floor(Math.random()*pool.length)]}while(x===last&&pool.length>1);last=x;return x});cfg.preset=matchPreset();saveCfg();fillForm();renderPresets();paint();break}
+    case 'exoClear':{if(run)break;cfg.exos=[];cfg.preset=matchPreset();saveCfg();fillForm();renderPresets();paint();break}
+    case 'exoAdd':{const v=$('#tmExoNew').value.trim().slice(0,40);if(!v){$('#tmExoNew').focus();break}
+      if(!perso.includes(v)&&!Object.values(EXOS).flat().includes(v)){perso.push(v);perso=perso.slice(-50);lsSet('adb-tm-exos-perso',JSON.stringify(perso))}
+      readExos();const k=cfg.exos.findIndex(x=>!x);if(k>=0)cfg.exos[k]=v;saveCfg();$('#tmExoNew').value='';fillForm();paint();toast(k>=0?'« '+v+' » ajouté au round '+(k+1):'« '+v+' » ajouté à la liste');break}
     case 'clearHist':if(!armedHist){armedHist=true;renderHist();setTimeout(()=>{if(armedHist){armedHist=false;renderHist()}},3000);break}
       armedHist=false;hist=[];lsSet('adb-tm-hist','[]');renderHist();toast('Historique effacé');break;
   }
@@ -1280,6 +1330,7 @@ if(!navigator.vibrate)sup.push('vibration');
 if(!('wakeLock' in navigator))sup.push('écran maintenu allumé');
 $('#tmSupport').textContent=sup.length?'Non pris en charge sur cet appareil : '+sup.join(', ')+'.':'';
 fillForm();renderPresets();renderHist();paint();
+window.tmRefresh=()=>{if(!run){cfg.preset=matchPreset()||cfg.preset}renderPresets()};
 })();
 
 function renderAll(){
