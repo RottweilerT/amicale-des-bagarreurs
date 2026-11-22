@@ -690,3 +690,10 @@ body.mn-lock{overflow:hidden}
 .mr-cote{align-self:center;font:800 clamp(1.1rem,5vw,1.8rem)/1 var(--f-data);text-transform:uppercase;letter-spacing:.06em;background:#fff;color:var(--tm-work);border-radius:999px;padding:6px 16px}
 .miroir{transform:scaleX(-1)}
 @media (max-width:420px){.mn-b-img .mn-mini{width:36px;height:32px}.mn-dur{grid-template-columns:32px auto 32px}.mn-dur-v{font-size:1.1rem}.mn-b{gap:4px}}
+/* puces de choix du minuteur : état sélectionné bien visible */
+#tab-minuteur button.chip{min-height:38px;padding:7px 12px;font-size:.9rem;font-weight:600;transition:background-color .12s,color .12s}
+#tab-minuteur button.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:var(--on-accent)}
+#tab-minuteur button.chip[aria-pressed="true"]::before{content:"✓ ";font-weight:800}
+#tab-minuteur .mn-occ button.chip{min-height:32px;padding:4px 10px}
+#mnFCat.actif{border-color:var(--blue);background:var(--blue-soft);font-weight:700}
+.mn-resume-sel{background:var(--blue-soft);border-radius:10px;padding:8px 12px;font-size:.92rem;line-height:1.35}

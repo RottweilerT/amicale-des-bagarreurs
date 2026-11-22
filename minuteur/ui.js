@@ -65,7 +65,7 @@ function vListe(){
     <input type="search" id="mnQ" placeholder="Rechercher une séance (nom, zone, catégorie)" value="${E(ui.q)}" aria-label="Rechercher une séance">
     <div class="chips mn-filtres">${chip('fDuree','','Toutes durées')}${chip('fDuree','c','< 15 min')}${chip('fDuree','m','15–30 min')}${chip('fDuree','l','> 30 min')}</div>
     <div class="chips mn-filtres">${chip('fType','','Toutes')}${chip('fType','fav','★ Favorites')}${chip('fType','groupe','👥 Groupe')}${chip('fType','local','📱 Ce téléphone')}
-      ${cats.length?`<select id="mnFCat" aria-label="Catégorie"><option value="">Toutes catégories</option>${cats.map(c=>`<option value="${c}"${ui.fCat===c?' selected':''}>${E(S.CAT[c])}</option>`).join('')}</select>`:''}</div>
+      ${cats.length?`<select id="mnFCat" aria-label="Catégorie"${ui.fCat?' class="actif"':''}><option value="">Toutes catégories</option>${cats.map(c=>`<option value="${c}"${ui.fCat===c?' selected':''}>${E(S.CAT[c])}</option>`).join('')}</select>`:''}</div>
     <div class="mn-liste">${l.map(cSeance).join('')||`<div class="empty">${all.length?'Aucune séance ne correspond à ces filtres.':'Aucune séance enregistrée pour l’instant. Crée la tienne, ou pars d’un modèle ci-dessous.'}</div>`}</div>
   </div>
   <div class="panel"><div class="mn-h"><h3>Modèles prêts à l’emploi</h3><span class="hint">modifiables</span></div>
@@ -122,11 +122,19 @@ function vGen(){
     <div class="mn-tl">Impact</div><div class="chips">${c('impact',1,'Sans saut')}${c('impact',2,'Modéré')}${c('impact',3,'Tous')}</div>
     <div class="mn-tl">Matériel disponible</div><div class="chips">${Object.entries(L.materiel).map(([k,t])=>c('mat',k,t,1)).join('')}</div>
     <div class="mn-rapide-g">${stepper('genT',fT(gen.travail),'Travail','data-k="travail"')}${stepper('genT',fT(gen.repos),'Repos','data-k="repos"')}</div>
-    <details class="mn-det"><summary>Catégories précises (facultatif)</summary><div class="chips">${L.cats.map(([k,t])=>c('cats',k,t,1)).join('')}</div></details>
+    <details class="mn-det"${gen.cats.length?' open':''}><summary>Catégories précises (facultatif)${gen.cats.length?` — ${gen.cats.length} choisie${gen.cats.length>1?'s':''}`:''}</summary><div class="chips">${L.cats.map(([k,t])=>c('cats',k,t,1)).join('')}</div></details>
     <label class="check"><input type="checkbox" data-mn="genEch" ${gen.echauffement?'checked':''}> Échauffement et retour au calme (séances de 10 min et plus)</label>
+    <div class="mn-resume-sel"><b>Ta sélection :</b> ${E(resumeGen())}</div>
     <button class="btn mn-go" type="button" data-mn="genGo">Générer la séance</button></div>`;
 }
 
+function resumeGen(){
+  const t=(l,v)=>(l.find(x=>x[0]===v)||[])[1]||'';
+  return [gen.duree+' min',gen.zones.length?gen.zones.map(z=>S.ZONES_NOM[z]).join(' + '):'corps entier',
+    t([[1,'débutant'],[2,'intermédiaire'],[3,'avancé']],gen.niveau),'cardio '+t([[1,'doux'],[2,'moyen'],[3,'élevé']],gen.cardio),
+    t([[1,'sans saut'],[2,'impact modéré'],[3,'tous impacts']],gen.impact),gen.mat.length?'avec '+gen.mat.map(m=>L.materiel[m].toLowerCase()).join(', '):'sans matériel',
+    fT(gen.travail)+' / '+fT(gen.repos)].concat(gen.cats.length?[gen.cats.map(c=>S.CAT[c]).join(', ')]:[]).join(' · ');
+}
 /* ================= Éditeur ================= */
 let ed=null; // {s, existe, partage, gen, sel:Set, selListe, occTab:{}, etat}
 try{const b=JSON.parse(localStorage.getItem('adb-mn-brouillon')||'null');if(b&&b.s)ed={s:M.normaliser(b.s),existe:!!b.existe,partage:!!b.partage,sel:new Set(),selListe:null,occTab:{},etat:b.existe?'ok':'brouillon'}}catch(e){}
