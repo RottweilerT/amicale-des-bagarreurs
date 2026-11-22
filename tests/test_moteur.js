@@ -115,6 +115,20 @@ function derouler(s,opts){
   const now=1e7;M.avancer(c,now);ok(c.fini&&M.evenements(c,now,5000).length===0,'H : plus rien ne démarre après la fin');
   M.suivant(c,now);ok(c.fini,'H : « suivant » après la fin ne relance rien');
 }
+/* Côtés : un exercice fait d'un seul côté est divisé en gauche puis droite, sauf choix d'un côté */
+{
+  M.definirCotes(id=>id==='fente'?'jambe':id==='etir'?'côté':'');
+  const f=(o)=>Object.assign({t:'act',exo:{id:'fente',nom:'Fentes',cat:'cuisses'},d:40},o||{});
+  let st=M.compiler({prep:0,blocs:[f(),{t:'repos',d:20},act('Squats',40)]});
+  ok(st.length===4&&st[0].cote==='g'&&st[1].cote==='d'&&st[0].d===40&&st[1].d===40,'Côtés : par défaut, jambe gauche puis jambe droite, même durée');
+  ok(st[0].coteLabel==='jambe gauche'&&st[1].coteLabel==='jambe droite','Côtés : libellés « jambe gauche » / « jambe droite »');
+  ok(M.annonce(st,0).nom==='Fentes — jambe droite','Côtés : pendant la jambe gauche, on annonce la jambe droite');
+  st=M.compiler({prep:0,blocs:[f({cote:'d'})]});ok(st.length===1&&st[0].cote==='d','Côtés : un seul côté si on le choisit');
+  st=M.compiler({prep:0,blocs:[act('Squats',40)]});ok(st.length===1&&!st[0].cote,'Côtés : les exercices symétriques ne sont pas divisés');
+  ok(M.libelleCote('côté','d')==='côté droit'&&M.libelleCote('bras','d')==='bras droit','Côtés : accords « côté droit », « bras droit »');
+  st=M.compiler({prep:0,blocs:[{t:'rep',n:2,blocs:[f(),{t:'repos',d:10}]}]});ok(st.filter(x=>x.k==='act').length===4,'Côtés : dans une répétition, chaque tour fait les deux côtés');
+  M.definirCotes(()=>'');
+}
 /* Cas particuliers */
 {
   ok(!M.valider({blocs:[]}).ok,'Séance vide refusée');

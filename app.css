@@ -564,7 +564,7 @@ nav.tabs button.tp-more{font-size:1.3rem;line-height:1;padding-inline:14px}
 .mn-poignee{cursor:grab;touch-action:none;color:var(--muted);font-size:1.3rem;text-align:center;user-select:none;padding:10px 0}
 .mn-sel{display:grid;place-items:center}.mn-sel input{width:22px;height:22px}
 .mn-b-nom{border:0;background:transparent;color:var(--ink);text-align:left;font:inherit;display:grid;gap:1px;padding:4px 2px;cursor:pointer;min-width:0}
-.mn-b-nom b{overflow-wrap:anywhere;line-height:1.15}.mn-b-nom small{color:var(--muted);font-size:.8rem;overflow-wrap:anywhere}
+.mn-b-nom b{overflow-wrap:break-word;hyphens:auto;line-height:1.15}.mn-b-nom small{color:var(--muted);font-size:.8rem;overflow-wrap:anywhere}
 div.mn-b-nom{cursor:default}
 .mn-dur{display:grid;grid-template-columns:36px auto 36px;align-items:center;gap:2px}
 .mn-dur .btn{padding:0;min-height:40px;font-size:1.2rem}
@@ -685,3 +685,8 @@ body.mn-lock{overflow:hidden}
 .mr-next-img{height:clamp(56px,13vh,120px);width:auto;aspect-ratio:1.15;border-radius:10px;background:#F3F5FA;flex:0 0 auto}
 .mr-next.imminent .mr-next-img{outline:3px solid currentColor}
 @media (orientation:landscape) and (max-height:560px){.mr-vis{height:clamp(48px,18vh,90px)}.mr-next-img{height:clamp(44px,16vh,80px)}}
+/* côtés */
+.mn-cote{grid-column:2/-1;justify-self:start;margin:2px 0 2px}
+.mr-cote{align-self:center;font:800 clamp(1.1rem,5vw,1.8rem)/1 var(--f-data);text-transform:uppercase;letter-spacing:.06em;background:#fff;color:var(--tm-work);border-radius:999px;padding:6px 16px}
+.miroir{transform:scaleX(-1)}
+@media (max-width:420px){.mn-b-img .mn-mini{width:36px;height:32px}.mn-dur{grid-template-columns:32px auto 32px}.mn-dur-v{font-size:1.1rem}.mn-b{gap:4px}}

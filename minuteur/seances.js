@@ -11,12 +11,14 @@ const now=()=>new Date().toISOString();
 
 /* ---------- bibliothèque ---------- */
 const CAT=Object.fromEntries(L.cats);
-const EX=new Map(L.exos.map(a=>{const [id,nom,cats,mp,ms,niv,cardio,impact,mat,pos,esp,instr,facile,difficile]=a;
-  return [id,{id,nom,cats,cat:cats[0],mp,ms,niv,cardio,impact,mat,pos,esp,instr,facile,difficile}]}));
+const EX=new Map(L.exos.map(a=>{const [id,nom,cats,mp,ms,niv,cardio,impact,mat,pos,esp,instr,facile,difficile,cote]=a;
+  return [id,{id,nom,cats,cat:cats[0],mp,ms,niv,cardio,impact,mat,pos,esp,instr,facile,difficile,cote:cote||''}]}));
 let perso=jget('adb-mn-exos-perso',[]);if(!Array.isArray(perso))perso=[];
 let fav=jget('adb-mn-fav',{});fav={exos:fav.exos||[],combos:fav.combos||[],seances:fav.seances||[]};
 const saveFav=()=>jset('adb-mn-fav',fav);
 function exo(id){return EX.get(id)||perso.find(p=>p.id===id)||null}
+/* exercices faits d'un seul côté : le moteur les divise en gauche puis droite (sauf si un côté est choisi) */
+M.definirCotes(id=>{const e=exo(id);return e&&e.cote||''});
 function tousExos(){return [...EX.values(),...perso]}
 const sansAccent=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 /* recherche « intelligente » : tous les mots, dans le nom, les catégories, les muscles, la consigne */

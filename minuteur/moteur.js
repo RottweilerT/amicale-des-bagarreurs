@@ -23,6 +23,7 @@ function normBloc(b,prof){
   if(b.t==='act'){
     o.exo=normExo(b.exo);o.reps=clampInt(b.reps,0,999,0);o.d=o.reps?0:clampInt(b.d,0,MAX_D,30);
     o.variante=str(b.variante,60);o.note=str(b.note,120);o.intensite=clampInt(b.intensite,0,3,0);
+    o.cote=['g','d','2'].includes(b.cote)?b.cote:''; // côté travaillé : g, d, 2 = les deux à la suite ; vide = selon l'exercice
   }else if(b.t==='repos'||b.t==='recup'){
     o.d=clampInt(b.d,0,MAX_D,b.t==='recup'?120:30);o.note=str(b.note,120);
   }else if(b.t==='rep'){
@@ -51,6 +52,15 @@ function clone(x,neuf){
   return c;
 }
 
+/* ---------- côtés (exercices faits d'un seul côté à la fois) ---------- */
+/* L'appli indique quels exercices se font d'un côté : fonction id → « jambe » | « bras » | « côté » | ''. */
+let typeCote=()=>'';
+function definirCotes(f){if(typeof f==='function')typeCote=f}
+const NOM_COTE={g:'gauche',d:'droite'};
+function libelleCote(type,c){if(!type||!NOM_COTE[c])return '';return type+' '+(c==='g'?'gauche':type==='jambe'?'droite':'droit')}
+/* côtés effectifs d'un bloc d'activité : [] (pas de côté), ['g'], ['d'] ou ['g','d'] (les deux, gauche d'abord) */
+function cotesDe(b){const t=b.exo&&b.exo.id?typeCote(b.exo.id):'';if(!t)return [];return b.cote==='g'?['g']:b.cote==='d'?['d']:['g','d']}
+
 /* ---------- 2. Compilation en étapes ---------- */
 /* Une étape : {k:'prep'|'act'|'repos'|'recup', d (s ; 0 = passage manuel), reps, nom, exo, variante, note, intensite,
    blocId, rounds:[{i,n}] (pile des répétitions englobantes), combo:{nom,tour,tours,parts,partI}|null} */
@@ -59,7 +69,9 @@ function compiler(s){
   if(s.prep>0)out.push({k:'prep',d:s.prep,nom:'Préparation',blocId:'prep',rounds:[],combo:null});
   const emit=(b,pile,combo)=>{
     if(b.t==='act'){if(b.d<=0&&!b.reps)return;
-      out.push({k:'act',d:b.reps?0:b.d,reps:b.reps,nom:b.exo.nom||'Exercice',exo:b.exo,variante:b.variante,note:b.note,intensite:b.intensite,blocId:b.id,rounds:pile,combo});}
+      const cs=cotesDe(b),t=cs.length?typeCote(b.exo.id):'';
+      (cs.length?cs:['']).forEach((c,k)=>out.push({k:'act',d:b.reps?0:b.d,reps:b.reps,nom:b.exo.nom||'Exercice',exo:b.exo,variante:b.variante,note:b.note,intensite:b.intensite,blocId:b.id,rounds:pile,combo,
+        cote:c,coteLabel:libelleCote(t,c),coteI:cs.length>1?k+1:0}));}
     else if(b.t==='repos'||b.t==='recup'){if(b.d<=0)return;
       out.push({k:b.t,d:b.d,nom:b.t==='repos'?'Repos':'Récupération',note:b.note,blocId:b.id,rounds:pile,combo});}
     else if(b.t==='rep'){
@@ -70,7 +82,7 @@ function compiler(s){
         l.forEach(x=>emit(x,p2,combo));
       }
     }else if(b.t==='combo'){
-      const parts=b.mvts.map(m=>({k:m.t,nom:m.t==='act'?(m.exo.nom||'Exercice'):'Repos',d:m.d,reps:m.reps||0}));
+      const parts=b.mvts.map(m=>{const cs=m.t==='act'?cotesDe(m):[];return {k:m.t,nom:m.t==='act'?(m.exo.nom||'Exercice'):'Repos',d:m.d*(cs.length||1),reps:m.reps||0,cotes:cs.length>1?'chaque côté':cs.length?NOM_COTE[cs[0]]:''}});
       for(let k=0;k<b.tours;k++)b.mvts.forEach((m,j)=>emit(m,pile,{nom:b.nom,id:b.id,tour:k+1,tours:b.tours,parts,partI:j}));
     }
   };
@@ -88,9 +100,9 @@ function annonce(steps,i){
   const a=prochaineActivite(steps,i);if(!a)return null;
   if(a.combo){
     const parts=a.combo.parts.slice(a.combo.partI).filter(p=>p.k==='act');
-    return {nom:a.combo.nom,combo:parts.map(p=>(p.reps?p.reps+' × ':fmtCourt(p.d)+' de ')+p.nom.toLowerCase()),d:a.combo.parts.slice(a.combo.partI).reduce((t,p)=>t+p.d,0),etape:a};
+    return {nom:a.combo.nom,combo:parts.map(p=>(p.reps?p.reps+' × ':fmtCourt(p.d)+' de ')+p.nom.toLowerCase()+(p.cotes?' ('+p.cotes+')':'')),d:a.combo.parts.slice(a.combo.partI).reduce((t,p)=>t+p.d,0),etape:a};
   }
-  return {nom:a.nom,d:a.d,reps:a.reps,variante:a.variante,etape:a};
+  return {nom:a.nom+(a.coteLabel?' — '+a.coteLabel:''),d:a.d,reps:a.reps,variante:a.variante,etape:a};
 }
 function fmtCourt(s){s=Math.round(s);if(s<60)return s+' s';const m=Math.floor(s/60),r=s%60;return r?m+' min '+r:m+' min'}
 
@@ -197,7 +209,7 @@ function restaurer(steps,snap,now){
   return c;
 }
 
-const API={normaliser,normBloc,normListe,clone,nid,compiler,dureeTotale,prochaineActivite,annonce,valider,fmtCourt,
+const API={definirCotes,cotesDe,libelleCote,normaliser,normBloc,normListe,clone,nid,compiler,dureeTotale,prochaineActivite,annonce,valider,fmtCourt,
   chrono,avancer,pauser,reprendre,suivant,precedent,aller,ecoule,restant,progression,evenements,exporter,restaurer,MAX_D,MAX_N};
 if(typeof module!=='undefined'&&module.exports)module.exports=API;else root.ADB_MOTEUR=API;
 })(typeof window!=='undefined'?window:this);

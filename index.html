@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
-<link rel="stylesheet" href="app.css?v=19">
+<link rel="stylesheet" href="app.css?v=20">
 </head>
 <body>
 <div class="splash" id="splash" role="img" aria-label="Chargement de l’Amicale des Bagarreurs"></div>
@@ -315,6 +315,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
       <div class="mr-main">
         <img class="mr-vis" id="mrVis" alt="" hidden>
         <div class="mr-exo" id="mrExo" aria-live="polite"></div>
+        <div class="mr-cote" id="mrCote" hidden></div>
         <div class="mr-var" id="mrVar"></div>
         <div class="mr-clock num" id="mrClock" role="timer">00:00</div>
         <div class="mr-bar mr-bar-ph" aria-hidden="true"><i id="mrBarPh"></i></div>
@@ -486,11 +487,11 @@ const APPCHECK_SITE_KEY = "";
 <script src="app.js?v=18"></script>
 <script src="onglets.js?v=18"></script>
 <script src="ergonomie.js?v=18"></script>
-<script src="minuteur/exercices.js?v=1"></script>
-<script src="minuteur/moteur.js?v=1"></script>
+<script src="minuteur/exercices.js?v=2"></script>
+<script src="minuteur/moteur.js?v=2"></script>
 <script src="minuteur/sons.js?v=1"></script>
-<script src="minuteur/seances.js?v=2"></script>
-<script src="minuteur/ui.js?v=2"></script>
+<script src="minuteur/seances.js?v=3"></script>
+<script src="minuteur/ui.js?v=3"></script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>
 </body>
 </html>
