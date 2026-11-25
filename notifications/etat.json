@@ -35,14 +35,6 @@
 "nom": "Boxe anglaise",
 "serie": "489qBTmofd8AIeNa6MKs"
 },
-"Em7Z3Zho8ov4nkAnHhbb": {
-"date": "2026-11-25",
-"fin": "90",
-"heure": "19:15",
-"lieu": "St Roch",
-"nom": "Cours mixte",
-"serie": "R2zEvjfmbfiNZGO6dWGM"
-},
 "FYkMwZmPdfPCFwa6MFvo": {
 "date": "2026-12-21",
 "fin": "90",
@@ -149,9 +141,7 @@
 }
 },
 "echecs_code": [],
-"jour_j": [
-"Em7Z3Zho8ov4nkAnHhbb"
-],
+"jour_j": [],
 "rappel_semaine": "2026-47",
 "v": 2
 }
