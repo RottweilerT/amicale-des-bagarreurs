@@ -52,5 +52,14 @@
   "origine": "auto",
   "envoyes": 0,
   "echecs": 0
+ },
+ {
+  "date": "2026-11-25T15:36+01:00",
+  "categorie": "rappel",
+  "titre": "Cours aujourd'hui",
+  "message": "Cours mixte à 19h15, St Roch",
+  "origine": "auto",
+  "envoyes": 0,
+  "echecs": 2
  }
 ]
