@@ -10,3 +10,13 @@ Appli web du groupe de boxe : inscriptions des membres, arbitrage des combats (b
 - Onglet Notes : tickets (idées, tâches, problèmes) enregistrés dans la collection `courses` avec `kind: "note"`.
 - `.github/workflows/export-tickets.yml` : copie les tickets dans `tickets/tickets.json` toutes les heures (et à la demande). Lancée avec l'entrée « resoudre » (identifiants séparés par des virgules), elle passe d'abord ces tickets en Résolu.
 - Notifications push (cloche en haut de l'appli) : voir `NOTIFICATIONS.md`. Envoi par `.github/workflows/notifications.yml` + `.github/notifications.py` ; règles Firestore à ajouter dans `firestore.rules.notifications`.
+
+## Connexion Google (facultative)
+
+Dans l'onglet Membres, chacun peut **relier son compte Google** à sa fiche (« Se connecter avec Google » ou « Relier mon compte Google »). Sur un autre téléphone, il retrouve alors sa fiche d'un geste, sans la chercher dans la liste. C'est **facultatif** : choisir son nom dans la liste marche toujours comme avant.
+
+- La fiche ne garde que l'identifiant Google (champ `google`), jamais l'adresse e-mail.
+- « Ce n'est pas moi » déconnecte aussi le compte Google sur l'appareil ; « Délier mon compte Google » retire le lien.
+- Ce n'est pas un verrou : la base reste ouverte comme avant (choix assumé).
+- Prérequis dans la console Firebase : **Authentication → Méthode de connexion → Google : activé**, et `rottweilert.github.io` dans **Authentication → Paramètres → Domaines autorisés**. Tant que ce n'est pas fait, le bouton affiche un message et l'appli continue de marcher sans.
+- Test : `python3 tests/test_google.py`.

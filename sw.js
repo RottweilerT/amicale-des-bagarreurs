@@ -1,10 +1,10 @@
 // Mode hors ligne : la page et ses ressources sont gardées sur l'appareil.
 // La page est toujours redemandée au réseau d'abord (pour avoir la dernière version),
 // et la copie locale ne sert que sans connexion. Les données Firebase ne passent pas par ici.
-const CACHE = 'adb-v23';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png', './config.js?v=1', './app.css?v=21', './app.js?v=18', './onglets.js?v=18', './ergonomie.js?v=18', './minuteur/exercices.js?v=2', './minuteur/moteur.js?v=2', './minuteur/sons.js?v=1', './minuteur/seances.js?v=3', './minuteur/ui.js?v=4', './minuteur/visuels/manifest.json', './splash.jpg', './icon-maskable-512.png', './apple-touch-icon.png'];
+const CACHE = 'adb-v24';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo.png', './favicon.png', './config.js?v=1', './app.css?v=21', './app.js?v=19', './onglets.js?v=18', './ergonomie.js?v=18', './minuteur/exercices.js?v=2', './minuteur/moteur.js?v=2', './minuteur/sons.js?v=1', './minuteur/seances.js?v=3', './minuteur/ui.js?v=4', './minuteur/visuels/manifest.json', './splash.jpg', './icon-maskable-512.png', './apple-touch-icon.png'];
 // Moteur Firebase : mis en cache dès l'installation, pour que l'appli démarre sans réseau même juste après une mise à jour.
-const SDK = ['https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check-compat.js'];
+const SDK = ['https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js', 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check-compat.js'];
 const EXTERNAL = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', e => {

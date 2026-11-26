@@ -63,6 +63,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
         <div class="reg-actions"><button class="reg-btn ghost" type="button" id="bxEdit">Modifier</button><button class="reg-btn ghost" type="button" id="bxForget">Ce n'est pas moi</button><button class="reg-btn danger" data-w type="button" id="bxDel">Me désinscrire</button></div>
         <div class="reg-toggle"><label class="reg-switch" for="bxActive"><input type="checkbox" id="bxActive" role="switch"><span></span></label><div><b id="bxActiveT">Profil activé</b><span class="reg-line" id="bxActiveH"></span></div></div>
         <p class="reg-note" id="bxDelNote" hidden>Ta fiche sera effacée du groupe. Touche encore pour confirmer.</p>
+        <div class="reg-g"><span class="reg-line" id="bxGoogle"></span> <button class="reg-link" type="button" id="bxGBtn">Relier mon compte Google</button></div>
         <button class="reg-link" type="button" id="bxOther">Inscrire quelqu'un d'autre</button>
       </div>
       <!-- Sur ton téléphone : installation et notifications -->
@@ -80,6 +81,9 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
         <label class="reg-f" for="bxPick"><span>Choisis ton nom pour retrouver ta fiche sur ce téléphone</span><select id="bxPick"></select></label>
         <form id="bxPinAsk" class="reg-inline" hidden><input type="password" id="bxPinInput" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="current-password" placeholder="Code d'accès" aria-label="Code d'accès"><button class="reg-btn" type="submit">Valider</button></form>
         <p class="reg-note" id="bxPinMsg" hidden></p>
+        <div class="reg-actions"><button class="reg-btn ghost" type="button" id="gIn">Se connecter avec Google</button></div>
+        <p class="reg-note">Facultatif : pour retrouver ta fiche d'un geste sur un autre téléphone.</p>
+        <p class="reg-note" id="gMsg" role="status" hidden></p>
       </div>
       <!-- Formulaire : inscription ou modification -->
       <form id="fMember" class="reg-card" autocomplete="off" novalidate>
@@ -466,6 +470,7 @@ window.splashDone=()=>setTimeout(fin,Math.max(0,1000-(Date.now()-t0)));setTimeou
 <script src="config.js?v=1"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check-compat.js"></script>
 <script>
@@ -484,7 +489,7 @@ const FIREBASE_CONFIG = {
 /* App Check (SEC-01) : clé de site reCAPTCHA v3 (publique). Vide = App Check inactif. Voir NOTIFICATIONS.md, « App Check ». */
 const APPCHECK_SITE_KEY = "";
 </script>
-<script src="app.js?v=18"></script>
+<script src="app.js?v=19"></script>
 <script src="onglets.js?v=18"></script>
 <script src="ergonomie.js?v=18"></script>
 <script src="minuteur/exercices.js?v=2"></script>

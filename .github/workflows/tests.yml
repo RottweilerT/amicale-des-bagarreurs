@@ -31,5 +31,7 @@ jobs:
         run: python3 tests/test_notifications.py
       - name: Parcours de l'appli
         run: python3 tests/test_appli.py
+      - name: Connexion Google facultative
+        run: python3 tests/test_google.py
       - name: Vrai SDK Firebase (lecture seule)
         run: python3 tests/test_sdk.py

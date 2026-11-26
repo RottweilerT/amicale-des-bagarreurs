@@ -60,6 +60,7 @@ async function boot(){
     db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
   }catch(e){banner("La configuration Firebase est invalide.");renderAll();return}
   connected=true;
+  G.init();
   for(const col of Object.keys(S)){
     db.collection(col).onSnapshot(snap=>{
       const m=new Map();snap.docs.forEach(d=>m.set(d.id,d.data()));
@@ -214,12 +215,12 @@ function resetMemberForm(){resetFields();ui.regForm=false;renderReg()}
 $('#mCancel').addEventListener('click',resetMemberForm);
 $('#bxEdit').addEventListener('click',()=>openMemberForm(me));
 $('#bxOther').addEventListener('click',()=>openMemberForm(null));
-$('#bxForget').addEventListener('click',()=>{me='';lsSet('adb-me','');ui.confirm=null;renderAll()});
+$('#bxForget').addEventListener('click',()=>{me='';lsSet('adb-me','');ui.confirm=null;G.deconnecter();renderAll()});
 $('#bxDel').addEventListener('click',()=>{
   if(ui.confirm!=='me'){ui.confirm='me';renderReg();setTimeout(()=>{if(ui.confirm==='me'){ui.confirm=null;renderReg()}},4000);return}
   ui.confirm=null;delDoc('members/'+me);S.members.delete(me);me='';lsSet('adb-me','');toast('Tu es désinscrit.');renderAll();
 });
-function pickAs(id){me=id;lsSet('adb-me',id);pickId=null;toast('Bonjour '+member(id).first+' !');renderAll()}
+function pickAs(id){me=id;lsSet('adb-me',id);pickId=null;toast('Bonjour '+member(id).first+' !');G.apresChoix(id);renderAll()}
 $('#bxPick').addEventListener('change',e=>{
   const v=e.target.value,m=v&&member(v);$('#bxPinAsk').hidden=true;$('#bxPinMsg').hidden=true;pickId=null;
   if(!m)return;if(!m.pin){pickAs(v);return}
@@ -254,8 +255,69 @@ function renderReg(){
     $('#mPinLabel').textContent=hasPin?'Nouveau code':'Code d’accès';$('#mPin').placeholder=hasPin?'Laisse vide pour garder':'Facultatif';$('#mPinOffRow').hidden=!hasPin;
     $('#mPinHint').textContent=hasPin?'Il y a déjà un code : laisse vide pour le garder, ou tape un nouveau code (4 à 8 chiffres).':'4 à 8 chiffres. Le code évite qu’un autre membre ouvre ou modifie ta fiche par erreur depuis l’appli. Ce n’est pas un mot de passe : ne réutilise pas un code important.';
   }
-  $('#telCard').hidden=!(mine&&!showForm);Tel.render();Tel.sync();
+  $('#telCard').hidden=!(mine&&!showForm);Tel.render();Tel.sync();G.render();
 }
+/* ----- Connexion Google (facultative) -----
+   Sert seulement à retrouver sa fiche d'un geste sur un autre appareil, sans choisir son nom dans la liste.
+   On peut toujours utiliser l'appli sans compte Google. La fiche ne garde que l'identifiant Google (champ « google »),
+   jamais l'adresse e-mail. Prérequis côté Firebase : Authentication → Méthode de connexion → Google activé,
+   et rottweilert.github.io dans les domaines autorisés. */
+const G=(()=>{
+  let auth=null,user=null,attente=false;
+  const el=id=>document.getElementById(id);
+  const ERR={'auth/operation-not-allowed':'La connexion Google n’est pas encore activée pour l’appli. Tu peux continuer sans.',
+    'auth/unauthorized-domain':'Ce site n’est pas encore autorisé pour la connexion Google. Tu peux continuer sans.',
+    'auth/network-request-failed':'Pas de connexion internet : réessaie plus tard.'};
+  function msg(t){const m=el('gMsg');if(!m)return;m.textContent=t||'';m.hidden=!t}
+  function lie(){if(!user)return null;for(const [id,m] of S.members)if(m&&m.google===user.uid)return id;return null}
+  async function ecrire(id,uid){
+    const m=member(id);if(!m||!db)return;
+    try{await db.doc('members/'+id).set({google:uid},{merge:true});
+      if(uid)m.google=uid;else delete m.google;
+      toast(uid?'Compte Google relié à ta fiche':'Compte Google délié de ta fiche');renderAll()}
+    catch(e){handleErr(e)}
+  }
+  function relier(){
+    if(!user||!loaded.members)return;
+    const id=lie();
+    if(id){if(me!==id){attente=false;msg('');pickAs(id)}return}
+    if(attente&&me&&member(me)&&!member(me).google){attente=false;msg('');ecrire(me,user.uid);return}
+    if(attente&&!me)msg('Choisis ton nom ci-dessus : ta fiche sera reliée à ce compte Google.');
+  }
+  async function connecter(){
+    if(!auth){msg('La connexion Google n’est pas disponible pour le moment. Tu peux continuer sans.');return}
+    attente=true;msg('');
+    if(user){relier();return}
+    const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
+    try{await auth.signInWithPopup(p)}
+    catch(e){
+      if(e&&(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment')){try{sessionStorage.setItem('adb-g-attente','1')}catch(_){};return auth.signInWithRedirect(p)}
+      attente=false;if(e&&e.code!=='auth/popup-closed-by-user'&&e.code!=='auth/cancelled-popup-request')msg(ERR[e.code]||'La connexion Google a échoué. Tu peux continuer sans.');
+    }
+  }
+  function deconnecter(){attente=false;if(auth&&user)auth.signOut().catch(()=>{})}
+  function init(){
+    try{if(sessionStorage.getItem('adb-g-attente')){attente=true;sessionStorage.removeItem('adb-g-attente')}}catch(_){}
+    if(!window.firebase||!firebase.auth){render();return}
+    try{auth=firebase.auth();
+      auth.getRedirectResult().catch(e=>{attente=false;if(e&&e.code)msg(ERR[e.code]||'La connexion Google a échoué. Tu peux continuer sans.')});
+      auth.onAuthStateChanged(u=>{user=u;relier();render()});
+    }catch(e){console.warn('Google',e);auth=null}
+    render();
+  }
+  function apresChoix(id){if(user&&attente&&member(id)&&!member(id).google&&!lie()){attente=false;msg('');ecrire(id,user.uid)}}
+  function render(){
+    const b=el('gIn');if(b)b.textContent=user?'Retrouver ma fiche avec Google':'Se connecter avec Google';
+    const m=me&&member(me),t=el('bxGoogle'),btn=el('bxGBtn');if(!t||!btn)return;
+    if(m&&m.google){t.textContent=user&&user.uid===m.google?'Compte Google relié ('+(user.email||'')+')':'Compte Google relié';btn.textContent='Délier mon compte Google'}
+    else{t.textContent='Facultatif : relie ton compte Google pour retrouver ta fiche sur un autre téléphone.';btn.textContent='Relier mon compte Google'}
+  }
+  return {init,render,connecter,deconnecter,apresChoix,
+    basculer(){const m=me&&member(me);if(!m)return;if(m.google){ecrire(me,null);deconnecter()}else connecter()},
+    _etat:()=>({auth:!!auth,user:user&&user.uid,attente})};
+})();
+document.getElementById('gIn')?.addEventListener('click',()=>G.connecter());
+document.getElementById('bxGBtn')?.addEventListener('click',()=>G.basculer());
 const PUSH={vapid:'BJB53XBL72om9F12Ifu5uy46_DFg7Cbl9k71iqviMunQtKZEixFqh1y2O9Ozbj-eQULoHoJj3TFzWCYP9kAwyVo',me:()=>me&&member(me)?me:''};
 /* ----- Notifications push (Firebase Cloud Messaging) — voir NOTIFICATIONS.md -----
    Chaque appareil abonné a une fiche privée push_subs/<identifiant aléatoire> : jeton FCM, catégories, profil (facultatif),
@@ -440,6 +502,7 @@ $('#fMember').addEventListener('submit',async e=>{
   if(prev&&Array.isArray(prev.push))data.push=prev.push;
   if(prev&&prev.notifs&&typeof prev.notifs==='object')data.notifs=prev.notifs;
   if(prev&&prev.off)data.off=true;
+  if(prev&&prev.google)data.google=prev.google;
   data.pin=pin?await hashPin(id,pin):($('#mPinOff').checked?null:(prev?.pin||null));
   setDoc('members/'+id,data);S.members.set(id,data);
   if(!prev&&!me){me=id;lsSet('adb-me',id)}
