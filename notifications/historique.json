@@ -61,5 +61,14 @@
   "origine": "auto",
   "envoyes": 0,
   "echecs": 2
+ },
+ {
+  "date": "2026-11-26T16:39+01:00",
+  "categorie": "rappel",
+  "titre": "Cours aujourd'hui",
+  "message": "Boxe anglaise à 19h00, St Roch",
+  "origine": "auto",
+  "envoyes": 0,
+  "echecs": 0
  }
 ]
