@@ -70,5 +70,14 @@
   "origine": "auto",
   "envoyes": 0,
   "echecs": 0
+ },
+ {
+  "date": "2026-11-28T18:45+01:00",
+  "categorie": "rappel",
+  "titre": "Tes présences de la semaine",
+  "message": "Rappel personnel à ceux à qui il manque des réponses",
+  "origine": "auto",
+  "envoyes": 1,
+  "echecs": 0
  }
 ]
